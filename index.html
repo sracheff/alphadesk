@@ -378,6 +378,28 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .warn-toggle{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:4px}
 .warn-toggle input{cursor:pointer}
 
+/* EARNINGS CALENDAR */
+.ec-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border2);flex-wrap:wrap}
+.ec-row:last-child{border-bottom:none}
+.ec-row:hover{background:rgba(255,255,255,.015)}
+.ec-ticker{font-size:13px;font-weight:900;font-family:monospace;width:52px;flex-shrink:0}
+.ec-date{font-size:12px;font-weight:600;width:110px;flex-shrink:0}
+.ec-days{font-size:11px;font-weight:800;font-family:monospace;min-width:70px;flex-shrink:0}
+.ec-urgency{min-width:110px}
+.ec-note{font-size:11px;color:var(--muted);flex:1}
+.ec-sell{font-size:11px;font-weight:700;min-width:110px;text-align:right;flex-shrink:0}
+/* STRATEGY CARDS */
+.strat-card{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:11px;position:relative}
+.strat-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
+.strat-icon{font-size:24px;flex-shrink:0}
+.strat-name{font-size:14px;font-weight:800}
+.strat-when{font-size:11px;color:var(--muted);margin-top:2px}
+.strat-body{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.strat-body{grid-template-columns:1fr}}
+.strat-section{background:rgba(255,255,255,.025);border-radius:7px;padding:9px}
+.strat-section-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:5px}
+.strat-section p{font-size:11px;line-height:1.6;color:var(--muted)}
+.strat-section p strong{color:var(--text)}
 /* STOCK LOOKUP */
 .lookup-chip{padding:4px 10px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;font-size:11px;font-weight:700;font-family:monospace;cursor:pointer;color:var(--muted);transition:all .15s;letter-spacing:.3px}
 .lookup-chip:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(6,182,212,.07)}
@@ -447,7 +469,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <div class="acct-avatar">S</div>
       <div>
         <div class="acct-name">Stephen R.</div>
-        <div class="acct-bal">$295.75 available</div>
+        <div class="acct-bal">$120.81 buying power</div>
       </div>
     </div>
   </div>
@@ -458,9 +480,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   <div class="topbar">
     <div class="searchbox" onclick="focusLookup()" style="cursor:text"><span>🔍</span><input id="srch" type="text" placeholder="Search ticker, strategy…" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter'){quickLookup(this.value.trim());this.value=''}"></div>
     <div class="mktchips">
-      <div class="mkt"><span class="lb">SPY</span><span class="up">564.82</span><span class="up">+0.8%</span></div>
-      <div class="mkt"><span class="lb">QQQ</span><span class="up">481.40</span><span class="up">+1.1%</span></div>
-      <div class="mkt"><span class="lb">VIX</span><span class="dn">18.4</span></div>
+      <div class="mkt"><span class="lb">SPY</span><span class="dn">731.36</span><span class="dn">-0.3%</span></div>
+      <div class="mkt"><span class="lb">QQQ</span><span class="dn">694.28</span><span class="dn">-0.2%</span></div>
+      <div class="mkt"><span class="lb">VIX</span><span class="up">17.21</span></div>
       <div class="mkt"><span class="lb">BTC</span><span class="up">96,420</span></div>
     </div>
     <div class="dot-live"></div>
@@ -474,7 +496,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   ══════════════════════════════════════════ -->
   <div class="section active" id="sec-picks">
     <div class="sec-title">🤖 AI Picks — May 7, 2026</div>
-    <div class="sec-sub">Research-backed options plays · Graded A–D · All under $100/contract · Built for your $295.75 buying power</div>
+    <div class="sec-sub">Research-backed options plays · Graded A–D · All under $100/contract · Built for your $120.81 buying power</div>
 
     <div class="info-bar">
       <span>📡</span>
@@ -487,7 +509,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <span class="badge b-purple">Aggressive Growth</span>
       <span class="badge b-cyan">Options Focus</span>
       <span class="badge b-gold">Semi-Risky</span>
-      <span style="font-size:11px;color:var(--muted);margin-left:4px">Account: $325.75 · Buying Power: $295.75 · Max per trade: $147</span>
+      <span style="font-size:11px;color:var(--muted);margin-left:4px">Account: $302.81 · Buying Power: $120.81 · Max per trade: $60</span>
       <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="showSec('settings')">Change Strategy</button>
     </div>
 
@@ -506,52 +528,110 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   ══════════════════════════════════════════ -->
   <div class="section" id="sec-options">
     <div class="sec-title">⚡ Options Center</div>
-    <div class="sec-sub">Active position analysis · Greeks · P&L diagram · New play scanner</div>
+    <div class="sec-sub">Active position management · Break-even calculator · Position sizer · Earnings calendar · Strategy guide</div>
 
-    <div class="grid2" style="margin-bottom:16px">
-      <!-- SAIL position -->
-      <div class="card">
-        <div class="card-hdr"><div class="card-title">Active: SAIL $15C Jun 18</div><span class="badge b-cyan">Long Call</span></div>
-        <div class="warn-bar">🚨 <strong>CRITICAL POSITION ALERT:</strong> SAIL dropped to $12.06 — your $15 Call is $3 out of the money. Option likely near stop loss ($0.25). Consider exiting NOW. Hard deadline: Jun 10 9:45 AM.</div>
-        <div class="grid4" style="margin-bottom:12px">
-          <div style="text-align:center"><div style="font-size:19px;font-weight:800;color:var(--cyan)">$0.60</div><div style="font-size:9px;color:var(--muted);margin-top:2px">ENTRY</div></div>
-          <div style="text-align:center"><div style="font-size:19px;font-weight:800">$0.75</div><div style="font-size:9px;color:var(--muted);margin-top:2px">CURRENT</div></div>
-          <div style="text-align:center"><div style="font-size:19px;font-weight:800;color:var(--green)">+25%</div><div style="font-size:9px;color:var(--muted);margin-top:2px">UNREALIZED</div></div>
-          <div style="text-align:center"><div style="font-size:19px;font-weight:800;color:var(--red)">$0.25</div><div style="font-size:9px;color:var(--muted);margin-top:2px">STOP</div></div>
+    <div class="tab-row" id="optTabRow">
+      <div class="tab active" onclick="optTab('positions')">📊 My Positions</div>
+      <div class="tab" onclick="optTab('calc')">🧮 Calculator</div>
+      <div class="tab" onclick="optTab('earnings')">📅 Earnings Calendar</div>
+      <div class="tab" onclick="optTab('strategy')">⚡ Strategy Guide</div>
+    </div>
+
+    <!-- ── TAB: MY POSITIONS ── -->
+    <div id="opt-positions">
+      <div id="opt-positions-content"></div>
+    </div>
+
+    <!-- ── TAB: CALCULATOR ── -->
+    <div id="opt-calc" style="display:none">
+      <!-- TRADE ANALYZER -->
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-hdr">
+          <div>
+            <div class="card-title">🧮 Trade Analyzer</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px">Enter any play — see break-even, targets, and P&L curve</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-sm" id="calcCallBtn" onclick="setOptType('call')" style="background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3)">📈 Call</button>
+            <button class="btn btn-ghost btn-sm" id="calcPutBtn" onclick="setOptType('put')">📉 Put</button>
+          </div>
         </div>
-        <div class="divider"></div>
-        <div class="card-title" style="margin-bottom:10px">Greeks (Estimated)</div>
-        <div class="grid3">
-          <div class="pstat"><div class="pstat-val" style="color:var(--cyan)">0.42</div><div class="pstat-lbl">Delta Δ</div></div>
-          <div class="pstat"><div class="pstat-val" style="color:var(--purple)">0.08</div><div class="pstat-lbl">Gamma Γ</div></div>
-          <div class="pstat"><div class="pstat-val" style="color:var(--red)">-0.018</div><div class="pstat-lbl">Theta/day</div></div>
-          <div class="pstat"><div class="pstat-val" style="color:var(--green)">0.052</div><div class="pstat-lbl">Vega</div></div>
-          <div class="pstat"><div class="pstat-val">72%</div><div class="pstat-lbl">IV</div></div>
-          <div class="pstat"><div class="pstat-val" style="color:var(--gold)">42%</div><div class="pstat-lbl">P(Profit)</div></div>
+        <input type="hidden" id="calcOptType" value="call">
+        <div class="pf-row-3">
+          <div><div class="pf-label">Stock Price ($)</div><input class="pf-input" id="calcStock" type="number" step="0.01" placeholder="50.00" oninput="calcPreview()"></div>
+          <div><div class="pf-label">Strike Price ($)</div><input class="pf-input" id="calcStrike" type="number" step="0.01" placeholder="55.00" oninput="calcPreview()"></div>
+          <div><div class="pf-label">Premium Paid ($)</div><input class="pf-input" id="calcPremium" type="number" step="0.01" placeholder="0.75" oninput="calcPreview()"></div>
         </div>
-        <div class="divider"></div>
-        <div class="card-title" style="margin-bottom:8px">Profit Targets</div>
-        <div class="targets-row">
-          <div class="tgt tgt-1">$0.90<div class="tgt-lbl">+50% — sell ⅓</div></div>
-          <div class="tgt tgt-2">$1.20<div class="tgt-lbl">+100% — sell ⅓</div></div>
-          <div class="tgt tgt-3">$1.80<div class="tgt-lbl">+200% — sell ⅓</div></div>
+        <div class="pf-row-3">
+          <div><div class="pf-label">Contracts</div><input class="pf-input" id="calcContracts" type="number" step="1" min="1" value="1" oninput="calcPreview()"></div>
+          <div><div class="pf-label">Days to Expiry (DTE)</div><input class="pf-input" id="calcDTE" type="number" step="1" placeholder="30" oninput="calcPreview()"></div>
+          <div><div class="pf-label">IV % (optional)</div><input class="pf-input" id="calcIV" type="number" step="1" placeholder="65" oninput="calcPreview()"></div>
+        </div>
+        <div id="calcResults" style="display:none">
+          <div class="divider"></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:13px" id="calcKeyStats"></div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px">Exit Targets (option price)</div>
+          <div id="calcTargets" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px"></div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px">P&amp;L at Expiration</div>
+          <canvas id="calcPLChart" height="140"></canvas>
+          <div class="divider"></div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px">Greeks Estimate</div>
+          <div id="calcGreeks" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px"></div>
         </div>
       </div>
-      <!-- P&L diagram -->
+
+      <!-- POSITION SIZER -->
       <div class="card">
-        <div class="card-hdr"><div class="card-title">SAIL $15C — P&L at Expiry</div><span class="badge b-gray">Jun 18</span></div>
-        <canvas id="plChart" height="220"></canvas>
-        <div class="grid2" style="margin-top:10px;gap:8px">
-          <div class="pstat"><div class="pstat-val" style="color:var(--red)">$15.60</div><div class="pstat-lbl">Break-Even</div></div>
-          <div class="pstat"><div class="pstat-val" style="color:var(--green)">Unlimited</div><div class="pstat-lbl">Max Gain</div></div>
+        <div class="card-hdr">
+          <div>
+            <div class="card-title">📐 Position Sizer</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:2px">How many contracts can you afford while staying within your rules?</div>
+          </div>
+          <span class="badge b-cyan">Auto-filled from portfolio</span>
+        </div>
+        <div class="pf-row-3" style="align-items:end">
+          <div><div class="pf-label">Buying Power ($)</div><input class="pf-input" id="sizerBP" type="number" step="0.01" value="120.81" oninput="calcSizer()"></div>
+          <div><div class="pf-label">Premium per contract ($)</div><input class="pf-input" id="sizerPrem" type="number" step="0.01" placeholder="0.75" oninput="calcSizer()"></div>
+          <div>
+            <div class="pf-label">Max risk % of buying power</div>
+            <div class="range-wrap">
+              <input type="range" id="sizerRisk" min="5" max="60" value="25" oninput="document.getElementById('sizerRiskVal').textContent=this.value+'%';calcSizer()">
+              <span class="range-val" id="sizerRiskVal">25%</span>
+            </div>
+          </div>
+        </div>
+        <div id="sizerResults" style="margin-top:12px;display:none">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px" id="sizerCards"></div>
+          <div id="sizerWarning"></div>
         </div>
       </div>
     </div>
 
-    <!-- NEW PLAYS SCANNER -->
-    <div class="card-hdr"><div class="sec-title" style="font-size:15px;margin-bottom:0">New Play Scanner</div><span class="badge b-gold">≤ $100/contract</span></div>
-    <div style="margin-bottom:10px"></div>
-    <div id="optionPlays"></div>
+    <!-- ── TAB: EARNINGS CALENDAR ── -->
+    <div id="opt-earnings" style="display:none">
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:13px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div>
+            <div class="card-title">📅 Earnings Calendar — All Tracked Tickers</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">Sell any options you hold at least 1 day before earnings to avoid IV crush</div>
+          </div>
+          <span class="badge b-red">🚨 RGTI in 4 days — SELL NOW</span>
+        </div>
+        <div id="earningsCalBody"></div>
+        <div style="padding:10px 16px;font-size:10px;color:var(--dim);border-top:1px solid var(--border)">
+          Dates verified via multiple sources · Unconfirmed dates marked as estimated · Always double-check before trading
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: STRATEGY GUIDE ── -->
+    <div id="opt-strategy" style="display:none">
+      <div class="info-bar" style="margin-bottom:14px">
+        <span>💡</span>
+        <span>Strategies below are explained in plain English with examples sized for your <strong>$295.75 buying power</strong>. Best picks for your account are marked ✅.</span>
+      </div>
+      <div id="strategyCards"></div>
+    </div>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -889,18 +969,18 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 // PORTFOLIO DATA (editable)
 // ════════════════════════════════════════════════
 let PORTFOLIO = {
-  totalValue: 325.75,
-  buyingPower: 295.75,
+  totalValue: 302.81,
+  buyingPower: 120.81,
   startValue: 201.99,
   goal: 1000,
   chartDates: ['Mar 3','Mar 17','Mar 31','Apr 14','Apr 28','May 7'],
-  chartValues: [201.99, 218, 244, 271, 310, 325.75],
+  chartValues: [201.99, 218, 244, 271, 295, 302.81],
   active: [
     {
       id: 1, ticker:'SAIL', type:'Call', strike:15, contracts:1,
-      entry:0.60, current:0.75, stop:0.25,
+      entry:0.60, current:0.30, stop:0.25,
       expiry:'Jun 18, 2026', hardExit:'Jun 10, 9:45 AM',
-      warning:'🚨 CRITICAL: SAIL now at $12.06 — stock is $3 BELOW your $15 strike. Option likely near or below your $0.25 stop loss. Consider exiting NOW to preserve remaining value. Hard deadline: sell by Jun 10, 9:45 AM regardless.'
+      warning:'⚠️ SAIL at $12.17 today (+4.77%) — stock up but still $2.83 BELOW your $15 strike. Option is deeply OTM with 42 days to expiry. Monitor closely — if option approaches $0.25 stop, EXIT. Hard deadline: sell by Jun 10, 9:45 AM regardless of price.'
     }
   ],
   closed: [
@@ -1392,17 +1472,17 @@ function cancelAddWatch() {
 const PICKS = [
   {
     grade:'A', ticker:'IONQ', contract:'$50C Jun 20', price:0.62, total:62,
-    entry:46.41, stop:0.25, t1:0.95, t2:1.35, t3:2.00,
+    entry:46.60, stop:0.25, t1:0.95, t2:1.35, t3:2.00,
     earn:'Aug 2026 (unconfirmed — verify before hold)', holdMax:'Jun 20',
     signal:'buy', signalText:'Buy at open — blowout earnings selloff is a gift',
     iv:74, ivFlag:false,
-    thesis:'<strong>IONQ down -11.7% today despite a blowout Q1 earnings.</strong> Revenue beat massively, but "one big catch" (likely profitability timeline) spooked short-term traders. This is exactly the type of mispriced selloff that creates entries. Stock was $52.57 yesterday — now $46.41. Fundamentals unchanged. NVIDIA quantum partnership still active. Jun 20 expiry gives 6 weeks for the thesis to play out. Entry: $46.41 · Stop on option: $0.25.',
+    thesis:'<strong>IONQ Q1 2026 earnings reported TODAY — stock down -11.4% to $46.60 despite beating revenue estimates massively.</strong> Zacks headline: "Revenues Beat, \'26 Sales View Up." MarketBeat: "Breakout Quarter — But 1 Problem Remains." The selloff is emotional, not fundamental. NVIDIA quantum partnership still active. Revenue guidance raised for \'26. Jun 20 expiry gives 6 weeks for the thesis to play out. Entry: $46.60 · Stop on option: $0.25.',
     watch:['Watch $48 reclaim as first momentum signal','NVIDIA quantum news = recurring +10-15% catalysts','Monitor the "big catch" — if profitability guidance, thesis is intact','Any commercial contract win = immediate spike'],
     risks:'Today\'s drop shows sentiment can be fragile. If broad market sells off, speculative names like IONQ get hit harder. Theta burns on Jun 20 expiry if stock stalls.'
   },
   {
     grade:'A', ticker:'NVDA', contract:'$215C May 16', price:0.68, total:68,
-    entry:211.71, stop:0.28, t1:1.05, t2:1.55, t3:2.30,
+    entry:212.72, stop:0.28, t1:1.05, t2:1.55, t3:2.30,
     earn:'⚠️ May 20 — EARNINGS PLAY — SELL BY MAY 19 OPEN', holdMax:'May 19 open',
     signal:'buy', signalText:'⚠️ EARNINGS PLAY — sell by May 19 open, no exceptions',
     iv:42, ivFlag:false,
@@ -1412,7 +1492,7 @@ const PICKS = [
   },
   {
     grade:'B', ticker:'ACHR', contract:'$7C Jun 20', price:0.48, total:48,
-    entry:6.18, stop:0.19, t1:0.75, t2:1.10, t3:1.65,
+    entry:6.21, stop:0.19, t1:0.75, t2:1.10, t3:1.65,
     earn:'Not confirmed — verify before Aug', holdMax:'Jun 20',
     signal:'buy', signalText:'Buy now — cheap eVTOL with real catalysts',
     iv:78, ivFlag:false,
@@ -1422,7 +1502,7 @@ const PICKS = [
   },
   {
     grade:'B', ticker:'LUNR', contract:'$26C Jun 6', price:0.65, total:65,
-    entry:24.23, stop:0.26, t1:0.98, t2:1.40, t3:2.00,
+    entry:23.89, stop:0.26, t1:0.98, t2:1.40, t3:2.00,
     earn:'Not confirmed — verify; exit Jun 5 to be safe', holdMax:'Jun 5 EOD',
     signal:'buy', signalText:'Buy now — space momentum bounce after -8% today',
     iv:82, ivFlag:true,
@@ -1433,17 +1513,17 @@ const PICKS = [
   },
   {
     grade:'B', ticker:'S', contract:'$16C Jun 20', price:0.55, total:55,
-    entry:15.60, stop:0.22, t1:0.85, t2:1.20, t3:1.75,
+    entry:15.81, stop:0.22, t1:0.85, t2:1.20, t3:1.75,
     earn:'Jun 2026 (verify exact date)', holdMax:'May 30',
-    signal:'buy', signalText:'Buy now — cybersector ripping, S is the cheapest name',
+    signal:'buy', signalText:'Buy now — CRWD +7.3%, PANW +5.8% — S is the cheapest catch-up play',
     iv:46, ivFlag:false,
-    thesis:'<strong>CrowdStrike +6.1% and Palo Alto +4.9% today</strong> — cybersecurity sector is ripping. SentinelOne at $15.60 is the cheapest name in the sector by valuation (3.5x forward revenue vs CRWD at 18x). Growing 43% YoY. AI-native SOC platform gaining enterprise share. When CRWD and PANW run like today, S eventually follows. IV at 46% = one of the cheapest options on the entire watchlist.',
+    thesis:'<strong>CrowdStrike +7.3% and Palo Alto +5.8% TODAY</strong> — cybersecurity is the hottest sector on May 7. SentinelOne at $15.81 (+3.1%) is participating but still the cheapest name in the sector by valuation (3.5x forward revenue vs CRWD at 18x). Growing 43% YoY. AI-native SOC platform gaining enterprise share. Sector momentum takes 1-3 days to fully spread to all names. IV at 46% = cheapest options on the board.',
     watch:['CRWD and PANW momentum lifts all cybersecurity names','Watch $16 — reclaim confirms breakout','CrowdStrike earnings in June will lift sector further','IV 46% = maximum leverage per dollar spent'],
     risks:'Smallest market cap in cyber space ($5.2B). Can underperform the sector. Needs a specific catalyst to outperform CRWD/PANW.'
   },
   {
     grade:'C', ticker:'JOBY', contract:'$10.5C Jun 20', price:0.58, total:58,
-    entry:9.73, stop:0.23, t1:0.88, t2:1.25, t3:1.85,
+    entry:9.80, stop:0.23, t1:0.88, t2:1.25, t3:1.85,
     earn:'Aug 2026 (verify)', holdMax:'Jun 20',
     signal:'wait', signalText:'Wait for $10 reclaim before entering',
     iv:75, ivFlag:false,
@@ -1453,7 +1533,7 @@ const PICKS = [
   },
   {
     grade:'C', ticker:'BBAI', contract:'$4.5C Jun 20', price:0.38, total:38,
-    entry:4.12, stop:0.15, t1:0.58, t2:0.82, t3:1.20,
+    entry:4.17, stop:0.15, t1:0.58, t2:0.82, t3:1.20,
     earn:'Aug 2026 (verify)', holdMax:'Jun 20',
     signal:'wait', signalText:'Wait for $4.25 reclaim — lottery play only',
     iv:88, ivFlag:true,
@@ -1464,7 +1544,7 @@ const PICKS = [
   },
   {
     grade:'C', ticker:'QUBT', contract:'$10C Jun 20', price:0.55, total:55,
-    entry:9.39, stop:0.22, t1:0.83, t2:1.20, t3:1.80,
+    entry:9.57, stop:0.22, t1:0.83, t2:1.20, t3:1.80,
     earn:'Aug 2026 (verify)', holdMax:'Jun 20',
     signal:'wait', signalText:'Wait for $9.75 reclaim before entering',
     iv:90, ivFlag:true,
@@ -1478,82 +1558,82 @@ const PICKS = [
 // ── LIVE PRICES via FMP — May 7, 2026 ──
 const WATCHLISTS = {
   'Options Plays': [
-    {t:'IONQ',n:'IonQ Inc.',p:46.41,c:-11.72,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
-    {t:'NVDA',n:'NVIDIA Corp.',p:211.71,c:+1.87,tgt:240,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
-    {t:'ACHR',n:'Archer Aviation',p:6.18,c:-3.59,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
-    {t:'LUNR',n:'Intuitive Machines',p:24.23,c:-7.99,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
-    {t:'S',n:'SentinelOne',p:15.60,c:+1.76,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
-    {t:'JOBY',n:'Joby Aviation',p:9.73,c:-7.51,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'Wait $10'},
-    {t:'BBAI',n:'BigBear.ai',p:4.12,c:-5.72,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
-    {t:'QUBT',n:'Quantum Computing Inc.',p:9.39,c:-10.18,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
+    {t:'IONQ',n:'IonQ Inc.',p:46.60,c:-11.37,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:212.72,c:+2.35,tgt:240,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
+    {t:'ACHR',n:'Archer Aviation',p:6.21,c:-3.20,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
+    {t:'LUNR',n:'Intuitive Machines',p:23.89,c:-9.27,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
+    {t:'S',n:'SentinelOne',p:15.81,c:+3.10,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
+    {t:'JOBY',n:'Joby Aviation',p:9.80,c:-6.84,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'Wait $10'},
+    {t:'BBAI',n:'BigBear.ai',p:4.17,c:-4.69,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
+    {t:'QUBT',n:'Quantum Computing Inc.',p:9.57,c:-8.54,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
   ],
   'Quantum': [
-    {t:'IONQ',n:'IonQ Inc.',p:46.41,c:-11.72,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
-    {t:'RGTI',n:'Rigetti Computing',p:18.12,c:-9.83,tgt:25,iv:85,conv:6,risk:8,earn:'Verify',sig:'Hold'},
-    {t:'QBTS',n:'D-Wave Quantum',p:21.96,c:-7.85,tgt:30,iv:78,conv:6,risk:8,earn:'Verify',sig:'Hold'},
-    {t:'QUBT',n:'Quantum Computing Inc.',p:9.39,c:-10.18,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
+    {t:'IONQ',n:'IonQ Inc.',p:46.60,c:-11.37,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
+    {t:'RGTI',n:'Rigetti Computing',p:18.23,c:-9.28,tgt:25,iv:85,conv:6,risk:8,earn:'⚠ May 11',sig:'Avoid Earn'},
+    {t:'QBTS',n:'D-Wave Quantum',p:21.90,c:-8.10,tgt:30,iv:78,conv:6,risk:8,earn:'⚠ May 14',sig:'Avoid Earn'},
+    {t:'QUBT',n:'Quantum Computing Inc.',p:9.57,c:-8.54,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
   ],
   'Space': [
-    {t:'RKLB',n:'Rocket Lab USA',p:78.73,c:-7.00,tgt:95,iv:68,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
-    {t:'ASTS',n:'AST SpaceMobile',p:65.90,c:-6.76,tgt:88,iv:75,conv:8,risk:7,earn:'Aug 2026',sig:'Buy'},
-    {t:'LUNR',n:'Intuitive Machines',p:24.23,c:-7.99,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
-    {t:'JOBY',n:'Joby Aviation',p:9.73,c:-7.51,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'Wait $10'},
-    {t:'ACHR',n:'Archer Aviation',p:6.18,c:-3.59,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
+    {t:'RKLB',n:'Rocket Lab USA',p:78.40,c:-7.38,tgt:95,iv:68,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
+    {t:'ASTS',n:'AST SpaceMobile',p:65.39,c:-7.48,tgt:88,iv:75,conv:8,risk:7,earn:'Aug 2026',sig:'Buy'},
+    {t:'LUNR',n:'Intuitive Machines',p:23.89,c:-9.27,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
+    {t:'JOBY',n:'Joby Aviation',p:9.80,c:-6.84,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'Wait $10'},
+    {t:'ACHR',n:'Archer Aviation',p:6.21,c:-3.20,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
   ],
   'Defense / AI': [
-    {t:'PLTR',n:'Palantir Technologies',p:136.77,c:+2.23,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
-    {t:'BBAI',n:'BigBear.ai',p:4.12,c:-5.72,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
+    {t:'PLTR',n:'Palantir Technologies',p:136.79,c:+2.24,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
+    {t:'BBAI',n:'BigBear.ai',p:4.17,c:-4.69,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
   ],
   'Chips / AI': [
-    {t:'NVDA',n:'NVIDIA Corp.',p:211.71,c:+1.87,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
-    {t:'AMD',n:'Advanced Micro Devices',p:402.64,c:-4.45,tgt:450,iv:44,conv:8,risk:5,earn:'Aug 4',sig:'Buy Dip'},
-    {t:'MU',n:'Micron Technology',p:638.75,c:-4.18,tgt:720,iv:45,conv:8,risk:6,earn:'Jun 2026',sig:'Buy'},
-    {t:'SMCI',n:'Super Micro Computer',p:33.01,c:-4.76,tgt:50,iv:68,conv:6,risk:7,earn:'Aug 2026',sig:'Hold'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:212.72,c:+2.35,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
+    {t:'AMD',n:'Advanced Micro Devices',p:407.53,c:-3.29,tgt:450,iv:44,conv:8,risk:5,earn:'Aug 4',sig:'Buy Dip'},
+    {t:'MU',n:'Micron Technology',p:643.88,c:-3.41,tgt:720,iv:45,conv:8,risk:6,earn:'Jun 2026',sig:'Buy'},
+    {t:'SMCI',n:'Super Micro Computer',p:33.30,c:-3.94,tgt:50,iv:68,conv:6,risk:7,earn:'Aug 2026',sig:'Hold'},
   ],
   'Cybersecurity': [
-    {t:'CRWD',n:'CrowdStrike Holdings',p:496.44,c:+6.06,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
-    {t:'PANW',n:'Palo Alto Networks',p:192.71,c:+4.92,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
-    {t:'S',n:'SentinelOne',p:15.60,c:+1.76,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
+    {t:'CRWD',n:'CrowdStrike Holdings',p:502.37,c:+7.33,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
+    {t:'PANW',n:'Palo Alto Networks',p:194.41,c:+5.84,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
+    {t:'S',n:'SentinelOne',p:15.81,c:+3.10,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
   ],
   'Metals': [
-    {t:'GDX',n:'VanEck Gold Miners',p:92.08,c:-0.39,tgt:108,iv:28,conv:7,risk:4,earn:'N/A',sig:'Hold'},
-    {t:'SLV',n:'iShares Silver Trust',p:71.48,c:+1.93,tgt:85,iv:22,conv:7,risk:4,earn:'N/A',sig:'Buy'},
-    {t:'FCX',n:'Freeport-McMoRan',p:60.34,c:-0.90,tgt:72,iv:35,conv:7,risk:6,earn:'Jul 2026',sig:'Buy'},
+    {t:'GDX',n:'VanEck Gold Miners',p:92.58,c:+0.15,tgt:108,iv:28,conv:7,risk:4,earn:'N/A',sig:'Hold'},
+    {t:'SLV',n:'iShares Silver Trust',p:71.76,c:+2.32,tgt:85,iv:22,conv:7,risk:4,earn:'N/A',sig:'Buy'},
+    {t:'FCX',n:'Freeport-McMoRan',p:61.01,c:+0.20,tgt:72,iv:35,conv:7,risk:6,earn:'Jul 2026',sig:'Buy'},
   ],
   'eVTOL': [
-    {t:'ACHR',n:'Archer Aviation',p:6.18,c:-3.59,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
-    {t:'JOBY',n:'Joby Aviation',p:9.73,c:-7.51,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'Wait $10'},
+    {t:'ACHR',n:'Archer Aviation',p:6.21,c:-3.20,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
+    {t:'JOBY',n:'Joby Aviation',p:9.80,c:-6.84,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'Wait $10'},
   ],
   'Momentum': [
-    {t:'CRWD',n:'CrowdStrike Holdings',p:496.44,c:+6.06,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
-    {t:'PANW',n:'Palo Alto Networks',p:192.71,c:+4.92,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
-    {t:'PLTR',n:'Palantir Technologies',p:136.77,c:+2.23,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
-    {t:'NVDA',n:'NVIDIA Corp.',p:211.71,c:+1.87,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
+    {t:'CRWD',n:'CrowdStrike Holdings',p:502.37,c:+7.33,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
+    {t:'PANW',n:'Palo Alto Networks',p:194.41,c:+5.84,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
+    {t:'PLTR',n:'Palantir Technologies',p:136.79,c:+2.24,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:212.72,c:+2.35,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
   ]
 };
 
 // AI INTEL — live prices via FMP May 7, 2026
 const INTEL = {
   'Quantum': [
-    {t:'IONQ',name:'IonQ Inc.',p:46.41,c:-11.72,color:'#06b6d4',
+    {t:'IONQ',name:'IonQ Inc.',p:46.60,c:-11.37,color:'#06b6d4',
      news:'Q1 2026 revenue $64.67M — up 755% YoY. First public quantum company with >$100M GAAP revenue. NVIDIA Ising quantum platform announcement sent IONQ +21% in one day.',
      setup:'Best setup in quantum sector. Clean breakout above $50. RSI not overbought. 90 days to earnings (Aug 6).',
      watch:['$54 breakout = momentum confirmation','NVIDIA quantum announcements = recurring catalyst','Commercial airline/pharma contract wins = spike events','Monitor RSI — sell if exceeds 75'],
      options:'$55C Jun 20 ~$0.90. Stop $0.38. T1: $1.35 (+50%). Total cost $90.',
      signal:'STRONG BUY', signalColor:'var(--green)'},
-    {t:'RGTI',name:'Rigetti Computing',p:18.12,c:-9.83,color:'#8b5cf6',
-     news:'Q4 2025 revenue missed by 22%. Full-year revenue down 34%. BUT NVIDIA Ising announcement sent RGTI +13.3% on May 5. Stock up strongly today off NVIDIA halo effect.',
-     setup:'⚠️ EARNINGS MAY 11 — 4 DAYS AWAY. Do NOT buy calls before earnings. Wait for post-print reaction.',
+    {t:'RGTI',name:'Rigetti Computing',p:18.23,c:-9.28,color:'#8b5cf6',
+     news:'Q4 2025 revenue missed by 22%. Full-year revenue down 34%. BUT NVIDIA Ising announcement sent RGTI +13.3% on May 5. Zacks preview: "Can Rigetti\'s Q1 Earnings Strengthen Its Quantum Growth Narrative?" — earnings expected May 11.',
+     setup:'🚨 EARNINGS MAY 11 — 4 DAYS AWAY. Do NOT buy calls before earnings. Wait for post-print reaction at $18+.',
      watch:['EARNINGS MAY 11 — hard avoid until after','Post-earnings entry if stock holds $18','Revenue growth needs to turn positive','NVIDIA sector halo is supportive but temporary'],
      options:'WAIT. Post-earnings entry: $20C Jun 20 if stock holds $18 after May 11 print.',
      signal:'AVOID UNTIL MAY 12', signalColor:'var(--red)'},
-    {t:'QBTS',name:'D-Wave Quantum',p:21.96,c:-7.85,color:'#06b6d4',
+    {t:'QBTS',name:'D-Wave Quantum',p:21.90,c:-8.10,color:'#06b6d4',
      news:'Down 9% YTD. Analyst consensus target $35.77 — 13 Buy ratings, 2 Hold. Commercial bookings growth is the story. NVIDIA sector halo helped: +22.6% on Ising announcement.',
      setup:'⚠️ EARNINGS MAY 14 — 7 DAYS AWAY. Do NOT enter. Wait for post-print.',
      watch:['EARNINGS MAY 14 — avoid until May 15','Post-earnings entry if holds $8','Commercial booking announcements = catalyst','Target $35.77 is 4x current price if thesis plays out'],
      options:'WAIT. Post-earnings: $9C Jun 20 if holds $8 after May 14.',
      signal:'AVOID UNTIL MAY 15', signalColor:'var(--red)'},
-    {t:'QUBT',name:'Quantum Computing Inc.',p:9.39,c:-10.18,color:'#ec4899',
+    {t:'QUBT',name:'Quantum Computing Inc.',p:9.57,c:-8.54,color:'#ec4899',
      news:'Very early stage. High volatility. Benefited from sector halo. No major near-term catalysts beyond sector momentum.',
      setup:'Speculative only. Small size if any. Very illiquid options.',
      watch:['Only hold as small sector lottery ticket','Watch for NVIDIA or government quantum announcements','Check option liquidity before entering — often illiquid'],
@@ -1561,19 +1641,19 @@ const INTEL = {
      signal:'SPECULATIVE ONLY', signalColor:'var(--orange)'},
   ],
   'Space': [
-    {t:'RKLB',name:'Rocket Lab USA',p:78.73,c:-7.00,color:'#f59e0b',
+    {t:'RKLB',name:'Rocket Lab USA',p:78.40,c:-7.38,color:'#f59e0b',
      news:'FCC spectrum rule overhaul sent space stocks higher. Completed 2 launches in 48 hours. Neutron reusable rocket confirmed Q4 2026 debut — unlocks $5.6B NSSL Lane 1 contracts. Q1 earnings TODAY.',
      setup:'Strong setup. FCC catalyst + operational momentum. Q1 earnings today — wait for reaction, then enter if holds $27.50.',
      watch:['Q1 earnings today — hold $27.50 = bullish','Neutron milestones are multi-month catalysts','FCC satellite broadband rules continue to evolve','SpaceX IPO hype = rising tide for all space names'],
      options:'$32C Jun 20 ~$0.82. Wait for earnings reaction. Stop $0.32. T1: $1.25',
      signal:'BUY (AFTER EARNINGS PRINT)', signalColor:'var(--cyan)'},
-    {t:'ASTS',name:'AST SpaceMobile',p:65.90,c:-6.76,color:'#ec4899',
+    {t:'ASTS',name:'AST SpaceMobile',p:65.39,c:-7.48,color:'#ec4899',
      news:'FCC approved 223 additional satellites for SpaceMobile network. BlueBird-8/9/10 ready for shipment soon. Targeting 45 satellites in orbit in 2026. BlueBird-7 had launch anomaly but company pressing forward.',
      setup:'Strong catalyst pipeline. BlueBird deployments = stock movers. Volatile — 10% swings common.',
      watch:['BlueBird 8/9/10 launch dates are catalysts','Watch $32 support on any dip','FCC spectrum approvals continue to be bullish','Q1 earnings Aug 11 — far enough out for plays'],
      options:'$38C Jun 20 ~$0.85. Volatile entry — wait for pullback to $33.',
      signal:'BUY ON PULLBACK', signalColor:'var(--cyan)'},
-    {t:'LUNR',name:'Intuitive Machines',p:24.23,c:-7.99,color:'#a78bfa',
+    {t:'LUNR',name:'Intuitive Machines',p:23.89,c:-9.27,color:'#a78bfa',
      news:'Up 270% over past year. SpaceX IPO fever driving space proxies. Beta 2.95 = moves 3x the market. Q1 earnings May 14. $180.4M NASA CLPS task order + $175M strategic equity investment. Space ETF launches creating mechanical demand.',
      setup:'Quick flip play only. SpaceX IPO hype = near-term catalyst. MUST EXIT before May 14 earnings.',
      watch:['Exit by May 13 close — no exceptions','SpaceX IPO news = immediate catalyst','Watch for sharp pullbacks — beta 2.95 is violent','NASA contract announcements = spike events'],
@@ -1581,13 +1661,13 @@ const INTEL = {
      signal:'QUICK FLIP — 6 DAYS MAX', signalColor:'var(--gold)'},
   ],
   'Defense / AI': [
-    {t:'PLTR',name:'Palantir Technologies',p:136.77,c:+2.23,color:'#3b82f6',
+    {t:'PLTR',name:'Palantir Technologies',p:136.79,c:+2.24,color:'#3b82f6',
      news:'Q1 2026 revenue $1.63B up 85% YoY. Beat estimates. Raised FY2026 guidance to $7.66B. Stock DOWN 20% YTD despite these results — valuation concerns post-print. AIP platform winning enterprise deals at accelerating pace.',
      setup:'Best risk/reward on the list. 85% revenue growth + guidance raise + 20% YTD drawdown = value entry. Long runway to Aug 4 earnings.',
      watch:['Watch $50 reclaim = momentum confirmed','AIP enterprise deal announcements spike the stock','US defense AI budget = structural tailwind','Post-earnings dip historically has been bought'],
      options:'$55C Jun 20 ~$0.88. Stop $0.36. T1: $1.30. T2: $1.85. T3: $2.60',
      signal:'STRONG BUY', signalColor:'var(--green)'},
-    {t:'BBAI',name:'BigBear.ai',p:4.12,c:-5.72,color:'#f97316',
+    {t:'BBAI',name:'BigBear.ai',p:4.17,c:-4.69,color:'#f97316',
      news:'Q1 revenue $34.4M — slight beat. Loss was wider than expected at -$0.12 vs -$0.08 est. Down 31% YTD. Gross margins improved to 34%. Defense AI contracts continuing.',
      setup:'Very speculative. Small position only. Revenue growing but losses widening.',
      watch:['Defense contract announcements are the only catalyst','Watch $4 level as resistance','Loss widening is a concern — watch cash burn','Compare to PLTR for sector direction'],
@@ -1595,13 +1675,13 @@ const INTEL = {
      signal:'SPECULATIVE', signalColor:'var(--orange)'},
   ],
   'Chips / AI': [
-    {t:'NVDA',name:'NVIDIA Corp.',p:211.71,c:+1.87,color:'#10b981',
+    {t:'NVDA',name:'NVIDIA Corp.',p:212.72,c:+2.35,color:'#10b981',
      news:'Earnings May 28. Street consensus $78.8B revenue, whisper $80-82B. AMD beat sends positive read-through. Blackwell demand exceptional. Data center supercycle continues. IV will spike dramatically the week of earnings.',
      setup:'Strong long-term but CRITICAL earnings timing issue. Must exit all calls by May 21 (7 days before earnings). IV crush risk is extreme.',
      watch:['Only buy calls with expiry before May 21','AMD beat is positive read-through for NVDA Q1','Watch $118 as breakout confirmation','SELL ALL CALLS by May 21 — IV will be astronomical near print'],
      options:'$125C May 16 ~$0.75. SHORT HOLD — sell by May 21 before IV spikes. Do NOT hold through earnings.',
      signal:'BUY → EXIT BY MAY 21', signalColor:'var(--gold)'},
-    {t:'AMD',name:'Advanced Micro Devices',p:402.64,c:-4.45,color:'#8b5cf6',
+    {t:'AMD',name:'Advanced Micro Devices',p:407.53,c:-3.29,color:'#8b5cf6',
      news:'Q1 2026 BEAT: EPS $1.37 vs $1.25 est. Revenue $10.25B up 38% YoY. Data center sales +57% to $5.8B. MI300X GPU taking market share from NVIDIA. Next earnings Aug 4.',
      setup:'Strong setup post-earnings beat. Momentum play through July. 87 days to next earnings.',
      watch:['Data center revenue growth rate is key metric','MI300X server GPU adoption is the main catalyst','Watch $170 as next resistance level','AI infrastructure buildout has years of runway'],
@@ -1609,13 +1689,13 @@ const INTEL = {
      signal:'STRONG BUY', signalColor:'var(--green)'},
   ],
   'Cybersecurity': [
-    {t:'CRWD',name:'CrowdStrike Holdings',p:496.44,c:+6.06,color:'#ef4444',
+    {t:'CRWD',name:'CrowdStrike Holdings',p:502.37,c:+7.33,color:'#ef4444',
      news:'$5.25B ARR growing 24% YoY. Turned GAAP profitable. Best year ever per CEO — recovered fully from 2024 outage. FY27 revenue guidance: $5.9B. Market cap ~$100B. Consensus target $507.',
      setup:'Premium name, premium price. Low IV (35%) = cheap options relative to quality. Earnings Jun 4 — stay under 30 DTE or use Jun 20 expiry.',
      watch:['$450 breakout = next resistance target','Earnings Jun 4 — position accordingly','ARR growth deceleration would be bearish','Platform consolidation wins are catalysts'],
      options:'$450C Jun 20 ~$0.90. Low IV = good entry. Stop $0.36. T1: $1.40',
      signal:'STRONG BUY', signalColor:'var(--green)'},
-    {t:'S',name:'SentinelOne',p:15.60,c:+1.76,color:'#06b6d4',
+    {t:'S',name:'SentinelOne',p:15.81,c:+3.10,color:'#06b6d4',
      news:'Trading at 52-week low zone ($12.23 was the low). Market cap ~$4.3B. Trading at 3.5x forward revenue vs CRWD at 18x. 43% YoY revenue growth. AI-native platform is fastest-growing in cybersecurity.',
      setup:'Best VALUE setup on the entire watchlist. 5x valuation discount to CRWD for a company growing nearly as fast. IV 48% = cheap options. This is a bounce play.',
      watch:['$13 reclaim = confirmed base','CRWD earnings Jun 4 lifts all cybersecurity names','43% growth + 3.5x revenue = deeply undervalued vs peers','Declining volume on dip = selling exhaustion'],
@@ -1656,13 +1736,13 @@ const SCENARIOS = [
 ];
 
 const ALERTS_DATA = [
-  {icon:'⚠️',title:'SAIL — Earnings Hard Deadline',sub:'Jun 10 pre-market · Sell by 9:45 AM · Set calendar reminder NOW',on:true},
-  {icon:'📊',title:'LUNR — Exit Alert May 13',sub:'Earnings May 14 pre-market · Exit by close May 13',on:true},
-  {icon:'📈',title:'RGTI — Post-Earnings Entry Watch',sub:'Earnings May 11 · Alert when earnings are out + stock holds $18',on:true},
-  {icon:'🔔',title:'NVDA — IV Spike Warning',sub:'Alert when NVDA IV exceeds 60% (approaching earnings May 28)',on:false},
-  {icon:'₿',title:'Bitcoin $100K Watch',sub:'Alert when BTC crosses $100,000 — crypto plays activate',on:false},
-  {icon:'🔴',title:'VIX Danger Zone',sub:'Alert when VIX exceeds 25 — reduce all options exposure',on:true},
-  {icon:'🎯',title:'IONQ — Price Target Hit',sub:'Alert when IONQ crosses $60 (next resistance)',on:false},
+  {icon:'⚠️',title:'SAIL — Earnings Hard Deadline',sub:'Jun 10 pre-market · Sell by 9:45 AM · Set calendar reminder NOW · Stock at $12.17',on:true},
+  {icon:'🚨',title:'RGTI — EARNINGS MAY 11 (4 DAYS)',sub:'CONFIRMED May 11 — Do NOT hold any calls. Post-earnings watch: hold $18 = entry signal',on:true},
+  {icon:'⚠️',title:'QBTS — EARNINGS MAY 14',sub:'Confirmed May 14 — Avoid all calls until after print. Watch $21 hold post-earnings',on:true},
+  {icon:'🔔',title:'NVDA — Earnings May 20 — EXIT MAY 19',sub:'HARD EXIT all NVDA calls by May 19 open. IV crush will be severe into May 20 print',on:true},
+  {icon:'📊',title:'LUNR — Exit Alert Jun 5',sub:'Earnings timing uncertain — hard exit Jun 5 close to avoid any earnings risk',on:true},
+  {icon:'🔴',title:'VIX Danger Zone',sub:'Alert when VIX exceeds 25 — reduce all options exposure. Current VIX: 17.21',on:true},
+  {icon:'🎯',title:'IONQ — Price Target Hit',sub:'Alert when IONQ crosses $52 (reclaim of yesterday\'s close — confirms reversal)',on:false},
 ];
 
 const PHILOS = [
@@ -1680,8 +1760,8 @@ const EXIT_RULES = [
   {lbl:'Options — Earnings rule',val:'NEVER hold through earnings unintentionally'},
   {lbl:'Swing — Take profits',val:'Scale at +15%, +25%, +40%'},
   {lbl:'Swing — Stop loss',val:'Cut at -7% to -10%'},
-  {lbl:'Max per trade',val:'50% of buying power ($147 current max)'},
-  {lbl:'Cash reserve',val:'Always keep ≥25% cash ($73 minimum)'},
+  {lbl:'Max per trade',val:'50% of buying power ($60 current max)'},
+  {lbl:'Cash reserve',val:'Always keep ≥25% cash ($30 minimum)'},
   {lbl:'Chasing rule',val:'Skip any stock up 5%+ at market open'},
 ];
 
@@ -1761,6 +1841,353 @@ function toggleDrawer() {
 function closeDrawer() {
   document.getElementById('mobDrawer').classList.remove('open');
   document.getElementById('mobOverlay').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════
+// OPTIONS CENTER
+// ════════════════════════════════════════════════
+let calcChartInst = null;
+const optPosCharts = {};
+
+const EARNINGS_CAL = [
+  {ticker:'RGTI', date:'2026-05-11', confirmed:true,  note:'Quantum AI — high IV, options will collapse after'},
+  {ticker:'LUNR', date:'2026-05-14', confirmed:true,  note:'Space play — exit calls by May 13 close'},
+  {ticker:'PANW', date:'2026-05-20', confirmed:true,  note:'Cybersecurity — strong trend, watch for beat'},
+  {ticker:'NVDA', date:'2026-05-28', confirmed:true,  note:'⚠️ Intentional earnings play — IV crush risk, plan exit'},
+  {ticker:'MU',   date:'2026-06-25', confirmed:false, note:'Memory chips — estimated date, verify closer'},
+  {ticker:'SAIL', date:'2026-06-10', confirmed:true,  note:'🚨 YOU HOLD $15C — exit by 9:45 AM Jun 10'},
+  {ticker:'CRWD', date:'2026-06-03', confirmed:false, note:'Cybersecurity — estimated, verify'},
+  {ticker:'IONQ', date:'2026-08-05', confirmed:false, note:'Quantum computing — estimated Q3'},
+  {ticker:'AMD',  date:'2026-07-29', confirmed:false, note:'Chips — typically late July'},
+  {ticker:'ASTS', date:'2026-08-12', confirmed:false, note:'Space comms — estimated Q3'},
+  {ticker:'ACHR', date:'2026-08-10', confirmed:false, note:'eVTOL — small cap, verify date'},
+  {ticker:'JOBY', date:'2026-08-07', confirmed:false, note:'eVTOL — estimated Q3'},
+  {ticker:'PLTR', date:'2026-08-04', confirmed:false, note:'Defense AI — typically early August'},
+  {ticker:'BBAI', date:'2026-08-11', confirmed:false, note:'AI software — small cap, verify'},
+  {ticker:'RKLB', date:'2026-11-10', confirmed:false, note:'Space — Q4 estimated'},
+  {ticker:'S',    date:'2026-09-03', confirmed:false, note:'Cybersecurity — typically September'},
+];
+
+const STRATEGIES = [
+  {icon:'📈', name:'Long Call', best:true, when:'Bullish · Expect stock to rise · Defined risk',
+   risk:'Max loss: 100% of premium · Max gain: Unlimited',
+   howto:'Buy 1 call option OTM or ATM. Profit when stock rises above break-even = Strike + Premium.',
+   example:'Stock at $46, buy $50C for $0.65 = $65 total. Break-even $50.65. If stock hits $55, option worth ~$5 = $500 profit (+669%).',
+   goodFor:'✅ Perfect for small accounts — defined risk, huge upside. Your bread and butter.'},
+
+  {icon:'📉', name:'Long Put', best:true, when:'Bearish · Expect stock to fall · Defined risk',
+   risk:'Max loss: 100% of premium · Max gain: Strike - Premium (near unlimited for big drops)',
+   howto:'Buy 1 put option OTM or ATM. Profit when stock falls below break-even = Strike - Premium.',
+   example:'Stock at $50, buy $47P for $0.60 = $60 total. Break-even $46.40. If stock drops to $40, option worth ~$7 = $700 (+1067%).',
+   goodFor:'✅ Great hedge or directional bet. Works in down markets.'},
+
+  {icon:'🦋', name:'Bull Call Spread', best:true, when:'Moderately bullish · Reduce cost · Cap upside',
+   risk:'Max loss: Net debit paid · Max gain: Width of spread - Net debit',
+   howto:'Buy lower strike call, sell higher strike call same expiry. Cheaper than outright call.',
+   example:'Buy $50C for $0.80, sell $55C for $0.30. Net cost $0.50 = $50. Max gain = $500 - $50 = $450 if stock above $55.',
+   goodFor:'✅ Great for small accounts — cuts cost by 30-50% while keeping most upside.'},
+
+  {icon:'🐻', name:'Bear Put Spread', best:false, when:'Moderately bearish · Reduce cost on puts',
+   risk:'Max loss: Net debit paid · Max gain: Width of spread - Net debit',
+   howto:'Buy higher strike put, sell lower strike put same expiry. Cheaper than outright put.',
+   example:'Buy $50P for $0.75, sell $45P for $0.25. Net $0.50 = $50. Max gain $500 - $50 = $450.',
+   goodFor:'✅ Works for small accounts. Good when you expect a moderate pullback.'},
+
+  {icon:'⚡', name:'Straddle', best:false, when:'Big move expected either direction · Around earnings',
+   risk:'Max loss: Total premium (both options) · Max gain: Unlimited',
+   howto:'Buy a call AND a put at same strike, same expiry. Profit from a BIG move in either direction.',
+   example:'Stock at $50. Buy $50C for $1.00 + $50P for $0.80 = $1.80 = $180 total. Need stock to move more than $1.80 to profit.',
+   goodFor:'⚠️ More expensive — costs $150-200+ typically. Hard at small account size.'},
+
+  {icon:'🌀', name:'Iron Condor', best:false, when:'Neutral — expect stock to stay in range · Sell premium',
+   risk:'Max gain: Net credit received · Max loss: Width of spread - credit',
+   howto:'Sell OTM call + sell OTM put + buy further OTM call + buy further OTM put. Collect premium if stock stays in range.',
+   example:'Stock at $50. Sell $55C, buy $60C, sell $45P, buy $40P. Collect $1.00 credit = $100. Keep if stock stays $45-$55.',
+   goodFor:'❌ Requires larger capital and 4 legs. Not ideal for your account size yet.'},
+
+  {icon:'📞', name:'Covered Call', best:false, when:'Own stock · Collect income · Neutral/slightly bullish',
+   risk:'Max gain: Strike - Cost basis + Premium · Caps upside above strike',
+   howto:'Own 100 shares of stock, sell 1 OTM call against it. Collect premium as income.',
+   example:'Own NVDA at $210. Sell $220C for $2.00 = $200 income. Keep premium if stock stays below $220.',
+   goodFor:'❌ Requires owning 100 shares. Need $21,000+ in NVDA. Not for small accounts yet.'},
+
+  {icon:'💵', name:'Cash-Secured Put', best:false, when:'Want to buy stock at a lower price · Collect income',
+   risk:'Max gain: Premium received · Risk: Must buy stock at strike if it falls',
+   howto:'Sell a put at a price you would want to own the stock. Keep premium if stock stays above strike.',
+   example:'Want to own IONQ at $42. Sell $42P for $1.50 = $150 income. Need $4,200 cash as collateral.',
+   goodFor:'❌ Needs substantial cash collateral. Better suited once account reaches $5,000+.'},
+];
+
+function optTab(id) {
+  ['positions','calc','earnings','strategy'].forEach(t => {
+    document.getElementById('opt-'+t).style.display = (t === id) ? 'block' : 'none';
+  });
+  document.querySelectorAll('#optTabRow .tab').forEach((el,i) => {
+    el.classList.toggle('active', ['positions','calc','earnings','strategy'][i] === id);
+  });
+  if (id === 'positions') renderOptPositions();
+  if (id === 'earnings')  renderEarningsCalendar();
+  if (id === 'strategy')  renderStrategyGuide();
+  if (id === 'calc') { document.getElementById('sizerBP').value = PORTFOLIO.buyingPower; calcSizer(); }
+}
+
+function renderOptPositions() {
+  const P = PORTFOLIO;
+  const el = document.getElementById('opt-positions-content');
+  if (!P.active.length) {
+    el.innerHTML = `<div style="text-align:center;padding:50px 20px">
+      <div style="font-size:36px;margin-bottom:10px">📊</div>
+      <div style="font-size:14px;font-weight:800;margin-bottom:6px">No Active Positions</div>
+      <div style="font-size:12px;color:var(--muted)">Add positions via the Portfolio editor, then they'll appear here with full analysis.</div>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="openPortEdit()">＋ Add Position</button>
+    </div>`; return;
+  }
+  el.innerHTML = P.active.map(pos => {
+    const plPct = pos.entry ? ((pos.current - pos.entry) / pos.entry * 100) : 0;
+    const plDollar = ((pos.current - pos.entry) * 100 * (pos.contracts||1)).toFixed(0);
+    const isWin = plPct >= 0;
+    const atStop = pos.current <= pos.stop;
+    const nearStop = !atStop && pos.current <= pos.stop * 1.15;
+    const bigWin = plPct >= 50;
+    let signal, sigColor, sigBg;
+    if (atStop) { signal='🔴 EXIT NOW — at or below stop loss'; sigColor='var(--red)'; sigBg='rgba(239,68,68,.1)'; }
+    else if (nearStop) { signal='🟡 NEAR STOP — tighten up, monitor closely'; sigColor='var(--gold)'; sigBg='rgba(245,158,11,.08)'; }
+    else if (bigWin) { signal='🟢 AT PROFIT TARGET — consider taking ½ off'; sigColor='var(--green)'; sigBg='rgba(16,185,129,.08)'; }
+    else { signal='⚪ HOLD — within normal range'; sigColor='var(--muted)'; sigBg='rgba(255,255,255,.03)'; }
+    const isCall = pos.type==='Call';
+    const be = isCall ? (pos.strike + pos.entry).toFixed(2) : (pos.strike - pos.entry).toFixed(2);
+    const t1=(pos.entry*1.5).toFixed(2), t2=(pos.entry*2.0).toFixed(2), t3=(pos.entry*3.0).toFixed(2);
+    const warn = pos.warning ? `<div class="warn-bar" style="margin-bottom:11px;font-size:11px">${pos.warning}</div>` : '';
+    return `<div class="card" style="margin-bottom:14px">
+      ${warn}
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:11px;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:21px;font-weight:900;font-family:monospace">${pos.ticker} $${pos.strike}${isCall?'C':'P'} — ${pos.type}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">${pos.contracts||1} contract · Expires ${pos.expiry}${pos.hardExit?' · <strong style="color:var(--red)">Exit by '+pos.hardExit+'</strong>':''}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:22px;font-weight:900;font-family:monospace;color:${isWin?'var(--green)':'var(--red)'}">${isWin?'+':''}${plPct.toFixed(1)}%</div>
+          <div style="font-size:12px;color:${isWin?'var(--green)':'var(--red)'}">${isWin?'+':''}$${plDollar} unrealized</div>
+        </div>
+      </div>
+      <div style="padding:9px 12px;background:${sigBg};border:1px solid ${sigColor}44;border-radius:8px;margin-bottom:12px;font-size:12px;font-weight:700;color:${sigColor}">${signal}</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px">
+        <div class="pstat"><div class="pstat-val" style="color:var(--cyan)">$${pos.entry.toFixed(2)}</div><div class="pstat-lbl">Entry</div></div>
+        <div class="pstat"><div class="pstat-val">$${pos.current.toFixed(2)}</div><div class="pstat-lbl">Current</div></div>
+        <div class="pstat"><div class="pstat-val" style="color:var(--red)">$${pos.stop.toFixed(2)}</div><div class="pstat-lbl">Stop Loss</div></div>
+        <div class="pstat"><div class="pstat-val" style="color:var(--gold)">$${be}</div><div class="pstat-lbl">Break-Even</div></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px">Profit Targets (option price)</div>
+      <div class="targets-row">
+        <div class="tgt tgt-1">$${t1}<div class="tgt-lbl">+50% — sell ⅓</div></div>
+        <div class="tgt tgt-2">$${t2}<div class="tgt-lbl">+100% — sell ⅓</div></div>
+        <div class="tgt tgt-3">$${t3}<div class="tgt-lbl">+200% — let ride</div></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px">P&amp;L at Expiration</div>
+      <canvas id="posChart_${pos.id}" height="120"></canvas>
+    </div>`;
+  }).join('');
+
+  P.active.forEach(pos => {
+    const canvas = document.getElementById('posChart_'+pos.id);
+    if (!canvas) return;
+    if (optPosCharts[pos.id]) optPosCharts[pos.id].destroy();
+    const isCall = pos.type==='Call';
+    const lo = Math.floor(pos.strike*0.70), hi = Math.ceil(pos.strike*1.40);
+    const pts = 50, step = (hi-lo)/pts;
+    const labels=[], data=[];
+    for (let s=lo; s<=hi; s+=step) {
+      labels.push('$'+s.toFixed(0));
+      const c = pos.contracts||1;
+      const pl = isCall ? Math.max(-pos.entry*100*c,(s-pos.strike-pos.entry)*100*c)
+                        : Math.max(-pos.entry*100*c,(pos.strike-s-pos.entry)*100*c);
+      data.push(+pl.toFixed(2));
+    }
+    optPosCharts[pos.id] = new Chart(canvas.getContext('2d'),{
+      type:'line',
+      data:{labels,datasets:[{data,borderWidth:2,pointRadius:0,
+        segment:{borderColor:ctx=>ctx.p1.parsed.y>=0?'#10b981':'#ef4444'},
+        fill:{target:'origin',above:'rgba(16,185,129,0.08)',below:'rgba(239,68,68,0.08)'}}]},
+      options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'P&L: $'+c.raw}}},
+        scales:{x:{ticks:{color:'#64748b',font:{size:8}},grid:{color:'rgba(255,255,255,0.04)'}},
+                y:{ticks:{color:'#64748b',font:{size:9},callback:v=>'$'+v},grid:{color:'rgba(255,255,255,0.04)'}}}}
+    });
+  });
+}
+
+function setOptType(t) {
+  document.getElementById('calcOptType').value = t;
+  const cb = document.getElementById('calcCallBtn'), pb = document.getElementById('calcPutBtn');
+  if (t==='call') {
+    cb.style.cssText='background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3)';
+    pb.style.cssText='background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.08)';
+  } else {
+    pb.style.cssText='background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)';
+    cb.style.cssText='background:rgba(255,255,255,.05);color:var(--text);border:1px solid rgba(255,255,255,.08)';
+  }
+  calcPreview();
+}
+
+function calcPreview() {
+  const type    = document.getElementById('calcOptType').value;
+  const stock   = parseFloat(document.getElementById('calcStock').value);
+  const strike  = parseFloat(document.getElementById('calcStrike').value);
+  const prem    = parseFloat(document.getElementById('calcPremium').value);
+  const contr   = parseInt(document.getElementById('calcContracts').value)||1;
+  const dte     = parseFloat(document.getElementById('calcDTE').value)||30;
+  const iv      = parseFloat(document.getElementById('calcIV').value)||60;
+  if (!stock||!strike||!prem) { document.getElementById('calcResults').style.display='none'; return; }
+
+  document.getElementById('calcResults').style.display='block';
+  const isCall = type==='call';
+  const be = isCall ? strike+prem : strike-prem;
+  const maxLoss = prem*100*contr;
+  const totalCost = maxLoss;
+
+  // Key stats
+  document.getElementById('calcKeyStats').innerHTML = `
+    <div class="pstat"><div class="pstat-val" style="color:var(--gold)">$${be.toFixed(2)}</div><div class="pstat-lbl">Break-Even</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--red)">-$${maxLoss.toFixed(0)}</div><div class="pstat-lbl">Max Loss</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--green)">${isCall?'Unlimited':'$'+(strike*100*contr).toFixed(0)}</div><div class="pstat-lbl">Max Gain</div></div>`;
+
+  // Targets
+  const stop50  = (prem*0.50).toFixed(2);
+  const t50     = (prem*1.50).toFixed(2);
+  const t100    = (prem*2.00).toFixed(2);
+  const t200    = (prem*3.00).toFixed(2);
+  const t300    = (prem*4.00).toFixed(2);
+  document.getElementById('calcTargets').innerHTML = `
+    <div class="pstat"><div class="pstat-val" style="color:var(--red)">$${stop50}</div><div class="pstat-lbl">🛑 Stop -50%</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--green)">$${t50}</div><div class="pstat-lbl">T1 +50%</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--cyan)">$${t100}</div><div class="pstat-lbl">T2 +100%</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--purple)">$${t200}</div><div class="pstat-lbl">T3 +200%</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--gold)">$${t300}</div><div class="pstat-lbl">T4 +300%</div></div>`;
+
+  // P&L Chart
+  const lo = Math.floor(strike*0.70), hi = Math.ceil(strike*1.40);
+  const pts = 60, step = (hi-lo)/pts;
+  const labels=[], data=[];
+  for (let s=lo; s<=hi; s+=step) {
+    labels.push('$'+s.toFixed(0));
+    const pl = isCall ? Math.max(-prem*100*contr,(s-strike-prem)*100*contr)
+                      : Math.max(-prem*100*contr,(strike-s-prem)*100*contr);
+    data.push(+pl.toFixed(2));
+  }
+  if (calcChartInst) calcChartInst.destroy();
+  calcChartInst = new Chart(document.getElementById('calcPLChart').getContext('2d'),{
+    type:'line',
+    data:{labels,datasets:[{data,borderWidth:2,pointRadius:0,
+      segment:{borderColor:ctx=>ctx.p1.parsed.y>=0?'#10b981':'#ef4444'},
+      fill:{target:'origin',above:'rgba(16,185,129,0.09)',below:'rgba(239,68,68,0.09)'}}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'P&L: $'+c.raw}}},
+      scales:{x:{ticks:{color:'#64748b',font:{size:8}},grid:{color:'rgba(255,255,255,0.04)'}},
+              y:{ticks:{color:'#64748b',font:{size:9},callback:v=>'$'+v},grid:{color:'rgba(255,255,255,0.04)'}}}}
+  });
+
+  // Greeks estimate (Black-Scholes approximations)
+  const moneyness = isCall ? stock/strike : strike/stock;
+  const delta = isCall ? Math.min(0.99, Math.max(0.01, 0.5 + (moneyness-1)*3)).toFixed(2)
+                       : Math.max(-0.99, Math.min(-0.01, -0.5 - (moneyness-1)*3)).toFixed(2);
+  const gamma  = (0.04 / (stock * (iv/100) * Math.sqrt(dte/365))).toFixed(4);
+  const theta  = (-(prem * 0.5) / dte).toFixed(3);
+  const vega   = (prem * 0.10).toFixed(3);
+  const ivFlag = iv > 80 ? `<span class="badge b-red" style="font-size:9px">⚠️ HIGH IV — crush risk</span>` : `<span class="badge b-green" style="font-size:9px">IV normal</span>`;
+  document.getElementById('calcGreeks').innerHTML = `
+    <div class="pstat"><div class="pstat-val" style="color:var(--cyan)">${delta}</div><div class="pstat-lbl">Delta Δ</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--purple)">${gamma}</div><div class="pstat-lbl">Gamma Γ</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--red)">${theta}/day</div><div class="pstat-lbl">Theta Θ</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--green)">${vega}</div><div class="pstat-lbl">Vega ν</div></div>
+    <div class="pstat"><div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div class="pstat-val">${iv}%</div>${ivFlag}</div><div class="pstat-lbl">IV</div></div>`;
+}
+
+function calcSizer() {
+  const bp   = parseFloat(document.getElementById('sizerBP').value)||295.75;
+  const prem = parseFloat(document.getElementById('sizerPrem').value);
+  const risk = parseInt(document.getElementById('sizerRisk').value)||25;
+  if (!prem) { document.getElementById('sizerResults').style.display='none'; return; }
+  document.getElementById('sizerResults').style.display='block';
+  const maxRiskDollar = bp * (risk/100);
+  const costPerContr  = prem * 100;
+  const maxContracts  = Math.max(0, Math.floor(maxRiskDollar / costPerContr));
+  const totalCost     = maxContracts * costPerContr;
+  const pctOfBP       = bp ? ((totalCost/bp)*100).toFixed(1) : 0;
+  const isOK = maxContracts >= 1 && totalCost <= bp;
+  document.getElementById('sizerCards').innerHTML = `
+    <div class="pstat"><div class="pstat-val" style="color:var(--cyan)">${maxContracts}</div><div class="pstat-lbl">Max Contracts</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:${isOK?'var(--green)':'var(--red)'}">$${totalCost.toFixed(0)}</div><div class="pstat-lbl">Total Cost</div></div>
+    <div class="pstat"><div class="pstat-val">$${maxRiskDollar.toFixed(0)}</div><div class="pstat-lbl">$ at Risk</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:${parseFloat(pctOfBP)>40?'var(--red)':parseFloat(pctOfBP)>25?'var(--gold)':'var(--green)'}">${pctOfBP}%</div><div class="pstat-lbl">% of BP</div></div>`;
+  const warn = document.getElementById('sizerWarning');
+  if (maxContracts === 0) {
+    warn.innerHTML = `<div class="warn-bar">⚠️ Premium too high — $${costPerContr.toFixed(0)}/contract exceeds your risk budget of $${maxRiskDollar.toFixed(0)}. Look for cheaper contracts or lower the strike.</div>`;
+  } else if (parseFloat(pctOfBP) > 40) {
+    warn.innerHTML = `<div class="warn-bar">⚠️ This uses ${pctOfBP}% of your buying power — exceeds the 25-40% rule. Reduce position size or risk % to stay within your strategy rules.</div>`;
+  } else {
+    warn.innerHTML = `<div class="info-bar">✅ Within rules — ${pctOfBP}% of buying power. ${maxContracts} contract${maxContracts>1?'s':''} at $${costPerContr.toFixed(0)} each = $${totalCost.toFixed(0)} total risk.</div>`;
+  }
+}
+
+function renderEarningsCalendar() {
+  const today = new Date('2026-05-07');
+  const sorted = [...EARNINGS_CAL].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  document.getElementById('earningsCalBody').innerHTML = sorted.map(e => {
+    const d = new Date(e.date);
+    const days = Math.round((d-today)/(1000*60*60*24));
+    const sellBy = new Date(d); sellBy.setDate(sellBy.getDate()-1);
+    const sellStr = sellBy.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    let urgBadge, urgColor;
+    if (days < 0)       { urgBadge='<span class="badge b-gray">PASSED</span>';    urgColor='var(--dim)'; }
+    else if (days <= 3) { urgBadge='<span class="badge b-red">🚨 SELL NOW</span>';  urgColor='var(--red)'; }
+    else if (days <= 7) { urgBadge='<span class="badge b-orange" style="background:rgba(249,115,22,.13);color:var(--orange)">⚠️ EXIT SOON</span>'; urgColor='var(--orange)'; }
+    else if (days <= 14){ urgBadge='<span class="badge b-gold">👀 WATCH</span>';   urgColor='var(--gold)'; }
+    else                { urgBadge='<span class="badge b-green">✅ SAFE</span>';   urgColor='var(--green)'; }
+    const daysStr = days < 0 ? 'PASSED' : days === 0 ? 'TODAY' : days+'d';
+    return `<div class="ec-row">
+      <div class="ec-ticker" style="color:var(--cyan)">${e.ticker}</div>
+      <div class="ec-date">${d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}${!e.confirmed?' <span style="color:var(--dim);font-size:9px">est.</span>':''}</div>
+      <div class="ec-days" style="color:${urgColor}">${daysStr}</div>
+      <div class="ec-urgency">${urgBadge}</div>
+      <div class="ec-note">${e.note}</div>
+      <div class="ec-sell" style="color:var(--muted)">Sell by ${sellStr}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderStrategyGuide() {
+  document.getElementById('strategyCards').innerHTML = STRATEGIES.map(s => `
+    <div class="strat-card">
+      <div class="strat-hdr">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div class="strat-icon">${s.icon}</div>
+          <div>
+            <div class="strat-name">${s.name}</div>
+            <div class="strat-when">${s.when}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-direction:column;align-items:flex-end;flex-shrink:0">
+          ${s.best ? '<span class="badge b-green">✅ Your Account</span>' : '<span class="badge b-gray">Advanced</span>'}
+        </div>
+      </div>
+      <div class="strat-body">
+        <div class="strat-section">
+          <div class="strat-section-title">Risk Profile</div>
+          <p>${s.risk}</p>
+        </div>
+        <div class="strat-section">
+          <div class="strat-section-title">How It Works</div>
+          <p>${s.howto}</p>
+        </div>
+        <div class="strat-section" style="grid-column:1/-1">
+          <div class="strat-section-title">💡 Real Example</div>
+          <p>${s.example}</p>
+        </div>
+        <div class="strat-section" style="grid-column:1/-1;background:rgba(6,182,212,.04);border:1px solid rgba(6,182,212,.12)">
+          <div class="strat-section-title" style="color:var(--cyan)">For Your Account</div>
+          <p><strong>${s.goodFor}</strong></p>
+        </div>
+      </div>
+    </div>`).join('');
 }
 
 // ════════════════════════════════════════════════
@@ -2438,24 +2865,41 @@ function selectPhil(idx) {
 // ── LIVE 40% MODE PLAYS — FMP data May 7, 2026 ──
 const PLAYS_40 = [
   {
-    rank:1, ticker:'IONQ', contract:'$50C Jun 20', type:'Bounce — Blowout Earnings Selloff', setup:'Gap-down reversal on fundamental strength',
+    rank:1, ticker:'S', contract:'$16C Jun 20', type:'Cybersector Catch-Up — TODAY\'s Hottest Sector', setup:'CRWD +7.3%, PANW +5.8% — cheapest IV on the board',
+    price:0.55, totalCost:55, stopPct:60, stopPrice:0.22,
+    t1:0.85, t2:1.20, t3:1.75,
+    t1pct:55, t2pct:118, t3pct:218,
+    earn:'Jun 2026 — verify, max hold May 30', holdMax:'May 30', daysHold:23,
+    expectedMove:'+8–14% follow-through on cyber rally', ivCurrent:46, ivCrush:'VERY LOW — cheapest IV on the board',
+    liquidity:'MEDIUM-HIGH', spread:'$0.03–$0.07',
+    popEstimate:42, lossChance:58,
+    breakEven:16.55,
+    catalyst:'CrowdStrike +7.33% and Palo Alto +5.84% TODAY on May 7 — cybersecurity is the single hottest sector right now. SentinelOne at $15.81 (+3.1%) is already moving but still the cheapest name in the sector by far (3.5x forward revenue vs CRWD at 18x). When sector leaders rip 7%, the value laggard typically follows in 1-3 trading days. IV 46% = cheapest options on the entire watchlist.',
+    whyWin:'CRWD crossed $500 today for the first time. PANW +5.8%. Sector momentum is institutional-level and takes days to fully rotate into all names. S at 3.5x fwd revenue is deeply undervalued vs peers. IV 46% = max leverage per dollar. At $15.81, only $0.19 from the $16 strike.',
+    whyFail:'S is the smallest name in cyber ($5.3B vs CRWD $127B). Institutional rotation may not fully reach it. Needs a specific catalyst of its own to outperform sector leaders independently.',
+    chips:['💎 IV 46% — cheapest','🔒 CRWD +7.3% TODAY','📊 3.5x fwd revenue','💰 $55 total — cheapest'],
+    chipsStyle:['wchip-green','wchip-green','wchip-green','wchip-green'],
+    score:94
+  },
+  {
+    rank:2, ticker:'IONQ', contract:'$50C Jun 20', type:'Bounce — Blowout Earnings Selloff', setup:'Gap-down reversal on fundamental strength',
     price:0.62, totalCost:62, stopPct:60, stopPrice:0.25,
     t1:0.95, t2:1.35, t3:2.00,
     t1pct:53, t2pct:118, t3pct:223,
     earn:'Aug 2026 — verify before hold', holdMax:'Jun 20', daysHold:44,
-    expectedMove:'+8–15% bounce from $46.41', ivCurrent:74, ivCrush:'LOW — earnings August, no near-term crush risk',
+    expectedMove:'+8–15% bounce from $46.60', ivCurrent:74, ivCrush:'LOW — earnings August, no near-term crush risk',
     liquidity:'HIGH — major quantum name', spread:'$0.02–$0.06 typical',
     popEstimate:40, lossChance:60,
     breakEven:50.62,
-    catalyst:'IONQ dropped -11.72% today ($52.57 → $46.41) despite beating Q1 earnings massively. MarketBeat headline: "IonQ Just Posted a Breakout Quarter — But 1 Problem Remains." The selloff is emotional, not fundamental. NVIDIA quantum partnership intact. $64.67M Q1 revenue (estimated). 44 days to Jun 20 gives plenty of time for recovery.',
-    whyWin:'Stock was $52.57 yesterday. Dropped on one vague concern despite a blowout quarter. This type of gap-down on good earnings typically reverses in 3-10 trading days. $50 strike is only 7.7% above current price. NVIDIA catalysts can recover the gap in a single day.',
-    whyFail:'The "one big problem" could be real — if profitability is further away than expected, sellers could pile on. Quantum sector sentiment fragile. If NVDA pulls back, IONQ follows. Theta still eats option value even if stock stalls.',
-    chips:['📉 -11.7% gap-down today','🎯 Jun 20 — 44 DTE','✅ High liquidity','🚀 Blowout earnings'],
+    catalyst:'IONQ Q1 2026 REPORTED TODAY — stock down -11.4% to $46.60 despite beating revenue estimates and raising \'26 guidance. Zacks: "Revenues Beat, \'26 Sales View Up." MarketBeat: "Breakout Quarter — But 1 Problem Remains." Selloff is emotional, not fundamental. NVIDIA quantum partnership intact. 44 days to Jun 20 gives ample time for recovery.',
+    whyWin:'Stock was $52.57 yesterday. Dropped on one vague "problem" despite a blowout quarter and guidance raise. This type of gap-down on good earnings typically reverses in 3-10 trading days. $50 strike is only 7.3% above current price. One NVDA quantum headline recovers the gap instantly.',
+    whyFail:'The "one big problem" could be real — if profitability timeline is further than hoped, sellers pile on. Quantum sector fragile broadly today. If NVDA pulls back, IONQ follows. Theta still eats value if stock stalls.',
+    chips:['📉 -11.4% on earnings today','🎯 Jun 20 — 44 DTE','✅ High liquidity','📈 Guidance RAISED'],
     chipsStyle:['wchip-gold','wchip-green','wchip-green','wchip-green'],
-    score:93
+    score:90
   },
   {
-    rank:2, ticker:'NVDA', contract:'$215C May 16', type:'Pre-Earnings Momentum — SELL MAY 19', setup:'China trip catalyst + $200 reclaim momentum',
+    rank:3, ticker:'NVDA', contract:'$215C May 16', type:'Pre-Earnings Momentum — SELL MAY 19', setup:'China trip catalyst + $200 reclaim momentum',
     price:0.68, totalCost:68, stopPct:59, stopPrice:0.28,
     t1:1.05, t2:1.55, t3:2.30,
     t1pct:54, t2pct:128, t3pct:238,
@@ -2464,15 +2908,15 @@ const PLAYS_40 = [
     liquidity:'VERY HIGH — most liquid options in the world', spread:'$0.01–$0.03',
     popEstimate:44, lossChance:56,
     breakEven:215.68,
-    catalyst:'Trump confirmed bringing NVIDIA CEO Jensen Huang to China trip next week. Stock just reclaimed $200 (+5.8% Wed + 1.87% today = $211.71). Analysts see $250-300 target. IV at 42% is historically LOW for NVDA pre-earnings — cheap options. Must sell by May 19 open.',
-    whyWin:'Trump/Jensen China trip is a literal government-level AI catalyst that could move stock 5-10% in one day. IV 42% is cheap for NVDA. $211.71 already above $215 breakeven on the stock — just needs to hold. 12-day window with a macro catalyst.',
-    whyFail:'⚠️ MUST EXIT MAY 19 OPEN — earnings May 20. If China trip is cancelled/delayed, no catalyst. Stock is near 52-week high ($216.83) — resistance. Any negative AI chip export news crushes it.',
-    chips:['⚠️ EXIT MAY 19 OPEN','🇨🇳 Trump China catalyst','✅ IV 42% — cheap for NVDA','🔥 $200 reclaimed'],
+    catalyst:'Trump confirmed bringing NVIDIA CEO Jensen Huang to China trip next week. NVDA at $212.72, +2.35% today. SoftBank also in talks with NVIDIA to build homegrown AI servers. Analysts see $250-300 target. IV at 42% is historically LOW for NVDA pre-earnings — cheap options window. MUST sell by May 19 open.',
+    whyWin:'Trump/Jensen China trip is a literal government-level AI catalyst that could move stock 5-10% in one day. SoftBank AI server story adds another tailwind. IV 42% is cheap for NVDA. $212.72 near $215 strike — minimal gap to overcome.',
+    whyFail:'⚠️ MUST EXIT MAY 19 OPEN — earnings May 20. If China trip cancelled/delayed, no catalyst. Stock near 52-week high ($216.83) = resistance. Any negative AI chip export news crushes it.',
+    chips:['⚠️ EXIT MAY 19 OPEN','🇨🇳 Trump China catalyst','✅ IV 42% — cheap for NVDA','🔥 SoftBank AI deal'],
     chipsStyle:['wchip-orange','wchip-green','wchip-green','wchip-green'],
-    score:88
+    score:85
   },
   {
-    rank:3, ticker:'ACHR', contract:'$7C Jun 20', type:'eVTOL Bounce — Cheap Stock', setup:'Post-dip momentum with FAA catalyst potential',
+    rank:4, ticker:'ACHR', contract:'$7C Jun 20', type:'eVTOL Bounce — Cheap Stock', setup:'Post-dip momentum with FAA catalyst potential',
     price:0.48, totalCost:48, stopPct:60, stopPrice:0.19,
     t1:0.75, t2:1.10, t3:1.65,
     t1pct:56, t2pct:129, t3pct:244,
@@ -2481,46 +2925,29 @@ const PLAYS_40 = [
     liquidity:'MEDIUM-HIGH', spread:'$0.04–$0.10',
     popEstimate:37, lossChance:63,
     breakEven:7.48,
-    catalyst:'$2B cash, $6B order backlog, White House pilot NY/FL/TX, FAA H2 2026 certification target. Stock at $6.18 (-3.59% today) on no news. Cheapest quality eVTOL setup. $7C at $0.48 = $48 total, one of the lowest cost plays on the board.',
+    catalyst:'$2B cash, $6B order backlog, White House pilot NY/FL/TX, FAA H2 2026 certification target. Stock at $6.21 (-3.20% today) on no news. Cheapest quality eVTOL setup. $7C at $0.48 = $48 total, one of the lowest cost plays on the board.',
     whyWin:'$2B cash eliminates bankruptcy risk. $6B backlog shows real demand. FAA certification news (expected H2 2026) could spike stock 30-50%. Any White House announcement = immediate catalyst. Only 13% to strike from current price.',
     whyFail:'eVTOL companies are perpetually "almost there." FAA certification could slip to 2027. IV 78% means fast theta decay if stock goes sideways. No near-term earnings catalyst.',
     chips:['💰 $48 total cost','✅ $2B cash on hand','🛫 FAA H2 2026 target','🏛️ White House program'],
     chipsStyle:['wchip-green','wchip-green','wchip-gold','wchip-gold'],
-    score:81
+    score:78
   },
   {
-    rank:4, ticker:'LUNR', contract:'$26C Jun 6', type:'Space Bounce — High Beta', setup:'Sector selloff reversal',
+    rank:5, ticker:'LUNR', contract:'$26C Jun 6', type:'Space Bounce — High Beta', setup:'Sector selloff reversal',
     price:0.65, totalCost:65, stopPct:60, stopPrice:0.26,
     t1:0.98, t2:1.40, t3:2.00,
     t1pct:51, t2pct:115, t3pct:208,
     earn:'Verify before Jun 5 — exit Jun 5 to be safe', holdMax:'Jun 5 EOD', daysHold:29,
-    expectedMove:'+10–18% bounce from $24.23', ivCurrent:82, ivCrush:'ELEVATED — IV 82%. Exit Jun 5.',
+    expectedMove:'+10–18% bounce from $23.89', ivCurrent:82, ivCrush:'ELEVATED — IV 82%. Exit Jun 5.',
     liquidity:'MEDIUM', spread:'$0.05–$0.12',
-    popEstimate:36, lossChance:64,
+    popEstimate:34, lossChance:66,
     breakEven:26.65,
-    catalyst:'LUNR dropped -7.99% today to $24.23 on no stock-specific news — pure sector rotation. Beta 2.95x market. Up 200%+ over the past year. $180M+ NASA CLPS task order active. 9+ space ETFs require LUNR shares for mechanical rebalancing. SpaceX IPO hype is a recurring catalyst.',
+    catalyst:'LUNR dropped -9.27% today to $23.89 on no stock-specific news — pure sector rotation. Beta 2.95x market. Up 200%+ over the past year. $180M+ NASA CLPS task order active. 9+ space ETFs require LUNR shares for mechanical rebalancing. SpaceX IPO hype is a recurring catalyst.',
     whyWin:'Beta 2.95 — when market bounces 2%, LUNR bounces 6%. SpaceX IPO news could drop any day and send all space names up 15-20% instantly. 9 new space ETFs = forced mechanical buying. $175M strategic investment = institutional confidence.',
-    whyFail:'⚡ IV 82% ELEVATED. Beta 2.95 cuts both ways — market selloff hits LUNR 3x harder. Must exit Jun 5 to avoid any earnings risk. No specific catalyst guaranteed.',
-    chips:['📉 -8% today on no news','⚡ IV 82% — elevated','🚀 Beta 2.95x','🛸 SpaceX IPO catalyst'],
+    whyFail:'⚡ IV 82% ELEVATED. Beta 2.95 cuts both ways — market selloff hits LUNR 3x harder. More red today (-9.27%) confirms sector weakness. Must exit Jun 5 to avoid any earnings risk.',
+    chips:['📉 -9.3% today on no news','⚡ IV 82% — elevated','🚀 Beta 2.95x','🛸 SpaceX IPO catalyst'],
     chipsStyle:['wchip-gold','wchip-orange','wchip-green','wchip-green'],
-    score:76
-  },
-  {
-    rank:5, ticker:'S', contract:'$16C Jun 20', type:'Cybersector Catch-Up — Cheapest IV', setup:'CRWD +6% lifts all cyber names',
-    price:0.55, totalCost:55, stopPct:60, stopPrice:0.22,
-    t1:0.85, t2:1.20, t3:1.75,
-    t1pct:55, t2pct:118, t3pct:218,
-    earn:'Jun 2026 — verify, max hold May 30', holdMax:'May 30', daysHold:23,
-    expectedMove:'+8–14% follow-through on cyber rally', ivCurrent:46, ivCrush:'VERY LOW — cheapest IV on the board',
-    liquidity:'MEDIUM-HIGH', spread:'$0.03–$0.07',
-    popEstimate:38, lossChance:62,
-    breakEven:16.55,
-    catalyst:'CrowdStrike +6.06% and Palo Alto +4.92% today. Cybersecurity sector is the hottest sector on May 7. SentinelOne at $15.60 is the laggard — 3.5x forward revenue vs CRWD 18x. When sector leaders rip, the value name follows within 1-3 days. IV 46% = cheapest options on the list.',
-    whyWin:'CRWD and PANW are ripping today. Sector momentum takes 1-3 days to spread to all names. S is the cheapest valuation in cyber. IV 46% means maximum option leverage per dollar. At $15.60, only $0.40 to the $16 strike.',
-    whyFail:'S is the smallest name in cyber ($5.2B vs CRWD $125B). Institutional rotation may not reach it. Needs a specific catalyst of its own to outperform sector leaders.',
-    chips:['💎 IV 46% — cheapest','🔒 CRWD +6% sector pull','📊 3.5x fwd revenue','💰 $55 total cost'],
-    chipsStyle:['wchip-green','wchip-green','wchip-green','wchip-green'],
-    score:72
+    score:71
   }
 ];
 
@@ -2534,7 +2961,7 @@ function init40Mode() {
 }
 
 function renderGoalTracker() {
-  const bal = 325.75, weeklyTarget = 0.40, openPL = 15;
+  const bal = 302.81, weeklyTarget = 0.40, openPL = 0;
   const goal = bal * weeklyTarget;
   const remaining = Math.max(0, goal - openPL);
   const pct = Math.min(100, (openPL / goal * 100)).toFixed(0);
@@ -2549,7 +2976,7 @@ function renderGoalTracker() {
 }
 
 function recalc() {
-  const bal = parseFloat(document.getElementById('calcBal').value) || 325.75;
+  const bal = parseFloat(document.getElementById('calcBal').value) || 302.81;
   const riskPct = parseInt(document.getElementById('riskSlider').value) || 40;
   document.getElementById('riskPct').textContent = riskPct + '%';
   const dollarRisk = bal * riskPct / 100;
@@ -2659,7 +3086,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initClock();
   initPicks();
   initPortCharts();
-  initPLChart();
+  renderOptPositions();
   initOptionPlays();
   initWatchlist();
   initIntel();
