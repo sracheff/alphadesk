@@ -751,29 +751,17 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   ══════════════════════════════════════════ -->
   <div class="section" id="sec-watchlist">
     <div class="sec-title">👁 Watchlists</div>
-    <div class="sec-sub">Personal watchlist + AI sector research · IV flags · Earnings dates verified</div>
+    <div class="sec-sub">Your personal picks · AI sector recommendations · IV flags · Earnings warnings</div>
 
-    <!-- WHAT TO WATCH TODAY BANNER -->
-    <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,rgba(6,182,212,0.08),rgba(139,92,246,0.08));border-color:rgba(6,182,212,0.2)" id="wl-today-card">
-      <div class="card-hdr" style="margin-bottom:10px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="font-size:18px">🧠</div>
-          <div>
-            <div style="font-size:13px;font-weight:700;color:var(--cyan)">What to Watch Today</div>
-            <div style="font-size:10px;color:var(--muted)" id="wl-today-date"></div>
-          </div>
-        </div>
-        <button class="btn btn-ghost btn-sm" onclick="refreshWatchToday()" style="font-size:10px">↻ Refresh</button>
-      </div>
-      <div id="wl-today-picks" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px"></div>
+    <!-- ── SECTION 1: MY WATCHLIST ──────────────────── -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;margin-top:4px">
+      <div style="width:3px;height:18px;background:var(--cyan);border-radius:2px"></div>
+      <div style="font-size:13px;font-weight:800;color:var(--text)">⭐ My Watchlist</div>
+      <div style="font-size:11px;color:var(--muted);margin-left:4px">— Tickers you personally track</div>
+      <button class="btn btn-primary btn-sm" onclick="showAddWatchForm()" style="margin-left:auto">＋ Add Ticker</button>
     </div>
 
-    <!-- MY WATCHLIST (personal, editable) -->
-    <div class="card" style="margin-bottom:16px" id="my-wl-card">
-      <div class="card-hdr">
-        <div class="card-title">⭐ My Watchlist</div>
-        <button class="btn btn-cyan btn-sm" onclick="showAddWatchForm()">＋ Add Ticker</button>
-      </div>
+    <div class="card" style="margin-bottom:20px" id="my-wl-card">
       <!-- Add ticker form -->
       <div class="pos-form-wrap" id="addWatchForm">
         <div class="pos-form-title" id="addWatchTitle">Add to My Watchlist</div>
@@ -815,8 +803,28 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <div id="my-wl-list"></div>
     </div>
 
-    <!-- AI SECTOR WATCHLISTS -->
-    <div class="sec-sub" style="margin-bottom:8px;margin-top:4px">🤖 AI Research — All Sectors</div>
+    <!-- ── SECTION 2: AI RECOMMENDED ──────────────── -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div style="width:3px;height:18px;background:var(--purple);border-radius:2px"></div>
+      <div style="font-size:13px;font-weight:800;color:var(--text)">🧠 AI Recommended</div>
+      <div style="font-size:11px;color:var(--muted);margin-left:4px">— What AlphaDesk says to watch right now</div>
+      <button class="btn btn-ghost btn-sm" onclick="refreshWatchToday()" style="margin-left:auto;font-size:10px">↻ Refresh</button>
+    </div>
+
+    <!-- What to Watch Today cards -->
+    <div class="card" style="margin-bottom:14px;background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(6,182,212,0.06));border-color:rgba(139,92,246,0.2)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--purple)">📍 Top Picks Right Now</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px" id="wl-today-date"></div>
+        </div>
+        <span class="badge b-purple">AI Ranked</span>
+      </div>
+      <div id="wl-today-picks" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px"></div>
+    </div>
+
+    <!-- Sector breakdown tabs -->
+    <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">All Sectors — Deep Dive</div>
     <div class="tab-row" id="wlTabs"></div>
     <div class="card" style="overflow-x:auto">
       <table class="tbl">
@@ -3515,10 +3523,10 @@ window.addEventListener('DOMContentLoaded', () => {
   initPortCharts();
   renderOptPositions();
   initOptionPlays();
-  renderJournal();
   initWatchlist();
   refreshWatchToday();
   initIntel();
+  try { renderJournal(); } catch(e) { console.warn('Journal init:', e); }
   initScenarios();
   initAlerts();
   initSettings();
