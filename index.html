@@ -3518,19 +3518,19 @@ function refreshWatchToday() {
 // INIT ALL
 // ════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
-  initClock();
-  initPicks();
-  initPortCharts();
-  renderOptPositions();
-  initOptionPlays();
-  initWatchlist();
-  refreshWatchToday();
-  initIntel();
-  try { renderJournal(); } catch(e) { console.warn('Journal init:', e); }
-  initScenarios();
-  initAlerts();
-  initSettings();
-  init40Mode();
+  try { initClock(); }         catch(e) { console.warn('clock',e); }
+  try { initPicks(); }         catch(e) { console.warn('picks',e); }
+  try { initPortCharts(); }    catch(e) { console.warn('portcharts',e); }
+  try { renderOptPositions(); }catch(e) { console.warn('optpos',e); }
+  try { initOptionPlays(); }   catch(e) { console.warn('optplays',e); }
+  try { initWatchlist(); }     catch(e) { console.warn('watchlist',e); }
+  try { refreshWatchToday(); } catch(e) { console.warn('watchtoday',e); }
+  try { initIntel(); }         catch(e) { console.warn('intel',e); }
+  try { initScenarios(); }     catch(e) { console.warn('scenarios',e); }
+  try { initAlerts(); }        catch(e) { console.warn('alerts',e); }
+  try { initSettings(); }      catch(e) { console.warn('settings',e); }
+  try { init40Mode(); }        catch(e) { console.warn('40mode',e); }
+  try { renderJournal(); }     catch(e) { console.warn('journal',e); }
   // Simulated live price flicker
   setInterval(()=>{
     const v = parseFloat('564.82') + (Math.random()-.49)*.08;
