@@ -1,0 +1,2389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AlphaDesk v2 — AI Investment Intelligence</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04040a;--panel:#0c0c14;--panel2:#10101a;--panel3:#14141e;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.04);
+  --text:#e2e8f0;--muted:#64748b;--dim:#334155;
+  --green:#10b981;--red:#ef4444;--blue:#3b82f6;
+  --cyan:#06b6d4;--purple:#8b5cf6;--gold:#f59e0b;--orange:#f97316;
+  --pink:#ec4899;--sidebar:210px;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px}
+::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+.app{display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);min-width:var(--sidebar);background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.logo{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-mark{width:30px;height:30px;background:linear-gradient(135deg,var(--cyan),var(--purple));border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#000;flex-shrink:0}
+.logo-name{font-size:14px;font-weight:800;letter-spacing:-.3px}
+.logo-ver{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.nav{flex:1;padding:8px 0;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 14px;cursor:pointer;color:var(--muted);font-size:12px;font-weight:500;border-left:2px solid transparent;transition:all .15s}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+.nav-item.active{color:var(--cyan);background:rgba(6,182,212,0.07);border-left-color:var(--cyan)}
+.nav-icon{font-size:15px;width:18px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:700}
+.nav-badge-green{margin-left:auto;background:var(--green);color:#000;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:700}
+.nav-divider{height:1px;background:var(--border);margin:6px 14px}
+.sidebar-footer{padding:10px 14px;border-top:1px solid var(--border)}
+.acct-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px}
+.acct-avatar{width:26px;height:26px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}
+.acct-name{font-size:12px;font-weight:600}
+.acct-bal{font-size:11px;color:var(--cyan);font-weight:700;font-family:monospace}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:48px;min-height:48px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px}
+.searchbox{flex:1;max-width:280px;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:7px;padding:5px 10px}
+.searchbox input{background:transparent;border:none;outline:none;color:var(--text);font-size:12px;width:100%}
+.searchbox input::placeholder{color:var(--muted)}
+.mktchips{display:flex;gap:7px;margin-left:auto}
+.mkt{display:flex;align-items:center;gap:5px;padding:3px 9px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:5px;font-size:11px;font-weight:600}
+.mkt .lb{color:var(--muted);font-weight:400;font-size:10px}
+.up{color:var(--green)}.dn{color:var(--red)}
+.dot-live{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite;margin-left:8px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.content{flex:1;overflow-y:auto;padding:18px}
+.section{display:none}.section.active{display:block}
+
+/* UNIVERSAL COMPONENTS */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:15px}
+.card-sm{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:11px}
+.card-dark{background:var(--panel2);border:1px solid var(--border2);border-radius:9px;padding:11px}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700;gap:3px}
+.b-green{background:rgba(16,185,129,.13);color:var(--green)}
+.b-red{background:rgba(239,68,68,.13);color:var(--red)}
+.b-cyan{background:rgba(6,182,212,.13);color:var(--cyan)}
+.b-purple{background:rgba(139,92,246,.13);color:var(--purple)}
+.b-gold{background:rgba(245,158,11,.13);color:var(--gold)}
+.b-orange{background:rgba(249,115,22,.13);color:var(--orange)}
+.b-gray{background:rgba(100,116,139,.15);color:var(--muted)}
+.b-pink{background:rgba(236,72,153,.13);color:var(--pink)}
+.delta{display:inline-flex;align-items:center;gap:2px;font-size:11px;font-weight:700;padding:2px 6px;border-radius:5px}
+.delta.up{background:rgba(16,185,129,.12);color:var(--green)}
+.delta.dn{background:rgba(239,68,68,.12);color:var(--red)}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all .15s}
+.btn-primary{background:var(--cyan);color:#000}.btn-primary:hover{opacity:.85}
+.btn-ghost{background:rgba(255,255,255,0.05);color:var(--text);border:1px solid var(--border)}.btn-ghost:hover{background:rgba(255,255,255,0.08)}
+.btn-sm{padding:4px 8px;font-size:11px;border-radius:5px}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.divider{height:1px;background:var(--border);margin:13px 0}
+.sec-title{font-size:17px;font-weight:800;letter-spacing:-.4px;margin-bottom:3px}
+.sec-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.warn-bar{display:flex;align-items:center;gap:8px;padding:9px 13px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.2);border-radius:8px;margin-bottom:13px;font-size:12px}
+.info-bar{display:flex;align-items:center;gap:8px;padding:9px 13px;background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.18);border-radius:8px;margin-bottom:13px;font-size:12px}
+.tab-row{display:flex;gap:4px;padding:3px;background:rgba(255,255,255,0.03);border-radius:9px;border:1px solid var(--border);margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:5px 11px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);transition:all .15s;white-space:nowrap}
+.tab:hover{color:var(--text)}.tab.active{background:rgba(6,182,212,.15);color:var(--cyan)}
+.progress{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-top:7px}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--cyan),var(--purple))}
+
+/* GRADE BADGES */
+.grade{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0}
+.grade-a{background:rgba(16,185,129,.18);color:var(--green)}
+.grade-b{background:rgba(6,182,212,.18);color:var(--cyan)}
+.grade-c{background:rgba(245,158,11,.18);color:var(--gold)}
+.grade-d{background:rgba(249,115,22,.18);color:var(--orange)}
+
+/* AI PICK CARD */
+.pick-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:11px;position:relative;overflow:hidden}
+.pick-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.pick-card.grade-a-card::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.pick-card.grade-b-card::before{background:linear-gradient(90deg,var(--cyan),var(--blue))}
+.pick-card.grade-c-card::before{background:linear-gradient(90deg,var(--gold),var(--orange))}
+.pick-card.grade-d-card::before{background:linear-gradient(90deg,var(--orange),var(--red))}
+.pick-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.pick-ticker{font-size:20px;font-weight:900;font-family:monospace;letter-spacing:-.5px}
+.pick-contract{font-size:11px;color:var(--muted);margin-top:2px}
+.pick-cost{text-align:right}
+.pick-price{font-size:19px;font-weight:800;color:var(--gold);font-family:monospace}
+.pick-total{font-size:11px;color:var(--muted);margin-top:2px}
+.pick-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
+.pstat{background:rgba(255,255,255,0.03);border:1px solid var(--border2);border-radius:7px;padding:8px;text-align:center}
+.pstat-val{font-size:13px;font-weight:800;font-family:monospace}
+.pstat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.pick-thesis{font-size:12px;color:var(--muted);line-height:1.6;padding:9px 11px;background:rgba(255,255,255,0.02);border-left:2px solid var(--cyan);border-radius:0 6px 6px 0;margin-bottom:10px}
+.pick-thesis strong{color:var(--text)}
+.targets-row{display:flex;gap:6px;margin-bottom:10px}
+.tgt{flex:1;text-align:center;padding:6px 4px;border-radius:6px;font-size:11px;font-weight:700}
+.tgt-1{background:rgba(16,185,129,.1);color:var(--green)}
+.tgt-2{background:rgba(6,182,212,.1);color:var(--cyan)}
+.tgt-3{background:rgba(139,92,246,.1);color:var(--purple)}
+.tgt-lbl{font-size:9px;color:var(--muted);margin-top:2px;font-weight:400}
+.pick-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.entry-signal{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:6px;font-size:11px;font-weight:700}
+.es-buy{background:rgba(16,185,129,.13);color:var(--green)}
+.es-wait{background:rgba(245,158,11,.13);color:var(--gold)}
+.es-avoid{background:rgba(239,68,68,.13);color:var(--red)}
+
+/* INTEL CARD */
+.intel-card{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:10px}
+.intel-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.intel-ticker{width:44px;height:44px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0}
+.intel-name{font-size:13px;font-weight:700}
+.intel-price{font-size:13px;font-family:monospace;font-weight:700;margin-top:2px}
+.intel-body{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.intel-section{background:rgba(255,255,255,0.025);border-radius:7px;padding:9px}
+.intel-section-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px}
+.intel-section p{font-size:11px;line-height:1.6;color:var(--muted)}
+.intel-section p strong{color:var(--text)}
+.watch-list{list-style:none}
+.watch-list li{font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border2);display:flex;gap:6px;align-items:flex-start}
+.watch-list li:last-child{border-bottom:none}
+.watch-list li::before{content:'→';color:var(--cyan);flex-shrink:0}
+
+/* PORTFOLIO */
+.pos-card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:9px;display:flex;align-items:center;gap:12px}
+.pos-ticker-pill{padding:6px 10px;border-radius:7px;font-size:13px;font-weight:800;font-family:monospace;min-width:58px;text-align:center}
+.pos-info{flex:1}
+.pos-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.pos-meta{font-size:11px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.pos-pl{text-align:right;min-width:70px}
+.pos-pl-val{font-size:15px;font-weight:800;font-family:monospace}
+.pos-pl-pct{font-size:11px;font-weight:700;margin-top:1px}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:7px 9px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border)}
+.tbl td{padding:8px 9px;border-bottom:1px solid var(--border2);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,0.015)}
+.tick-cell{display:flex;align-items:center;gap:7px}
+.tick-dot{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;flex-shrink:0}
+
+/* SCENARIO */
+.sc-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:13px;cursor:pointer;transition:all .2s}
+.sc-card:hover{border-color:rgba(255,255,255,0.14);transform:translateY(-1px)}
+.sc-card.active{border-color:var(--cyan);background:rgba(6,182,212,.06)}
+.sc-icon{font-size:22px;margin-bottom:7px}
+.sc-title{font-size:12px;font-weight:700;margin-bottom:3px}
+.sc-desc{font-size:10px;color:var(--muted);line-height:1.4}
+
+/* CHAT */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 200px);max-height:700px}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg-user{align-self:flex-end;max-width:72%;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.2);border-radius:10px 10px 2px 10px;padding:10px 13px;font-size:12px;line-height:1.5}
+.msg-ai{align-self:flex-start;max-width:82%;background:var(--panel2);border:1px solid var(--border);border-radius:2px 10px 10px 10px;padding:10px 13px;font-size:12px;line-height:1.6}
+.msg-ai .ai-tag{font-size:9px;font-weight:700;color:var(--cyan);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px}
+.chat-qp{display:flex;flex-wrap:wrap;gap:5px;padding:9px 14px;border-top:1px solid var(--border)}
+.qp{padding:4px 9px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:14px;font-size:11px;cursor:pointer;color:var(--muted);transition:all .15s}
+.qp:hover{border-color:var(--cyan);color:var(--cyan)}
+.chat-input-row{display:flex;gap:7px;padding:11px 14px;border-top:1px solid var(--border);background:var(--panel)}
+.chat-input-row input{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:7px;padding:8px 12px;color:var(--text);font-size:12px;outline:none}
+.chat-input-row input:focus{border-color:var(--cyan)}
+.chat-input-row button{background:var(--cyan);color:#000;border:none;border-radius:7px;padding:8px 14px;cursor:pointer;font-weight:700;font-size:12px}
+
+/* SETTINGS */
+.phil-card{padding:13px;background:var(--panel2);border:1px solid var(--border);border-radius:9px;cursor:pointer;transition:all .15s;text-align:center}
+.phil-card:hover{border-color:rgba(255,255,255,0.14)}
+.phil-card.active{border-color:var(--cyan);background:rgba(6,182,212,.07)}
+.phil-icon{font-size:20px;margin-bottom:5px}
+.phil-name{font-size:12px;font-weight:700;margin-bottom:3px}
+.phil-desc{font-size:10px;color:var(--muted);line-height:1.4}
+.rule-row{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 10px;background:rgba(255,255,255,0.02);border-radius:7px;margin-bottom:5px;gap:10px}
+.rule-lbl{font-size:11px;font-weight:600;color:var(--muted)}
+.rule-val{font-size:11px;color:var(--text);text-align:right}
+.score-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.score-lbl{font-size:11px;color:var(--muted);width:120px;flex-shrink:0}
+.score-bar{flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:3px}
+.score-num{font-size:11px;font-weight:700;font-family:monospace;width:24px;text-align:right}
+
+/* ALERTS */
+.alert-rule{display:flex;align-items:center;gap:10px;padding:11px 12px;background:var(--panel2);border:1px solid var(--border);border-radius:9px;margin-bottom:7px}
+.alert-icon-box{font-size:18px;width:32px;text-align:center}
+.alert-info{flex:1}
+.alert-title{font-size:12px;font-weight:600;margin-bottom:2px}
+.alert-sub{font-size:10px;color:var(--muted)}
+.toggle{width:34px;height:18px;background:rgba(255,255,255,0.1);border-radius:9px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--green)}
+.toggle::after{content:'';width:13px;height:13px;background:white;border-radius:50%;position:absolute;top:2.5px;left:2.5px;transition:left .2s}
+.toggle.on::after{left:18.5px}
+
+/* COUNTDOWN */
+.cdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.cdown-cell{text-align:center;background:rgba(255,255,255,0.04);border-radius:7px;padding:8px 4px}
+.cdown-num{font-size:18px;font-weight:800;font-family:monospace;color:var(--cyan)}
+.cdown-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+/* ── 40% MODE — amber/indigo palette, easy on eyes ── */
+:root{--amber:#f59e0b;--amber2:#fbbf24;--indigo:#6366f1;--indigo2:#818cf8}
+.mode-banner{background:linear-gradient(135deg,rgba(99,102,241,.10),rgba(245,158,11,.07));border:1px solid rgba(99,102,241,.28);border-radius:12px;padding:16px 18px;margin-bottom:16px;position:relative;overflow:hidden}
+.mode-banner::before{content:'⚡ GROWTH MODE';position:absolute;top:10px;right:14px;font-size:9px;font-weight:800;color:var(--amber);letter-spacing:.8px;opacity:.55}
+.mode-title{font-size:18px;font-weight:900;letter-spacing:-.4px;color:var(--amber2);margin-bottom:4px}
+.mode-sub{font-size:12px;color:rgba(245,158,11,.65);line-height:1.5}
+.goal-tracker{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.gt-cell{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.gt-val{font-size:20px;font-weight:800;font-family:monospace;letter-spacing:-.5px}
+.gt-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.calc-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;align-items:end}
+.calc-input-wrap{display:flex;flex-direction:column;gap:4px}
+.calc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.calc-input{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:7px;padding:8px 11px;color:var(--text);font-size:13px;font-weight:700;font-family:monospace;outline:none;width:100%}
+.calc-input:focus{border-color:var(--amber)}
+.calc-result{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.22);border-radius:10px;padding:13px;text-align:center}
+.calc-result-val{font-size:22px;font-weight:900;font-family:monospace;color:var(--indigo2)}
+.calc-result-lbl{font-size:10px;color:var(--muted);margin-top:3px}
+.play40-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:11px;position:relative;overflow:hidden}
+.play40-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.play40-card.rank-1::before{background:linear-gradient(90deg,#6366f1,#f59e0b)}
+.play40-card.rank-2::before{background:linear-gradient(90deg,#f59e0b,#06b6d4)}
+.play40-card.rank-3::before{background:linear-gradient(90deg,#06b6d4,#10b981)}
+.play40-card.rank-4::before{background:linear-gradient(90deg,#10b981,#8b5cf6)}
+.play40-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:11px}
+.p40-rank{width:30px;height:30px;border-radius:8px;background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.25);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--indigo2);flex-shrink:0}
+.p40-ticker{font-size:19px;font-weight:900;font-family:monospace}
+.p40-contract{font-size:11px;color:var(--muted);margin-top:2px}
+.p40-cost{text-align:right}
+.p40-price{font-size:18px;font-weight:800;color:var(--amber);font-family:monospace}
+.p40-label{font-size:10px;color:var(--muted);margin-top:2px}
+.math-box{background:rgba(99,102,241,.05);border:1px solid rgba(99,102,241,.14);border-radius:8px;padding:11px;margin-bottom:11px}
+.math-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--indigo2);margin-bottom:8px}
+.math-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.math-item{text-align:center;padding:6px 4px;background:rgba(255,255,255,.03);border-radius:6px}
+.math-val{font-size:13px;font-weight:800;font-family:monospace}
+.math-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.why-box{border-radius:7px;padding:9px 11px}
+.why-yes{background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.14)}
+.why-no{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.14)}
+.why-title{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.why-yes .why-title{color:var(--green)}
+.why-no .why-title{color:var(--amber)}
+.why-text{font-size:11px;color:var(--muted);line-height:1.55}
+.warn-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.wchip{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:5px;font-size:10px;font-weight:700}
+.wchip-red{background:rgba(245,158,11,.13);color:var(--amber)}
+.wchip-orange{background:rgba(249,115,22,.11);color:var(--orange)}
+.wchip-gold{background:rgba(245,158,11,.11);color:var(--gold)}
+.wchip-green{background:rgba(16,185,129,.11);color:var(--green)}
+.wchip-gray{background:rgba(100,116,139,.14);color:var(--muted)}
+.rank-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:10px;font-weight:700}
+.progress-red{height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;margin-top:8px}
+.progress-red-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--indigo),var(--amber))}
+.disc-box{background:rgba(99,102,241,.05);border:1px solid rgba(99,102,241,.18);border-radius:10px;padding:14px;margin-bottom:16px;font-size:12px;line-height:1.6;color:rgba(129,140,248,.8)}
+.weekly-log{background:var(--panel2);border:1px solid var(--border);border-radius:9px;overflow:hidden;margin-top:12px}
+.wlog-row{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;border-bottom:1px solid var(--border2);font-size:12px}
+.wlog-row:last-child{border-bottom:none}
+.range-wrap{display:flex;align-items:center;gap:10px}
+.range-wrap input[type=range]{-webkit-appearance:none;flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.1);outline:none}
+.range-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--amber);cursor:pointer}
+.range-val{font-size:12px;font-weight:700;font-family:monospace;color:var(--amber);min-width:40px;text-align:right}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{display:none}
+  .grid5{grid-template-columns:repeat(2,1fr)}.grid4{grid-template-columns:repeat(2,1fr)}
+  .grid3{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.mktchips{display:none}
+  .pick-stats{grid-template-columns:repeat(2,1fr)}.intel-body{grid-template-columns:1fr}
+  .main{padding-bottom:72px}
+}
+@media(min-width:769px){.mob-nav{display:none!important}}
+
+/* BOTTOM NAV BAR */
+.mob-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:999;
+  background:rgba(13,17,23,0.97);border-top:1px solid var(--border);
+  display:flex;align-items:stretch;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  height:62px;
+}
+.mob-nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;color:var(--muted);font-size:9px;font-weight:600;
+  letter-spacing:.3px;text-transform:uppercase;padding:4px 2px;
+  border:none;background:none;transition:color .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.mob-nav-item .mni{font-size:20px;line-height:1}
+.mob-nav-item.active{color:var(--cyan)}
+.mob-nav-item.hot-tab{color:var(--amber)}
+.mob-nav-item.hot-tab.active{color:var(--amber2)}
+
+/* MORE DRAWER */
+.mob-drawer{
+  position:fixed;bottom:62px;left:0;right:0;z-index:998;
+  background:rgba(13,17,23,0.98);border-top:1px solid var(--border);
+  padding:8px 0 4px;
+  transform:translateY(100%);transition:transform .22s ease;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.mob-drawer.open{transform:translateY(0)}
+.mob-drawer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:0 8px 8px}
+.mob-drawer-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;padding:10px 4px;cursor:pointer;color:var(--muted);font-size:9px;
+  font-weight:600;letter-spacing:.3px;text-transform:uppercase;
+  background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border);
+  -webkit-tap-highlight-color:transparent;
+}
+.mob-drawer-item .mni{font-size:22px}
+.mob-drawer-item.active{color:var(--cyan);border-color:rgba(6,182,212,.3);background:rgba(6,182,212,.06)}
+.mob-drawer-title{font-size:10px;color:var(--muted);text-align:center;padding:0 12px 6px;letter-spacing:.5px;text-transform:uppercase}
+.mob-overlay{position:fixed;inset:0;z-index:997;background:rgba(0,0,0,.4);display:none}
+.mob-overlay.open{display:block}
+
+/* PORTFOLIO EDIT MODAL */
+.pedit-overlay{position:fixed;inset:0;z-index:1100;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;padding:0}
+@media(min-width:600px){.pedit-overlay{align-items:center;padding:20px}}
+.pedit-overlay.hidden{display:none}
+.pedit-modal{background:#0d1117;border:1px solid var(--border);border-radius:16px 16px 0 0;width:100%;max-width:620px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+@media(min-width:600px){.pedit-modal{border-radius:16px;max-height:88vh}}
+.pedit-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.pedit-hdr-title{font-size:15px;font-weight:800;letter-spacing:-.3px}
+.pedit-close{background:rgba(255,255,255,.07);border:none;color:var(--text);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.pedit-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+.pedit-tab{padding:9px 16px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
+.pedit-tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.pedit-body{flex:1;overflow-y:auto;padding:16px 18px}
+.pedit-panel{display:none}.pedit-panel.active{display:block}
+.pf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.pf-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.pf-full{margin-bottom:10px}
+.pf-label{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.pf-input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:8px 10px;font-size:13px;font-family:monospace;box-sizing:border-box;outline:none;transition:border-color .15s}
+.pf-input:focus{border-color:var(--cyan)}
+.pf-select{width:100%;background:#0d1117;border:1px solid var(--border);border-radius:7px;color:var(--text);padding:8px 10px;font-size:13px;box-sizing:border-box;outline:none;cursor:pointer}
+.pf-select:focus{border-color:var(--cyan)}
+.pf-section-title{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px;border-bottom:1px solid var(--border2);padding-bottom:5px}
+.pos-edit-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:9px;padding:11px;margin-bottom:8px;position:relative}
+.pos-edit-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.pos-edit-ticker{font-size:14px;font-weight:900;font-family:monospace;color:var(--cyan)}
+.pos-edit-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.pos-edit-actions{display:flex;gap:6px}
+.btn-edit-sm{background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:4px 9px;font-size:10px;font-weight:700;cursor:pointer}
+.btn-del{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.25);color:var(--red)}
+.btn-add-pos{width:100%;background:rgba(6,182,212,.08);border:1px dashed rgba(6,182,212,.3);border-radius:9px;color:var(--cyan);padding:12px;font-size:12px;font-weight:700;cursor:pointer;margin-top:4px;transition:background .15s}
+.btn-add-pos:hover{background:rgba(6,182,212,.14)}
+.pedit-footer{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:10px;flex-shrink:0}
+.btn-save-port{flex:1;background:var(--cyan);color:#000;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:800;cursor:pointer;letter-spacing:.3px}
+.btn-cancel-port{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 18px;font-size:13px;font-weight:700;cursor:pointer}
+.pos-form-wrap{background:rgba(6,182,212,.04);border:1px solid rgba(6,182,212,.18);border-radius:9px;padding:13px;margin-top:8px;display:none}
+.pos-form-wrap.open{display:block}
+.pos-form-title{font-size:11px;font-weight:800;color:var(--cyan);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+.warn-toggle{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.warn-toggle input{cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">A</div>
+    <div><div class="logo-name">AlphaDesk</div><div class="logo-ver">v2 · AI-First</div></div>
+  </div>
+  <nav class="nav">
+    <div class="nav-item active" onclick="showSec('picks')"><span class="nav-icon">🤖</span>AI Picks <span class="nav-badge-green">8</span></div>
+    <div class="nav-item" onclick="showSec('portfolio')"><span class="nav-icon">💼</span>My Portfolio</div>
+    <div class="nav-item" onclick="showSec('options')"><span class="nav-icon">⚡</span>Options Center</div>
+    <div class="nav-divider"></div>
+    <div class="nav-item" onclick="showSec('watchlist')"><span class="nav-icon">👁</span>Watchlists</div>
+    <div class="nav-item" onclick="showSec('intel')"><span class="nav-icon">🔬</span>AI Intel Hub</div>
+    <div class="nav-item" onclick="showSec('scenarios')"><span class="nav-icon">🔮</span>Scenario Engine</div>
+    <div class="nav-divider"></div>
+    <div class="nav-item" onclick="showSec('mode40')" style="border-left-color:transparent;position:relative"><span class="nav-icon">🎯</span>40% Mode <span class="nav-badge" style="background:var(--red)">HOT</span></div>
+    <div class="nav-item" onclick="showSec('alerts')"><span class="nav-icon">🔔</span>Alerts <span class="nav-badge">3</span></div>
+    <div class="nav-item" onclick="showSec('settings')"><span class="nav-icon">⚙️</span>Strategy Settings</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="acct-chip">
+      <div class="acct-avatar">S</div>
+      <div>
+        <div class="acct-name">Stephen R.</div>
+        <div class="acct-bal">$295.75 available</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="searchbox"><span>🔍</span><input id="srch" type="text" placeholder="Search ticker, strategy…"></div>
+    <div class="mktchips">
+      <div class="mkt"><span class="lb">SPY</span><span class="up">564.82</span><span class="up">+0.8%</span></div>
+      <div class="mkt"><span class="lb">QQQ</span><span class="up">481.40</span><span class="up">+1.1%</span></div>
+      <div class="mkt"><span class="lb">VIX</span><span class="dn">18.4</span></div>
+      <div class="mkt"><span class="lb">BTC</span><span class="up">96,420</span></div>
+    </div>
+    <div class="dot-live"></div>
+    <span style="font-size:10px;color:var(--muted)" id="clk"></span>
+  </div>
+
+  <div class="content">
+
+  <!-- ══════════════════════════════════════════
+       AI PICKS (homepage)
+  ══════════════════════════════════════════ -->
+  <div class="section active" id="sec-picks">
+    <div class="sec-title">🤖 AI Picks — May 7, 2026</div>
+    <div class="sec-sub">Research-backed options plays · Graded A–D · All under $100/contract · Built for your $295.75 buying power</div>
+
+    <div class="info-bar">
+      <span>📡</span>
+      <span>Live research scan complete across 8 sectors · <strong>8 plays identified</strong> · Sorted by AI confidence score · Earnings flags verified from multiple sources</span>
+    </div>
+
+    <!-- STRATEGY PROFILE STRIP -->
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.18);border-radius:9px;margin-bottom:16px;flex-wrap:wrap">
+      <span style="font-size:11px;color:var(--purple);font-weight:700">⚡ ACTIVE STRATEGY:</span>
+      <span class="badge b-purple">Aggressive Growth</span>
+      <span class="badge b-cyan">Options Focus</span>
+      <span class="badge b-gold">Semi-Risky</span>
+      <span style="font-size:11px;color:var(--muted);margin-left:4px">Account: $325.75 · Buying Power: $295.75 · Max per trade: $147</span>
+      <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="showSec('settings')">Change Strategy</button>
+    </div>
+
+    <div id="picksContainer"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PORTFOLIO
+  ══════════════════════════════════════════ -->
+  <div class="section" id="sec-portfolio">
+    <div id="port-content"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       OPTIONS CENTER
+  ══════════════════════════════════════════ -->
+  <div class="section" id="sec-options">
+    <div class="sec-title">⚡ Options Center</div>
+    <div class="sec-sub">Active position analysis · Greeks · P&L diagram · New play scanner</div>
+
+    <div class="grid2" style="margin-bottom:16px">
+      <!-- SAIL position -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">Active: SAIL $15C Jun 18</div><span class="badge b-cyan">Long Call</span></div>
+        <div class="warn-bar">⚠️ <strong>CRITICAL:</strong> SAIL earnings Jun 10 pre-market. Sell by 9:45 AM Jun 10.</div>
+        <div class="grid4" style="margin-bottom:12px">
+          <div style="text-align:center"><div style="font-size:19px;font-weight:800;color:var(--cyan)">$0.60</div><div style="font-size:9px;color:var(--muted);margin-top:2px">ENTRY</div></div>
+          <div style="text-align:center"><div style="font-size:19px;font-weight:800">$0.75</div><div style="font-size:9px;color:var(--muted);margin-top:2px">CURRENT</div></div>
+          <div style="text-align:center"><div style="font-size:19px;font-weight:800;color:var(--green)">+25%</div><div style="font-size:9px;color:var(--muted);margin-top:2px">UNREALIZED</div></div>
+          <div style="text-align:center"><div style="font-size:19px;font-weight:800;color:var(--red)">$0.25</div><div style="font-size:9px;color:var(--muted);margin-top:2px">STOP</div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="card-title" style="margin-bottom:10px">Greeks (Estimated)</div>
+        <div class="grid3">
+          <div class="pstat"><div class="pstat-val" style="color:var(--cyan)">0.42</div><div class="pstat-lbl">Delta Δ</div></div>
+          <div class="pstat"><div class="pstat-val" style="color:var(--purple)">0.08</div><div class="pstat-lbl">Gamma Γ</div></div>
+          <div class="pstat"><div class="pstat-val" style="color:var(--red)">-0.018</div><div class="pstat-lbl">Theta/day</div></div>
+          <div class="pstat"><div class="pstat-val" style="color:var(--green)">0.052</div><div class="pstat-lbl">Vega</div></div>
+          <div class="pstat"><div class="pstat-val">72%</div><div class="pstat-lbl">IV</div></div>
+          <div class="pstat"><div class="pstat-val" style="color:var(--gold)">42%</div><div class="pstat-lbl">P(Profit)</div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="card-title" style="margin-bottom:8px">Profit Targets</div>
+        <div class="targets-row">
+          <div class="tgt tgt-1">$0.90<div class="tgt-lbl">+50% — sell ⅓</div></div>
+          <div class="tgt tgt-2">$1.20<div class="tgt-lbl">+100% — sell ⅓</div></div>
+          <div class="tgt tgt-3">$1.80<div class="tgt-lbl">+200% — sell ⅓</div></div>
+        </div>
+      </div>
+      <!-- P&L diagram -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title">SAIL $15C — P&L at Expiry</div><span class="badge b-gray">Jun 18</span></div>
+        <canvas id="plChart" height="220"></canvas>
+        <div class="grid2" style="margin-top:10px;gap:8px">
+          <div class="pstat"><div class="pstat-val" style="color:var(--red)">$15.60</div><div class="pstat-lbl">Break-Even</div></div>
+          <div class="pstat"><div class="pstat-val" style="color:var(--green)">Unlimited</div><div class="pstat-lbl">Max Gain</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW PLAYS SCANNER -->
+    <div class="card-hdr"><div class="sec-title" style="font-size:15px;margin-bottom:0">New Play Scanner</div><span class="badge b-gold">≤ $100/contract</span></div>
+    <div style="margin-bottom:10px"></div>
+    <div id="optionPlays"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       WATCHLIST
+  ══════════════════════════════════════════ -->
+  <div class="section" id="sec-watchlist">
+    <div class="sec-title">👁 Watchlists</div>
+    <div class="sec-sub">Personal watchlist + AI sector research · IV flags · Earnings dates verified</div>
+
+    <!-- MY WATCHLIST (personal, editable) -->
+    <div class="card" style="margin-bottom:16px" id="my-wl-card">
+      <div class="card-hdr">
+        <div class="card-title">⭐ My Watchlist</div>
+        <button class="btn btn-cyan btn-sm" onclick="showAddWatchForm()">＋ Add Ticker</button>
+      </div>
+      <!-- Add ticker form -->
+      <div class="pos-form-wrap" id="addWatchForm">
+        <div class="pos-form-title" id="addWatchTitle">Add to My Watchlist</div>
+        <input type="hidden" id="editWatchId" value="">
+        <div class="pf-row">
+          <div>
+            <div class="pf-label">Ticker</div>
+            <input class="pf-input" id="wt-ticker" type="text" placeholder="NVDA" style="text-transform:uppercase">
+          </div>
+          <div>
+            <div class="pf-label">Entry Target ($)</div>
+            <input class="pf-input" id="wt-entry" type="number" step="0.01" placeholder="90.00">
+          </div>
+        </div>
+        <div class="pf-row">
+          <div>
+            <div class="pf-label">Stop Loss ($)</div>
+            <input class="pf-input" id="wt-stop" type="number" step="0.01" placeholder="80.00">
+          </div>
+          <div>
+            <div class="pf-label">Price Target ($)</div>
+            <input class="pf-input" id="wt-target" type="number" step="0.01" placeholder="120.00">
+          </div>
+        </div>
+        <div class="pf-full">
+          <div class="pf-label">Why I'm Watching (catalyst / setup)</div>
+          <input class="pf-input" id="wt-reason" type="text" placeholder="e.g. Breakout above $90 on high volume, earnings play, AI catalyst...">
+        </div>
+        <div class="pf-full">
+          <div class="pf-label">Notes</div>
+          <input class="pf-input" id="wt-notes" type="text" placeholder="Any additional notes...">
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn-save-port" style="font-size:12px;padding:9px" onclick="saveWatchEntry()">Save to Watchlist</button>
+          <button class="btn-cancel-port" style="font-size:12px;padding:9px" onclick="cancelAddWatch()">Cancel</button>
+        </div>
+      </div>
+      <!-- List -->
+      <div id="my-wl-list"></div>
+    </div>
+
+    <!-- AI SECTOR WATCHLISTS -->
+    <div class="sec-sub" style="margin-bottom:8px;margin-top:4px">🤖 AI Research — All Sectors</div>
+    <div class="tab-row" id="wlTabs"></div>
+    <div class="card" style="overflow-x:auto">
+      <table class="tbl">
+        <thead><tr>
+          <th>Ticker</th><th>Price</th><th>Change</th><th>Target</th><th>Upside</th>
+          <th>IV%</th><th>Conviction</th><th>Risk</th><th>Earnings</th><th>Signal</th>
+        </tr></thead>
+        <tbody id="wlBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       AI INTEL HUB
+  ══════════════════════════════════════════ -->
+  <div class="section" id="sec-intel">
+    <div class="sec-title">🔬 AI Intel Hub</div>
+    <div class="sec-sub">Deep research per ticker · What to watch · Entry signals · Risk flags · All from live research May 7, 2026</div>
+    <div class="tab-row" id="intelTabs"></div>
+    <div id="intelBody"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCENARIO ENGINE
+  ══════════════════════════════════════════ -->
+  <div class="section" id="sec-scenarios">
+    <div class="sec-title">🔮 Scenario Engine</div>
+    <div class="sec-sub">What-if macro simulator · Portfolio impact · Hedge recommendations</div>
+    <div class="grid4" style="margin-bottom:16px" id="scGrid"></div>
+    <div id="scResult"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ALERTS
+  ══════════════════════════════════════════ -->
+  <div class="section" id="sec-alerts">
+    <div class="sec-title">🔔 Alerts</div>
+    <div class="sec-sub">Smart triggers · Earnings warnings · Price levels · Macro events</div>
+    <div class="warn-bar">⚠️ <strong>3 active alerts</strong> · SAIL earnings 34 days · RGTI IV elevated · MARA unusual volume</div>
+    <div class="grid2">
+      <div>
+        <div class="card-title" style="margin-bottom:9px">Alert Rules</div>
+        <div id="alertRules"></div>
+      </div>
+      <div>
+        <div class="card-title" style="margin-bottom:9px">Recent Triggers</div>
+        <div id="recentAlerts"></div>
+        <div class="divider"></div>
+        <div class="card-title" style="margin-bottom:9px">Macro Calendar</div>
+        <div class="grid3">
+          <div class="card-sm"><div style="font-size:10px;color:var(--muted)">CPI Report</div><div style="font-weight:700;margin-top:3px">May 13</div><span class="badge b-orange" style="margin-top:5px;display:inline-flex">High Impact</span></div>
+          <div class="card-sm"><div style="font-size:10px;color:var(--muted)">FOMC Meeting</div><div style="font-weight:700;margin-top:3px">Jun 11</div><span class="badge b-red" style="margin-top:5px;display:inline-flex">Rate Decision</span></div>
+          <div class="card-sm"><div style="font-size:10px;color:var(--muted)">SAIL Earnings</div><div style="font-weight:700;margin-top:3px">Jun 10</div><span class="badge b-red" style="margin-top:5px;display:inline-flex">⚠ SELL FIRST</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       STRATEGY SETTINGS
+  ══════════════════════════════════════════ -->
+  <div class="section" id="sec-settings">
+    <div class="sec-title">⚙️ Strategy Settings</div>
+    <div class="sec-sub">Define your style · AI adapts all recommendations to match</div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title" style="margin-bottom:12px">Investing Philosophy</div>
+      <div class="grid3" id="philGrid"></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">Exit Strategy Rules</div>
+        <div id="exitRules"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">Scoring System</div>
+        <div id="scoreDisplay"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       40% WEEKLY GROWTH MODE
+  ══════════════════════════════════════════ -->
+  <div class="section" id="sec-mode40">
+
+    <!-- DISCLAIMER -->
+    <div class="disc-box">
+      ⚠️ <strong>DISCLAIMER:</strong> Small Account 40% Weekly Growth Mode is <strong>SPECULATIVE and HIGH RISK</strong>. It is designed for opportunity tracking only — not guaranteed investment returns. Every trade shown carries the possibility of <strong>total loss of the amount risked</strong>. Options expire worthless. This is not financial advice. Only risk capital you can afford to lose entirely.
+    </div>
+
+    <!-- HEADER -->
+    <div class="mode-banner">
+      <div class="mode-title">🎯 Small Account 40% Weekly Growth Mode</div>
+      <div class="mode-sub">Math-first approach to turning $100–$500 into +40% per week · Each play is ranked by: realistic upside × catalyst strength × liquidity × probability</div>
+    </div>
+
+    <!-- WEEKLY GOAL TRACKER -->
+    <div style="margin-bottom:8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)">📊 Weekly Goal Tracker</div>
+    <div class="goal-tracker" id="goalTracker"></div>
+
+    <!-- PROGRESS BAR -->
+    <div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px">
+        <span>Weekly Progress</span>
+        <span id="progressLabel">$15.00 / $130.30 needed</span>
+      </div>
+      <div class="progress-red"><div class="progress-red-fill" id="weeklyProgressBar" style="width:11.5%"></div></div>
+    </div>
+
+    <!-- MATH CALCULATOR -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-hdr">
+        <div class="card-title">🧮 Required Return Calculator</div>
+        <span class="badge b-red">Required Return = Target Gain ÷ Amount Risked</span>
+      </div>
+      <div class="calc-row">
+        <div class="calc-input-wrap">
+          <label class="calc-label">Account Balance ($)</label>
+          <input class="calc-input" id="calcBal" type="number" value="325.75" oninput="recalc()">
+        </div>
+        <div class="calc-input-wrap">
+          <label class="calc-label">Risk Per Trade (%)</label>
+          <div class="range-wrap">
+            <input type="range" id="riskSlider" min="10" max="75" value="40" oninput="recalc()">
+            <span class="range-val" id="riskPct">40%</span>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Amount risked: <strong id="dollarRisk" style="color:var(--red)">$130.30</strong></div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-val" id="reqReturn">120%</div>
+          <div class="calc-result-lbl">Return needed per trade</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">to hit weekly +40% target</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px" id="mathBreakdown"></div>
+    </div>
+
+    <!-- RANKED PLAYS -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div>
+        <div style="font-size:15px;font-weight:800">Ranked Plays — Week of May 7</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Sorted by: realistic upside × catalyst strength × liquidity × probability of +40% move</div>
+      </div>
+      <span class="badge b-red">8 plays scanned</span>
+    </div>
+    <div id="plays40Container"></div>
+
+    <!-- TRADE LOG -->
+    <div class="card" style="margin-top:6px">
+      <div class="card-hdr"><div class="card-title">This Week's Trade Log</div><span class="badge b-green">1 open</span></div>
+      <div class="weekly-log">
+        <div class="wlog-row"><span style="font-weight:600">SAIL $15C Jun 18</span><span style="color:var(--muted)">Entered $0.60</span><span style="color:var(--text);font-family:monospace">Curr: ~$0.75</span><span class="delta up">+25%</span><span style="color:var(--muted);font-size:11px">Open</span></div>
+        <div class="wlog-row" style="opacity:.5"><span style="color:var(--muted)">Slot 2</span><span style="color:var(--muted)">—</span><span style="color:var(--muted)">No trade</span><span style="color:var(--muted)">—</span><span style="color:var(--muted)">Empty</span></div>
+        <div class="wlog-row" style="opacity:.5"><span style="color:var(--muted)">Slot 3</span><span style="color:var(--muted)">—</span><span style="color:var(--muted)">No trade</span><span style="color:var(--muted)">—</span><span style="color:var(--muted)">Empty</span></div>
+      </div>
+    </div>
+  </div><!-- /mode40 -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- MOBILE OVERLAY -->
+<div class="mob-overlay" id="mobOverlay" onclick="closeDrawer()"></div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav" id="mobNav">
+  <button class="mob-nav-item active" id="mni-picks" onclick="mobNav('picks')">
+    <span class="mni">🤖</span>AI Picks
+  </button>
+  <button class="mob-nav-item" id="mni-portfolio" onclick="mobNav('portfolio')">
+    <span class="mni">💼</span>Portfolio
+  </button>
+  <button class="mob-nav-item" id="mni-options" onclick="mobNav('options')">
+    <span class="mni">⚡</span>Options
+  </button>
+  <button class="mob-nav-item hot-tab" id="mni-mode40" onclick="mobNav('mode40')">
+    <span class="mni">🎯</span>40% Mode
+  </button>
+  <button class="mob-nav-item" id="mni-more" onclick="toggleDrawer()">
+    <span class="mni">☰</span>More
+  </button>
+</nav>
+
+<!-- MOBILE MORE DRAWER -->
+<div class="mob-drawer" id="mobDrawer">
+  <div class="mob-drawer-title">More Sections</div>
+  <div class="mob-drawer-grid">
+    <div class="mob-drawer-item" id="mdi-watchlist" onclick="mobNav('watchlist');closeDrawer()">
+      <span class="mni">👁</span>Watchlists
+    </div>
+    <div class="mob-drawer-item" id="mdi-intel" onclick="mobNav('intel');closeDrawer()">
+      <span class="mni">🔬</span>Intel Hub
+    </div>
+    <div class="mob-drawer-item" id="mdi-scenarios" onclick="mobNav('scenarios');closeDrawer()">
+      <span class="mni">🔮</span>Scenarios
+    </div>
+    <div class="mob-drawer-item" id="mdi-alerts" onclick="mobNav('alerts');closeDrawer()">
+      <span class="mni">🔔</span>Alerts
+    </div>
+    <div class="mob-drawer-item" id="mdi-settings" onclick="mobNav('settings');closeDrawer()">
+      <span class="mni">⚙️</span>Settings
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// PORTFOLIO DATA (editable)
+// ════════════════════════════════════════════════
+let PORTFOLIO = {
+  totalValue: 325.75,
+  buyingPower: 295.75,
+  startValue: 201.99,
+  goal: 1000,
+  chartDates: ['Mar 3','Mar 17','Mar 31','Apr 14','Apr 28','May 7'],
+  chartValues: [201.99, 218, 244, 271, 310, 325.75],
+  active: [
+    {
+      id: 1, ticker:'SAIL', type:'Call', strike:15, contracts:1,
+      entry:0.60, current:0.75, stop:0.25,
+      expiry:'Jun 18, 2026', hardExit:'Jun 10, 9:45 AM',
+      warning:'SAIL earnings Jun 10 pre-market. Hard sell by 9:45 AM Jun 10 — no exceptions. IV crush will kill premium even on a gap up.'
+    }
+  ],
+  closed: [
+    { id:1, ticker:'SOUN', desc:'$8 Call', entry:0.96, exitPrice:2.00, pnl:104, result:'win' },
+    { id:2, ticker:'RGTI', desc:'$22 Call', entry:1.25, exitPrice:1.75, pnl:50,  result:'win' }
+  ],
+  _nextActiveId: 2,
+  _nextClosedId: 3
+};
+
+// ════════════════════════════════════════════════
+// PORTFOLIO RENDER
+// ════════════════════════════════════════════════
+let portChartInst, tradeChartInst;
+
+function renderPortfolio() {
+  const P = PORTFOLIO;
+  const ret = P.totalValue - P.startValue;
+  const retPct = ((ret / P.startValue) * 100).toFixed(1);
+  const goalPct = Math.min(100, ((P.totalValue / P.goal) * 100)).toFixed(1);
+  const wins = P.closed.filter(t => t.result === 'win').length;
+  const winRate = P.closed.length ? Math.round((wins / P.closed.length) * 100) : 0;
+  const openLabel = P.active.length ? P.active.map(a => a.ticker + ' $' + a.strike + (a.type==='Call'?'C':a.type==='Put'?'P':'')).join(', ') : 'None';
+
+  const statsHtml = `
+  <div class="sec-title">💼 My Portfolio</div>
+  <div class="sec-sub" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <span>Started ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} · Goal: $${P.startValue} → $${P.goal.toLocaleString()}</span>
+    <button class="btn btn-cyan btn-sm" onclick="openPortEdit()">✏️ Edit Portfolio</button>
+  </div>
+
+  <div class="grid5" style="margin-bottom:16px;margin-top:12px">
+    <div class="card">
+      <div class="card-title">Total Value</div>
+      <div style="font-size:24px;font-weight:800;color:var(--cyan);letter-spacing:-1px;margin-top:5px">$${P.totalValue.toFixed(2)}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">Started: $${P.startValue.toFixed(2)}</div>
+      <div class="progress"><div class="progress-fill" style="width:${goalPct}%"></div></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px">${goalPct}% to $${P.goal.toLocaleString()} goal</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Total Return</div>
+      <div style="font-size:24px;font-weight:800;color:${ret>=0?'var(--green)':'var(--red)'};letter-spacing:-1px;margin-top:5px">${ret>=0?'+':''}$${ret.toFixed(2)}</div>
+      <div style="margin-top:5px"><span class="delta ${ret>=0?'up':'dn'}">${ret>=0?'+':''}${retPct}% all time</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Buying Power</div>
+      <div style="font-size:24px;font-weight:800;letter-spacing:-1px;margin-top:5px">$${P.buyingPower.toFixed(2)}</div>
+      <div style="margin-top:5px"><span class="badge b-green">Max 1 play: $${(P.buyingPower/2).toFixed(0)}</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Open Positions</div>
+      <div style="font-size:24px;font-weight:800;letter-spacing:-1px;margin-top:5px">${P.active.length}</div>
+      <div style="margin-top:5px;font-size:10px;color:var(--cyan)">${openLabel}</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Win Rate</div>
+      <div style="font-size:24px;font-weight:800;color:${winRate>=50?'var(--green)':'var(--red)'};letter-spacing:-1px;margin-top:5px">${winRate}%</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">${wins}/${P.closed.length} closed wins</div>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">Portfolio Growth</div><span class="badge b-green">${ret>=0?'+':''}${retPct}% all time</span></div>
+      <canvas id="portChart" height="170"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">Trade History</div></div>
+      <canvas id="tradeChart" height="170"></canvas>
+    </div>
+  </div>`;
+
+  const activeHtml = `
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-hdr"><div class="card-title">Active Positions (${P.active.length})</div><button class="btn btn-ghost btn-sm" onclick="openPortEdit();peditTab('active')">+ Add Position</button></div>
+    ${P.active.length === 0 ? '<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">No active positions. Click "+ Add Position" to log one.</div>' :
+      P.active.map(a => {
+        const pnl = ((a.current - a.entry) / a.entry * 100).toFixed(1);
+        const pnlDollar = ((a.current - a.entry) * 100 * a.contracts).toFixed(2);
+        const up = a.current >= a.entry;
+        return `
+        ${a.warning ? `<div class="warn-bar">⚠️ <strong>${a.ticker} Alert:</strong> ${a.warning}</div>` : ''}
+        <div class="pos-card">
+          <div class="pos-ticker-pill" style="background:rgba(6,182,212,.13);color:var(--cyan)">${a.ticker}</div>
+          <div class="pos-info">
+            <div class="pos-title">$${a.strike} ${a.type} · ${a.expiry} · ${a.contracts} contract${a.contracts>1?'s':''}</div>
+            <div class="pos-meta">
+              <span>Entry: $${a.entry}</span>
+              <span>Current: $${a.current}</span>
+              <span>Stop: $${a.stop}</span>
+              ${a.hardExit ? `<span>Hard Exit: ${a.hardExit}</span>` : ''}
+            </div>
+          </div>
+          <div class="pos-pl">
+            <div class="pos-pl-val ${up?'up':'dn'}">${up?'+':''}$${Math.abs(pnlDollar)}</div>
+            <div class="pos-pl-pct ${up?'up':'dn'}">${up?'+':''}${pnl}%</div>
+          </div>
+        </div>`;
+      }).join('')
+    }
+  </div>`;
+
+  const closedHtml = `
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-title">Closed Trades</div>
+      <span class="badge b-green">${wins}/${P.closed.length} profitable</span>
+    </div>
+    ${P.closed.length === 0 ? '<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">No closed trades logged yet.</div>' :
+      P.closed.map(t => {
+        const icon = t.result==='win'?'var(--green)':t.result==='loss'?'var(--red)':'var(--gold)';
+        const pct = t.entry > 0 ? (((t.exitPrice - t.entry) / t.entry) * 100).toFixed(0) : 0;
+        return `<div class="pos-card">
+          <div class="pos-ticker-pill" style="background:rgba(16,185,129,.13);color:${icon}">${t.ticker}</div>
+          <div class="pos-info">
+            <div class="pos-title">${t.desc} · Closed</div>
+            <div class="pos-meta"><span>Entry $${t.entry}</span><span>Exit $${t.exitPrice}</span><span>${pct>=0?'+':''}${pct}%</span></div>
+          </div>
+          <div class="pos-pl">
+            <div class="pos-pl-val" style="color:${icon}">${t.pnl>=0?'+':''}$${t.pnl}</div>
+            <div class="pos-pl-pct" style="color:${icon}">${t.result==='win'?'✅ Win':t.result==='loss'?'❌ Loss':'➖ Even'}</div>
+          </div>
+        </div>`;
+      }).join('')
+    }
+  </div>`;
+
+  document.getElementById('port-content').innerHTML = statsHtml + activeHtml + closedHtml;
+  buildPortCharts();
+}
+
+function buildPortCharts() {
+  const P = PORTFOLIO;
+  if (portChartInst) { portChartInst.destroy(); portChartInst = null; }
+  if (tradeChartInst) { tradeChartInst.destroy(); tradeChartInst = null; }
+
+  const ctx1 = document.getElementById('portChart').getContext('2d');
+  const grad = ctx1.createLinearGradient(0,0,0,200);
+  grad.addColorStop(0,'rgba(6,182,212,.3)');
+  grad.addColorStop(1,'rgba(6,182,212,.01)');
+  portChartInst = new Chart(ctx1, {
+    type:'line',
+    data:{
+      labels: P.chartDates,
+      datasets:[
+        {label:'Value',data:P.chartValues,borderColor:'#06b6d4',borderWidth:2,fill:true,backgroundColor:grad,tension:.4,pointRadius:4,pointBackgroundColor:'#06b6d4'},
+        {label:'Goal',data:P.chartDates.map(()=>P.goal),borderColor:'rgba(139,92,246,.25)',borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d0d14',borderColor:'rgba(255,255,255,.1)',borderWidth:1,callbacks:{label:c=>' $'+c.parsed.y.toFixed(2)}}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:9},callback:v=>'$'+v}}}}
+  });
+
+  const tradeLabels = [...P.closed.map(t=>t.ticker+' '+t.desc), ...P.active.map(a=>a.ticker+' $'+a.strike+(a.type==='Call'?'C':'P')+' (open)')];
+  const tradePnls  = [...P.closed.map(t=>t.pnl), ...P.active.map(a=>parseFloat(((a.current-a.entry)*100*a.contracts).toFixed(2)))];
+  const tradeColors = [...P.closed.map(t=>t.result==='win'?'rgba(16,185,129,.6)':t.result==='loss'?'rgba(239,68,68,.6)':'rgba(245,158,11,.5)'), ...P.active.map(()=>'rgba(6,182,212,.4)')];
+  const tradeBorders= [...P.closed.map(t=>t.result==='win'?'#10b981':t.result==='loss'?'#ef4444':'#f59e0b'), ...P.active.map(()=>'#06b6d4')];
+
+  const ctx2 = document.getElementById('tradeChart').getContext('2d');
+  tradeChartInst = new Chart(ctx2, {
+    type:'bar',
+    data:{
+      labels:tradeLabels,
+      datasets:[{label:'P&L',data:tradePnls,backgroundColor:tradeColors,borderColor:tradeBorders,borderWidth:1,borderRadius:5}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d0d14',borderColor:'rgba(255,255,255,.1)',borderWidth:1,callbacks:{label:c=>' P&L: $'+c.parsed.y}}},scales:{x:{grid:{display:false},ticks:{color:'#64748b',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:9},callback:v=>'$'+v}}}}
+  });
+}
+
+// ════════════════════════════════════════════════
+// PORTFOLIO EDIT MODAL
+// ════════════════════════════════════════════════
+function openPortEdit() {
+  const P = PORTFOLIO;
+  document.getElementById('pe-totalValue').value  = P.totalValue;
+  document.getElementById('pe-buyingPower').value = P.buyingPower;
+  document.getElementById('pe-startValue').value  = P.startValue;
+  document.getElementById('pe-goal').value        = P.goal;
+  document.getElementById('pe-chartDates').value  = P.chartDates.join(', ');
+  document.getElementById('pe-chartValues').value = P.chartValues.join(', ');
+  renderActivePosEdit();
+  renderClosedEdit();
+  document.getElementById('peditOverlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePortEdit() {
+  document.getElementById('peditOverlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function peditTab(tab) {
+  document.querySelectorAll('.pedit-tab').forEach((t,i) => {
+    const tabs = ['account','active','closed'];
+    t.classList.toggle('active', tabs[i] === tab);
+  });
+  document.querySelectorAll('.pedit-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('ptab-' + tab).classList.add('active');
+  if (tab === 'active') { cancelAddPos(); renderActivePosEdit(); }
+  if (tab === 'closed') { cancelAddClosed(); renderClosedEdit(); }
+}
+
+function renderActivePosEdit() {
+  const list = document.getElementById('active-pos-list');
+  if (!PORTFOLIO.active.length) {
+    list.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:12px">No active positions yet.</div>';
+    return;
+  }
+  list.innerHTML = PORTFOLIO.active.map(a => `
+    <div class="pos-edit-card">
+      <div class="pos-edit-top">
+        <div>
+          <div class="pos-edit-ticker">${a.ticker} $${a.strike}${a.type==='Call'?'C':'P'} ${a.expiry}</div>
+          <div class="pos-edit-desc">Entry $${a.entry} · Current $${a.current} · Stop $${a.stop} · ${a.contracts} contract${a.contracts>1?'s':''}</div>
+        </div>
+        <div class="pos-edit-actions">
+          <button class="btn-edit-sm" onclick="editActivePos(${a.id})">Edit</button>
+          <button class="btn-edit-sm btn-del" onclick="deleteActivePos(${a.id})">✕</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderClosedEdit() {
+  const list = document.getElementById('closed-trades-list');
+  if (!PORTFOLIO.closed.length) {
+    list.innerHTML = '<div style="text-align:center;padding:16px;color:var(--muted);font-size:12px">No closed trades yet.</div>';
+    return;
+  }
+  list.innerHTML = PORTFOLIO.closed.map(t => `
+    <div class="pos-edit-card">
+      <div class="pos-edit-top">
+        <div>
+          <div class="pos-edit-ticker">${t.ticker} ${t.desc}</div>
+          <div class="pos-edit-desc">Entry $${t.entry} → Exit $${t.exitPrice} · P&L: ${t.pnl>=0?'+':''}$${t.pnl} · ${t.result==='win'?'✅ Win':t.result==='loss'?'❌ Loss':'➖ Even'}</div>
+        </div>
+        <div class="pos-edit-actions">
+          <button class="btn-edit-sm" onclick="editClosedTrade(${t.id})">Edit</button>
+          <button class="btn-edit-sm btn-del" onclick="deleteClosedTrade(${t.id})">✕</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function showAddPosForm() {
+  document.getElementById('addPosFormTitle').textContent = 'New Position';
+  document.getElementById('editPosId').value = '';
+  ['ap-ticker','ap-type','ap-strike','ap-contracts','ap-entry','ap-current','ap-stop','ap-expiry','ap-hardExit','ap-warning'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+  document.getElementById('ap-contracts').value = 1;
+  document.getElementById('addPosForm').classList.add('open');
+  document.getElementById('addPosForm').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function editActivePos(id) {
+  const a = PORTFOLIO.active.find(p => p.id === id);
+  if (!a) return;
+  document.getElementById('addPosFormTitle').textContent = 'Edit Position';
+  document.getElementById('editPosId').value = id;
+  document.getElementById('ap-ticker').value    = a.ticker;
+  document.getElementById('ap-type').value      = a.type;
+  document.getElementById('ap-strike').value    = a.strike;
+  document.getElementById('ap-contracts').value = a.contracts;
+  document.getElementById('ap-entry').value     = a.entry;
+  document.getElementById('ap-current').value   = a.current;
+  document.getElementById('ap-stop').value      = a.stop;
+  document.getElementById('ap-expiry').value    = a.expiry;
+  document.getElementById('ap-hardExit').value  = a.hardExit || '';
+  document.getElementById('ap-warning').value   = a.warning || '';
+  document.getElementById('addPosForm').classList.add('open');
+  document.getElementById('addPosForm').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function savePosEntry() {
+  const editId = parseInt(document.getElementById('editPosId').value);
+  const pos = {
+    id:          editId || PORTFOLIO._nextActiveId++,
+    ticker:      document.getElementById('ap-ticker').value.toUpperCase().trim(),
+    type:        document.getElementById('ap-type').value,
+    strike:      parseFloat(document.getElementById('ap-strike').value) || 0,
+    contracts:   parseInt(document.getElementById('ap-contracts').value) || 1,
+    entry:       parseFloat(document.getElementById('ap-entry').value) || 0,
+    current:     parseFloat(document.getElementById('ap-current').value) || 0,
+    stop:        parseFloat(document.getElementById('ap-stop').value) || 0,
+    expiry:      document.getElementById('ap-expiry').value.trim(),
+    hardExit:    document.getElementById('ap-hardExit').value.trim(),
+    warning:     document.getElementById('ap-warning').value.trim()
+  };
+  if (!pos.ticker) return alert('Ticker is required.');
+  if (editId) {
+    const idx = PORTFOLIO.active.findIndex(p => p.id === editId);
+    if (idx > -1) PORTFOLIO.active[idx] = pos;
+  } else {
+    PORTFOLIO.active.push(pos);
+  }
+  cancelAddPos();
+  renderActivePosEdit();
+}
+
+function deleteActivePos(id) {
+  if (!confirm('Remove this position?')) return;
+  PORTFOLIO.active = PORTFOLIO.active.filter(p => p.id !== id);
+  renderActivePosEdit();
+}
+
+function cancelAddPos() {
+  document.getElementById('addPosForm').classList.remove('open');
+}
+
+function showAddClosedForm() {
+  document.getElementById('editClosedId').value = '';
+  ['ct-ticker','ct-desc','ct-entry','ct-exit','ct-pnl'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ct-result').selectedIndex = 0;
+  document.getElementById('addClosedForm').classList.add('open');
+  document.getElementById('addClosedForm').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function editClosedTrade(id) {
+  const t = PORTFOLIO.closed.find(c => c.id === id);
+  if (!t) return;
+  document.getElementById('editClosedId').value = id;
+  document.getElementById('ct-ticker').value = t.ticker;
+  document.getElementById('ct-desc').value   = t.desc;
+  document.getElementById('ct-entry').value  = t.entry;
+  document.getElementById('ct-exit').value   = t.exitPrice;
+  document.getElementById('ct-pnl').value    = t.pnl;
+  document.getElementById('ct-result').value = t.result;
+  document.getElementById('addClosedForm').classList.add('open');
+  document.getElementById('addClosedForm').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function saveClosedEntry() {
+  const editId = parseInt(document.getElementById('editClosedId').value);
+  const t = {
+    id:        editId || PORTFOLIO._nextClosedId++,
+    ticker:    document.getElementById('ct-ticker').value.toUpperCase().trim(),
+    desc:      document.getElementById('ct-desc').value.trim(),
+    entry:     parseFloat(document.getElementById('ct-entry').value) || 0,
+    exitPrice: parseFloat(document.getElementById('ct-exit').value) || 0,
+    pnl:       parseFloat(document.getElementById('ct-pnl').value) || 0,
+    result:    document.getElementById('ct-result').value
+  };
+  if (!t.ticker) return alert('Ticker is required.');
+  if (editId) {
+    const idx = PORTFOLIO.closed.findIndex(c => c.id === editId);
+    if (idx > -1) PORTFOLIO.closed[idx] = t;
+  } else {
+    PORTFOLIO.closed.push(t);
+  }
+  cancelAddClosed();
+  renderClosedEdit();
+}
+
+function deleteClosedTrade(id) {
+  if (!confirm('Remove this trade?')) return;
+  PORTFOLIO.closed = PORTFOLIO.closed.filter(c => c.id !== id);
+  renderClosedEdit();
+}
+
+function cancelAddClosed() {
+  document.getElementById('addClosedForm').classList.remove('open');
+}
+
+function savePortfolio() {
+  const P = PORTFOLIO;
+  P.totalValue  = parseFloat(document.getElementById('pe-totalValue').value) || P.totalValue;
+  P.buyingPower = parseFloat(document.getElementById('pe-buyingPower').value) || P.buyingPower;
+  P.startValue  = parseFloat(document.getElementById('pe-startValue').value) || P.startValue;
+  P.goal        = parseFloat(document.getElementById('pe-goal').value) || P.goal;
+  const rawDates  = document.getElementById('pe-chartDates').value;
+  const rawValues = document.getElementById('pe-chartValues').value;
+  if (rawDates.trim())  P.chartDates  = rawDates.split(',').map(s=>s.trim()).filter(Boolean);
+  if (rawValues.trim()) P.chartValues = rawValues.split(',').map(s=>parseFloat(s.trim())).filter(v=>!isNaN(v));
+  closePortEdit();
+  renderPortfolio();
+}
+
+// ════════════════════════════════════════════════
+// MY WATCHLIST (personal, editable)
+// ════════════════════════════════════════════════
+let MY_WATCHLIST = [
+  { id:1, ticker:'IONQ',  entry:52.00, stop:44.00, target:72.00, reason:'AI quantum leader, NVIDIA partnership catalyst, 755% revenue growth', notes:'Watch $54 breakout level' },
+  { id:2, ticker:'RKLB',  entry:22.00, stop:18.00, target:32.00, reason:'Space + defense, NASA contract momentum, recurring revenue growing', notes:'Watching for re-test of $22 support' },
+  { id:3, ticker:'PLTR',  entry:115.00,stop:98.00, target:145.00,reason:'Defense AI, massive US gov contracts, strong revenue growth', notes:'Want to enter on any pullback to $110-115' }
+];
+let _nextWatchId = 4;
+
+function renderMyWatchlist() {
+  const list = document.getElementById('my-wl-list');
+  if (!list) return;
+  if (!MY_WATCHLIST.length) {
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">No tickers added yet. Click "+ Add Ticker" to start your watchlist.</div>';
+    return;
+  }
+  list.innerHTML = MY_WATCHLIST.map(w => {
+    const upside = w.target && w.entry ? (((w.target - w.entry) / w.entry) * 100).toFixed(0) : null;
+    const risk   = w.stop  && w.entry ? (((w.entry - w.stop)  / w.entry) * 100).toFixed(0) : null;
+    return `
+    <div class="pos-edit-card" style="margin-bottom:8px">
+      <div class="pos-edit-top" style="margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+          <div style="background:rgba(6,182,212,.13);color:var(--cyan);padding:6px 10px;border-radius:7px;font-size:13px;font-weight:900;font-family:monospace;flex-shrink:0">${w.ticker}</div>
+          <div style="min-width:0">
+            <div style="font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.reason || '—'}</div>
+            ${w.notes ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${w.notes}</div>` : ''}
+          </div>
+        </div>
+        <div class="pos-edit-actions" style="flex-shrink:0;margin-left:8px">
+          <button class="btn-edit-sm" onclick="editWatchEntry(${w.id})">Edit</button>
+          <button class="btn-edit-sm btn-del" onclick="deleteWatchEntry(${w.id})">✕</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${w.entry  ? `<span style="font-size:10px;background:rgba(255,255,255,.05);border-radius:5px;padding:3px 7px;color:var(--muted)">Entry <span style="color:var(--text);font-weight:700">$${w.entry}</span></span>` : ''}
+        ${w.stop   ? `<span style="font-size:10px;background:rgba(239,68,68,.08);border-radius:5px;padding:3px 7px;color:var(--muted)">Stop <span style="color:var(--red);font-weight:700">$${w.stop}</span></span>` : ''}
+        ${w.target ? `<span style="font-size:10px;background:rgba(16,185,129,.08);border-radius:5px;padding:3px 7px;color:var(--muted)">Target <span style="color:var(--green);font-weight:700">$${w.target}</span></span>` : ''}
+        ${upside   ? `<span style="font-size:10px;background:rgba(16,185,129,.1);border-radius:5px;padding:3px 7px;color:var(--green);font-weight:700">+${upside}% upside</span>` : ''}
+        ${risk     ? `<span style="font-size:10px;background:rgba(239,68,68,.08);border-radius:5px;padding:3px 7px;color:var(--red);font-weight:700">-${risk}% risk</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showAddWatchForm() {
+  document.getElementById('addWatchTitle').textContent = 'Add to My Watchlist';
+  document.getElementById('editWatchId').value = '';
+  ['wt-ticker','wt-entry','wt-stop','wt-target','wt-reason','wt-notes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('addWatchForm').classList.add('open');
+  document.getElementById('addWatchForm').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function editWatchEntry(id) {
+  const w = MY_WATCHLIST.find(x => x.id === id);
+  if (!w) return;
+  document.getElementById('addWatchTitle').textContent = 'Edit Watchlist Entry';
+  document.getElementById('editWatchId').value = id;
+  document.getElementById('wt-ticker').value = w.ticker;
+  document.getElementById('wt-entry').value  = w.entry  || '';
+  document.getElementById('wt-stop').value   = w.stop   || '';
+  document.getElementById('wt-target').value = w.target || '';
+  document.getElementById('wt-reason').value = w.reason || '';
+  document.getElementById('wt-notes').value  = w.notes  || '';
+  document.getElementById('addWatchForm').classList.add('open');
+  document.getElementById('addWatchForm').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function saveWatchEntry() {
+  const editId = parseInt(document.getElementById('editWatchId').value);
+  const entry = {
+    id:      editId || _nextWatchId++,
+    ticker:  document.getElementById('wt-ticker').value.toUpperCase().trim(),
+    entry:   parseFloat(document.getElementById('wt-entry').value)  || null,
+    stop:    parseFloat(document.getElementById('wt-stop').value)   || null,
+    target:  parseFloat(document.getElementById('wt-target').value) || null,
+    reason:  document.getElementById('wt-reason').value.trim(),
+    notes:   document.getElementById('wt-notes').value.trim()
+  };
+  if (!entry.ticker) return alert('Ticker is required.');
+  if (editId) {
+    const idx = MY_WATCHLIST.findIndex(x => x.id === editId);
+    if (idx > -1) MY_WATCHLIST[idx] = entry;
+  } else {
+    MY_WATCHLIST.push(entry);
+  }
+  cancelAddWatch();
+  renderMyWatchlist();
+}
+
+function deleteWatchEntry(id) {
+  if (!confirm('Remove this ticker from your watchlist?')) return;
+  MY_WATCHLIST = MY_WATCHLIST.filter(x => x.id !== id);
+  renderMyWatchlist();
+}
+
+function cancelAddWatch() {
+  document.getElementById('addWatchForm').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════
+// RESEARCH-BACKED DATA (May 7, 2026)
+// ════════════════════════════════════════════════
+
+// Real prices from live research searches
+const PICKS = [
+  {
+    grade:'A', ticker:'IONQ', contract:'$55C Jun 20', price:0.90, total:90,
+    entry:52.50, stop:0.38, t1:1.35, t2:1.90, t3:2.80,
+    earn:'Aug 6, 2026', holdMax:'Jun 20',
+    signal:'buy', signalText:'Buy at open — clean setup',
+    iv:71, ivFlag:false,
+    thesis:'<strong>755% YoY revenue growth</strong> in Q1 2026 ($64.67M vs est. $8.5M). First public quantum company with >$100M in GAAP revenue. NVIDIA just validated the entire sector with its Ising quantum platform announcement — sent IONQ +21% in a single day. Commercial deals with airlines and pharma sector closing. <strong>90 days of runway before earnings.</strong>',
+    watch:['Watch $54 as breakout confirmation level','RSI ~52 — not overbought, room to run','NVIDIA quantum announcements are recurring catalysts','Commercial contract wins = immediate price spikes'],
+    risks:'Sector is speculative. Stock up 16% YTD — some profit taking possible. If NVIDIA pulls back, quantum names follow.'
+  },
+  {
+    grade:'A', ticker:'PLTR', contract:'$55C Jun 20', price:0.88, total:88,
+    entry:48.20, stop:0.36, t1:1.30, t2:1.85, t3:2.60,
+    earn:'Aug 4, 2026', holdMax:'Jun 20',
+    signal:'buy', signalText:'Buy at open — value dip entry',
+    iv:52, ivFlag:false,
+    thesis:'<strong>Q1 2026: Revenue $1.63B up 85% YoY.</strong> Beat estimates. Raised full-year guidance to $7.66B. Despite these monster numbers, stock is DOWN 20% YTD — the market overreacted to valuation concerns post-print. AIP platform is accelerating enterprise adoption. Government contracts expanding. This is a value entry on a growth compounder.',
+    watch:['Watch $50 reclaim as momentum confirmation','Post-earnings dip is historically a buy signal for PLTR','AIP enterprise deal flow announcements are catalysts','US defense budget expansion = tailwind'],
+    risks:'High valuation even after 20% drawdown. If broader market sells off, high-multiple names get hit first. Vol can be violent.'
+  },
+  {
+    grade:'B', ticker:'RKLB', contract:'$32C Jun 20', price:0.82, total:82,
+    entry:28.50, stop:0.32, t1:1.25, t2:1.75, t3:2.50,
+    earn:'Aug 4, 2026', holdMax:'Jun 20',
+    signal:'wait', signalText:'Wait for Q1 earnings reaction — entering today',
+    iv:68, ivFlag:false,
+    thesis:'<strong>FCC spectrum rule overhaul</strong> sent all space stocks higher — RKLB specifically benefited from updated broadband transmission rules. Company completed TWO launches in 48 hours from separate sites. Neutron reusable rocket confirmed on track for Q4 2026 — this unlocks $5.6B NSSL government contracts. SpaceX IPO hype is lifting all space proxies. Q1 earnings today — wait for the print, then enter if stock holds $28.',
+    watch:['Q1 earnings reaction today — key level $28 must hold','Neutron development milestones are catalysts','FCC regulatory news continues to drive space sector','SpaceX IPO filing = immediate sector rip'],
+    risks:'Earnings today — binary event. If miss, stock could drop 10-15%. Only enter AFTER the print.'
+  },
+  {
+    grade:'B', ticker:'ACHR', contract:'$15C Jun 20', price:0.78, total:78,
+    entry:12.80, stop:0.30, t1:1.20, t2:1.70, t3:2.40,
+    earn:'TODAY May 7 — ⚠️ EARNINGS PLAY', holdMax:'Jun 20',
+    signal:'wait', signalText:'⚠️ EARNINGS PLAY — wait for print first',
+    iv:88, ivFlag:true,
+    thesis:'<strong>⚠️ INTENTIONAL EARNINGS PLAY — READ BEFORE ENTERING.</strong> Archer reports earnings TODAY. Analyst consensus is Strong Buy with 130% upside target. $2B cash, $6B order backlog. White House pilot program across NY, FL, TX. FAA commercial launch planned for H2 2026. Analysts see much higher upside in ACHR vs JOBY. <strong>Strategy: Watch the post-earnings reaction. If stock holds $13+ and beats estimates, enter the next morning as momentum builds.</strong>',
+    watch:['Wait for post-earnings price action today','Stock must hold $13 to stay bullish','$2B cash = zero bankruptcy risk even if delayed','White House program announcement = catalyst'],
+    risks:'⚡ IV ELEVATED AT 88% — IV crush after earnings will hurt. This is a post-earnings momentum entry, NOT a pre-earnings buy. Do not buy calls before the print.'
+  },
+  {
+    grade:'B', ticker:'S', contract:'$13C Jun 20', price:0.60, total:60,
+    entry:12.00, stop:0.24, t1:0.90, t2:1.30, t3:1.90,
+    earn:'Jun 3, 2026', holdMax:'May 28',
+    signal:'buy', signalText:'Buy at open — oversold value',
+    iv:48, ivFlag:false,
+    thesis:'<strong>SentinelOne is trading at 3.5x forward revenue vs CrowdStrike at 18x</strong> — a 5x valuation gap for a company growing 43% YoY. Hit 52-week low at $12.23 in late March. Market cap ~$4.3B. AI-native SOC platform is the fastest-growing product in cybersecurity. The sell-off is overdone relative to fundamentals. This is a bounce/value play, not a momentum play — low IV at 48% means cheap options.',
+    watch:['Watch $13 reclaim — confirms base is in','CrowdStrike reports Jun 4 — rising tide lifts all cyber boats','43% revenue growth will eventually re-rate the stock','IV at 48% = one of cheapest setups on the list'],
+    risks:'Smallest market cap on the list ($4.3B). Could continue drifting lower before the bounce. Not a momentum stock.'
+  },
+  {
+    grade:'C', ticker:'LUNR', contract:'$28C Jun 6', price:0.72, total:72,
+    entry:26.16, stop:0.28, t1:1.10, t2:1.55, t3:2.20,
+    earn:'May 14 — ⚠️ SELL BEFORE', holdMax:'May 13 EOD',
+    signal:'buy', signalText:'Buy now — quick flip, exit May 13',
+    iv:85, ivFlag:true,
+    thresh:'SHORT HOLD: Max 6 days. Exit by May 13 close.',
+    thesis:'<strong>SpaceX IPO fever is driving ALL space proxy stocks higher.</strong> LUNR up 270% over past year. Beta of 2.95 — moves 3x the market. FCC spectrum overhaul also lifted LUNR. $180.4M NASA CLPS task order + $175M strategic equity investment. Nine space ETFs launched in last 3 months = mechanical demand for liquid space names. <strong>This is a quick momentum flip — 6-day hold max. Earnings May 14 pre-market.</strong>',
+    watch:['SpaceX IPO news = immediate catalyst','Space ETF launches = mechanical buying pressure','Watch $28 as breakout level','MUST EXIT by May 13 close — earnings May 14 pre-market'],
+    risks:'⚠️ HIGH IV 85%. Earnings May 14 — hard stop at May 13 close. Beta 2.95 means it can also drop 10% in a day. Short leash required.'
+  },
+  {
+    grade:'C', ticker:'SOFI', contract:'$17C Jun 20', price:0.52, total:52,
+    entry:16.22, stop:0.20, t1:0.80, t2:1.15, t3:1.65,
+    earn:'Jul 28, 2026', holdMax:'Jun 20',
+    signal:'wait', signalText:'Wait for $16 support confirmation',
+    iv:62, ivFlag:false,
+    thesis:'<strong>Market massively overreacted to Q1 earnings.</strong> Stock fell 15% on earnings despite beating revenue by 5% ($1.10B) and record $12.18B in loan originations up 68% YoY. The selloff was triggered by one client departure in the Technology Platform segment — not a structural problem. Down 28% YTD. Multiple analysts say "SoFi stock could jump 26% as market overreacts to one soft segment." Rate cut narrative also helps fintech names.',
+    watch:['Watch $16 support hold — key level','Post-earnings selloffs of 15% in quality fintech historically reverse in 2-4 weeks','Rate cut expectations = strong tailwind for fintech','Volume declining on the dip = selling exhaustion'],
+    risks:'Stock is below all moving averages (6.7% below 20-day, 22.6% below 100-day). Could drift lower before the bounce. Patience required.'
+  },
+  {
+    grade:'C', ticker:'MARA', contract:'$14C Jun 20', price:0.68, total:68,
+    entry:12.00, stop:0.27, t1:1.05, t2:1.50, t3:2.20,
+    earn:'Aug 5, 2026', holdMax:'Jun 20',
+    signal:'wait', signalText:'Wait for pullback — up 8.5% today',
+    iv:105, ivFlag:true,
+    thresh:'⚠️ WAIT: Stock up 8.5% today. Option has already repriced. Enter on a 3-5% pullback.',
+    thesis:'<strong>MARA is pivoting from pure Bitcoin miner to AI data center infrastructure.</strong> Acquiring Long Ridge Energy & Power for $1.5B — 505MW natural gas plant + 1,600 acres for data campus. This is a completely new catalyst narrative beyond just BTC price. Macquarie target: $29 (144% upside from current). Rosenblatt raised target to $15. BTC above $96K = miner tailwind. <strong>Do not chase today. Wait for pullback to $11-11.50 range.</strong>',
+    watch:['AI data center narrative is NEW — market still processing','Wait for BTC to hold $95K before entering','$11.50 pullback = ideal entry zone','Long Ridge acquisition completion = catalyst'],
+    risks:'⚡ IV AT 105% — ELEVATED RISK FLAG. Do not enter until IV cools. Bitcoin correlation means 20% BTC drop = 40%+ MARA drop. Very high beta crypto name.'
+  }
+];
+
+const WATCHLISTS = {
+  'Options Plays': [
+    {t:'IONQ',n:'IonQ Inc.',p:52.50,c:+9.0,tgt:75,iv:71,conv:9,risk:7,earn:'Aug 6',sig:'Strong Buy'},
+    {t:'PLTR',n:'Palantir Technologies',p:48.20,c:-0.8,tgt:65,iv:52,conv:9,risk:5,earn:'Aug 4',sig:'Strong Buy'},
+    {t:'RKLB',n:'Rocket Lab USA',p:28.50,c:+6.2,tgt:45,iv:68,conv:9,risk:7,earn:'Aug 4',sig:'Strong Buy'},
+    {t:'ACHR',n:'Archer Aviation',p:12.80,c:+4.1,tgt:20,iv:88,conv:7,risk:8,earn:'TODAY',sig:'Buy Post-Earn'},
+    {t:'S',n:'SentinelOne',p:12.00,c:+2.8,tgt:20,iv:48,conv:8,risk:6,earn:'Jun 3',sig:'Value Buy'},
+    {t:'LUNR',n:'Intuitive Machines',p:26.16,c:+4.5,tgt:38,iv:85,conv:7,risk:8,earn:'May 14',sig:'Quick Flip'},
+    {t:'SOFI',n:'SoFi Technologies',p:16.22,c:-1.2,tgt:22,iv:62,conv:7,risk:6,earn:'Jul 28',sig:'Bounce Play'},
+    {t:'MARA',n:'Marathon Digital',p:12.00,c:+8.5,tgt:29,iv:105,conv:6,risk:9,earn:'Aug 5',sig:'Wait/Pullback'},
+  ],
+  'Quantum': [
+    {t:'IONQ',n:'IonQ Inc.',p:52.50,c:+9.0,tgt:75,iv:71,conv:9,risk:7,earn:'Aug 6',sig:'Strong Buy'},
+    {t:'RGTI',n:'Rigetti Computing',p:19.90,c:+13.3,tgt:28,iv:85,conv:6,risk:8,earn:'⚠ May 11',sig:'AVOID — Earn'},
+    {t:'QBTS',n:'D-Wave Quantum',p:8.40,c:-0.5,tgt:14,iv:78,conv:6,risk:8,earn:'⚠ May 14',sig:'AVOID — Earn'},
+    {t:'QUBT',n:'Quantum Computing Inc.',p:5.20,c:+3.1,tgt:9,iv:92,conv:4,risk:9,earn:'Aug 12',sig:'Speculative'},
+  ],
+  'Space': [
+    {t:'RKLB',n:'Rocket Lab USA',p:28.50,c:+6.2,tgt:45,iv:68,conv:9,risk:7,earn:'Aug 4',sig:'Strong Buy'},
+    {t:'ASTS',n:'AST SpaceMobile',p:35.20,c:+6.0,tgt:55,iv:75,conv:8,risk:7,earn:'Aug 11',sig:'Buy'},
+    {t:'LUNR',n:'Intuitive Machines',p:26.16,c:+4.5,tgt:38,iv:85,conv:7,risk:8,earn:'May 14',sig:'Quick Flip'},
+    {t:'JOBY',n:'Joby Aviation',p:8.45,c:+5.2,tgt:14,iv:82,conv:7,risk:7,earn:'Aug 7',sig:'Buy'},
+  ],
+  'Defense / AI': [
+    {t:'PLTR',n:'Palantir Technologies',p:48.20,c:-0.8,tgt:65,iv:52,conv:9,risk:5,earn:'Aug 4',sig:'Strong Buy'},
+    {t:'BBAI',n:'BigBear.ai',p:3.80,c:+5.2,tgt:6,iv:95,conv:5,risk:9,earn:'Aug 11',sig:'Speculative'},
+  ],
+  'Chips / AI': [
+    {t:'NVDA',n:'NVIDIA Corp.',p:115.80,c:+2.1,tgt:145,iv:38,conv:9,risk:5,earn:'⚠ May 28',sig:'Buy → Exit May 21'},
+    {t:'AMD',n:'Advanced Micro Devices',p:162.50,c:+1.4,tgt:200,iv:42,conv:9,risk:5,earn:'Aug 4',sig:'Strong Buy'},
+    {t:'MU',n:'Micron Technology',p:98.40,c:-0.6,tgt:125,iv:45,conv:7,risk:6,earn:'Jun 25',sig:'Buy'},
+    {t:'SMCI',n:'Super Micro Computer',p:42.80,c:+3.5,tgt:65,iv:68,conv:6,risk:7,earn:'Aug 5',sig:'Hold'},
+  ],
+  'Cybersecurity': [
+    {t:'CRWD',n:'CrowdStrike Holdings',p:429.00,c:+1.2,tgt:507,iv:35,conv:9,risk:4,earn:'Jun 4',sig:'Strong Buy'},
+    {t:'S',n:'SentinelOne',p:12.00,c:+2.8,tgt:20,iv:48,conv:8,risk:6,earn:'Jun 3',sig:'Value Buy'},
+    {t:'PANW',n:'Palo Alto Networks',p:195.40,c:-0.4,tgt:240,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
+  ],
+  'Crypto': [
+    {t:'MARA',n:'Marathon Digital',p:12.00,c:+8.5,tgt:29,iv:105,conv:6,risk:9,earn:'Aug 5',sig:'Wait Pullback'},
+    {t:'RIOT',n:'Riot Platforms',p:12.40,c:+7.2,tgt:20,iv:98,conv:5,risk:9,earn:'Aug 6',sig:'Speculative'},
+    {t:'COIN',n:'Coinbase Global',p:192.00,c:+4.8,tgt:260,iv:72,conv:7,risk:7,earn:'Aug 5',sig:'Buy'},
+  ],
+  'Metals': [
+    {t:'GDX',n:'VanEck Gold Miners',p:42.80,c:+1.8,tgt:52,iv:28,conv:7,risk:4,earn:'N/A',sig:'Buy'},
+    {t:'SLV',n:'iShares Silver Trust',p:28.50,c:+0.9,tgt:35,iv:22,conv:6,risk:4,earn:'N/A',sig:'Hold'},
+    {t:'FCX',n:'Freeport-McMoRan',p:45.20,c:+2.5,tgt:58,iv:35,conv:7,risk:6,earn:'Jul 22',sig:'Buy'},
+  ],
+  'Momentum': [
+    {t:'DKNG',n:'DraftKings',p:45.80,c:+1.9,tgt:60,iv:48,conv:6,risk:6,earn:'Aug 4',sig:'Hold'},
+    {t:'TOST',n:'Toast Inc.',p:38.20,c:+2.4,tgt:50,iv:42,conv:7,risk:5,earn:'Aug 7',sig:'Buy'},
+    {t:'RBLX',n:'Roblox Corp.',p:52.40,c:-1.2,tgt:70,iv:55,conv:6,risk:6,earn:'Aug 12',sig:'Hold'},
+  ]
+};
+
+// AI INTEL — real research per ticker
+const INTEL = {
+  'Quantum': [
+    {t:'IONQ',name:'IonQ Inc.',p:52.50,c:+9.0,color:'#06b6d4',
+     news:'Q1 2026 revenue $64.67M — up 755% YoY. First public quantum company with >$100M GAAP revenue. NVIDIA Ising quantum platform announcement sent IONQ +21% in one day.',
+     setup:'Best setup in quantum sector. Clean breakout above $50. RSI not overbought. 90 days to earnings (Aug 6).',
+     watch:['$54 breakout = momentum confirmation','NVIDIA quantum announcements = recurring catalyst','Commercial airline/pharma contract wins = spike events','Monitor RSI — sell if exceeds 75'],
+     options:'$55C Jun 20 ~$0.90. Stop $0.38. T1: $1.35 (+50%). Total cost $90.',
+     signal:'STRONG BUY', signalColor:'var(--green)'},
+    {t:'RGTI',name:'Rigetti Computing',p:19.90,c:+13.3,color:'#8b5cf6',
+     news:'Q4 2025 revenue missed by 22%. Full-year revenue down 34%. BUT NVIDIA Ising announcement sent RGTI +13.3% on May 5. Stock up strongly today off NVIDIA halo effect.',
+     setup:'⚠️ EARNINGS MAY 11 — 4 DAYS AWAY. Do NOT buy calls before earnings. Wait for post-print reaction.',
+     watch:['EARNINGS MAY 11 — hard avoid until after','Post-earnings entry if stock holds $18','Revenue growth needs to turn positive','NVIDIA sector halo is supportive but temporary'],
+     options:'WAIT. Post-earnings entry: $20C Jun 20 if stock holds $18 after May 11 print.',
+     signal:'AVOID UNTIL MAY 12', signalColor:'var(--red)'},
+    {t:'QBTS',name:'D-Wave Quantum',p:8.40,c:-0.5,color:'#06b6d4',
+     news:'Down 9% YTD. Analyst consensus target $35.77 — 13 Buy ratings, 2 Hold. Commercial bookings growth is the story. NVIDIA sector halo helped: +22.6% on Ising announcement.',
+     setup:'⚠️ EARNINGS MAY 14 — 7 DAYS AWAY. Do NOT enter. Wait for post-print.',
+     watch:['EARNINGS MAY 14 — avoid until May 15','Post-earnings entry if holds $8','Commercial booking announcements = catalyst','Target $35.77 is 4x current price if thesis plays out'],
+     options:'WAIT. Post-earnings: $9C Jun 20 if holds $8 after May 14.',
+     signal:'AVOID UNTIL MAY 15', signalColor:'var(--red)'},
+    {t:'QUBT',name:'Quantum Computing Inc.',p:5.20,c:+3.1,color:'#ec4899',
+     news:'Very early stage. High volatility. Benefited from sector halo. No major near-term catalysts beyond sector momentum.',
+     setup:'Speculative only. Small size if any. Very illiquid options.',
+     watch:['Only hold as small sector lottery ticket','Watch for NVIDIA or government quantum announcements','Check option liquidity before entering — often illiquid'],
+     options:'Too speculative for current account size. Skip.',
+     signal:'SPECULATIVE ONLY', signalColor:'var(--orange)'},
+  ],
+  'Space': [
+    {t:'RKLB',name:'Rocket Lab USA',p:28.50,c:+6.2,color:'#f59e0b',
+     news:'FCC spectrum rule overhaul sent space stocks higher. Completed 2 launches in 48 hours. Neutron reusable rocket confirmed Q4 2026 debut — unlocks $5.6B NSSL Lane 1 contracts. Q1 earnings TODAY.',
+     setup:'Strong setup. FCC catalyst + operational momentum. Q1 earnings today — wait for reaction, then enter if holds $27.50.',
+     watch:['Q1 earnings today — hold $27.50 = bullish','Neutron milestones are multi-month catalysts','FCC satellite broadband rules continue to evolve','SpaceX IPO hype = rising tide for all space names'],
+     options:'$32C Jun 20 ~$0.82. Wait for earnings reaction. Stop $0.32. T1: $1.25',
+     signal:'BUY (AFTER EARNINGS PRINT)', signalColor:'var(--cyan)'},
+    {t:'ASTS',name:'AST SpaceMobile',p:35.20,c:+6.0,color:'#ec4899',
+     news:'FCC approved 223 additional satellites for SpaceMobile network. BlueBird-8/9/10 ready for shipment soon. Targeting 45 satellites in orbit in 2026. BlueBird-7 had launch anomaly but company pressing forward.',
+     setup:'Strong catalyst pipeline. BlueBird deployments = stock movers. Volatile — 10% swings common.',
+     watch:['BlueBird 8/9/10 launch dates are catalysts','Watch $32 support on any dip','FCC spectrum approvals continue to be bullish','Q1 earnings Aug 11 — far enough out for plays'],
+     options:'$38C Jun 20 ~$0.85. Volatile entry — wait for pullback to $33.',
+     signal:'BUY ON PULLBACK', signalColor:'var(--cyan)'},
+    {t:'LUNR',name:'Intuitive Machines',p:26.16,c:+4.5,color:'#a78bfa',
+     news:'Up 270% over past year. SpaceX IPO fever driving space proxies. Beta 2.95 = moves 3x the market. Q1 earnings May 14. $180.4M NASA CLPS task order + $175M strategic equity investment. Space ETF launches creating mechanical demand.',
+     setup:'Quick flip play only. SpaceX IPO hype = near-term catalyst. MUST EXIT before May 14 earnings.',
+     watch:['Exit by May 13 close — no exceptions','SpaceX IPO news = immediate catalyst','Watch for sharp pullbacks — beta 2.95 is violent','NASA contract announcements = spike events'],
+     options:'$28C Jun 6 ~$0.72. Hard exit May 13 EOD. Stop $0.28. T1: $1.10',
+     signal:'QUICK FLIP — 6 DAYS MAX', signalColor:'var(--gold)'},
+  ],
+  'Defense / AI': [
+    {t:'PLTR',name:'Palantir Technologies',p:48.20,c:-0.8,color:'#3b82f6',
+     news:'Q1 2026 revenue $1.63B up 85% YoY. Beat estimates. Raised FY2026 guidance to $7.66B. Stock DOWN 20% YTD despite these results — valuation concerns post-print. AIP platform winning enterprise deals at accelerating pace.',
+     setup:'Best risk/reward on the list. 85% revenue growth + guidance raise + 20% YTD drawdown = value entry. Long runway to Aug 4 earnings.',
+     watch:['Watch $50 reclaim = momentum confirmed','AIP enterprise deal announcements spike the stock','US defense AI budget = structural tailwind','Post-earnings dip historically has been bought'],
+     options:'$55C Jun 20 ~$0.88. Stop $0.36. T1: $1.30. T2: $1.85. T3: $2.60',
+     signal:'STRONG BUY', signalColor:'var(--green)'},
+    {t:'BBAI',name:'BigBear.ai',p:3.80,c:+5.2,color:'#f97316',
+     news:'Q1 revenue $34.4M — slight beat. Loss was wider than expected at -$0.12 vs -$0.08 est. Down 31% YTD. Gross margins improved to 34%. Defense AI contracts continuing.',
+     setup:'Very speculative. Small position only. Revenue growing but losses widening.',
+     watch:['Defense contract announcements are the only catalyst','Watch $4 level as resistance','Loss widening is a concern — watch cash burn','Compare to PLTR for sector direction'],
+     options:'Skip or tiny speculative. $4C Jun 20 ~$0.35 if you want lottery exposure.',
+     signal:'SPECULATIVE', signalColor:'var(--orange)'},
+  ],
+  'Chips / AI': [
+    {t:'NVDA',name:'NVIDIA Corp.',p:115.80,c:+2.1,color:'#10b981',
+     news:'Earnings May 28. Street consensus $78.8B revenue, whisper $80-82B. AMD beat sends positive read-through. Blackwell demand exceptional. Data center supercycle continues. IV will spike dramatically the week of earnings.',
+     setup:'Strong long-term but CRITICAL earnings timing issue. Must exit all calls by May 21 (7 days before earnings). IV crush risk is extreme.',
+     watch:['Only buy calls with expiry before May 21','AMD beat is positive read-through for NVDA Q1','Watch $118 as breakout confirmation','SELL ALL CALLS by May 21 — IV will be astronomical near print'],
+     options:'$125C May 16 ~$0.75. SHORT HOLD — sell by May 21 before IV spikes. Do NOT hold through earnings.',
+     signal:'BUY → EXIT BY MAY 21', signalColor:'var(--gold)'},
+    {t:'AMD',name:'Advanced Micro Devices',p:162.50,c:+1.4,color:'#8b5cf6',
+     news:'Q1 2026 BEAT: EPS $1.37 vs $1.25 est. Revenue $10.25B up 38% YoY. Data center sales +57% to $5.8B. MI300X GPU taking market share from NVIDIA. Next earnings Aug 4.',
+     setup:'Strong setup post-earnings beat. Momentum play through July. 87 days to next earnings.',
+     watch:['Data center revenue growth rate is key metric','MI300X server GPU adoption is the main catalyst','Watch $170 as next resistance level','AI infrastructure buildout has years of runway'],
+     options:'$175C Jun 20 ~$0.85. Stop $0.34. T1: $1.30. T2: $1.85',
+     signal:'STRONG BUY', signalColor:'var(--green)'},
+  ],
+  'Cybersecurity': [
+    {t:'CRWD',name:'CrowdStrike Holdings',p:429.00,c:+1.2,color:'#ef4444',
+     news:'$5.25B ARR growing 24% YoY. Turned GAAP profitable. Best year ever per CEO — recovered fully from 2024 outage. FY27 revenue guidance: $5.9B. Market cap ~$100B. Consensus target $507.',
+     setup:'Premium name, premium price. Low IV (35%) = cheap options relative to quality. Earnings Jun 4 — stay under 30 DTE or use Jun 20 expiry.',
+     watch:['$450 breakout = next resistance target','Earnings Jun 4 — position accordingly','ARR growth deceleration would be bearish','Platform consolidation wins are catalysts'],
+     options:'$450C Jun 20 ~$0.90. Low IV = good entry. Stop $0.36. T1: $1.40',
+     signal:'STRONG BUY', signalColor:'var(--green)'},
+    {t:'S',name:'SentinelOne',p:12.00,c:+2.8,color:'#06b6d4',
+     news:'Trading at 52-week low zone ($12.23 was the low). Market cap ~$4.3B. Trading at 3.5x forward revenue vs CRWD at 18x. 43% YoY revenue growth. AI-native platform is fastest-growing in cybersecurity.',
+     setup:'Best VALUE setup on the entire watchlist. 5x valuation discount to CRWD for a company growing nearly as fast. IV 48% = cheap options. This is a bounce play.',
+     watch:['$13 reclaim = confirmed base','CRWD earnings Jun 4 lifts all cybersecurity names','43% growth + 3.5x revenue = deeply undervalued vs peers','Declining volume on dip = selling exhaustion'],
+     options:'$13C Jun 20 ~$0.60. Best risk/reward ratio. Stop $0.24. T1: $0.90 T2: $1.30',
+     signal:'VALUE BUY', signalColor:'var(--green)'},
+  ],
+  'Crypto': [
+    {t:'MARA',name:'Marathon Digital Holdings',p:12.00,c:+8.5,color:'#f59e0b',
+     news:'Acquiring Long Ridge Energy & Power for $1.5B — 505MW natural gas plant + 1,600 acres for AI data center campus. Macquarie target $29. Rosenblatt raised to $15. BTC above $96K. AI infrastructure pivot is a NEW narrative.',
+     setup:'Up 8.5% today — do not chase. Wait for pullback to $11-11.50. IV 105% = elevated. The AI data center story is genuinely new and not yet priced in.',
+     watch:['Do not enter today — stock extended 8.5%','Wait for $11-11.50 pullback entry','Long Ridge acquisition completion = major catalyst','BTC $100K break = miner stocks gap up'],
+     options:'$14C Jun 20 ~$0.68. Wait for pullback first. IV elevated. Stop $0.27.',
+     signal:'WAIT — EXTENDED TODAY', signalColor:'var(--gold)'},
+    {t:'COIN',name:'Coinbase Global',p:192.00,c:+4.8,color:'#3b82f6',
+     news:'BTC above $96K driving crypto platform revenue. Regulatory clarity improving. Spot ETF flows benefiting exchange volumes. Strong Q1 expected.',
+     setup:'Solid setup. BTC correlation without the extreme leverage of MARA/RIOT. IV 72% is manageable.',
+     watch:['BTC price is the primary driver','Watch $200 as psychological resistance','Regulatory news continues to de-risk the story','ETF inflow data each week is a catalyst'],
+     options:'$200C Jun 20 ~$0.85. Stop $0.34. T1: $1.30.',
+     signal:'BUY', signalColor:'var(--cyan)'},
+    {t:'RIOT',name:'Riot Platforms',p:12.40,c:+7.2,color:'#ef4444',
+     news:'Pure Bitcoin miner. Up 7.2% today on BTC rally. IV 98% = very expensive options. Less diversified than MARA.',
+     setup:'Speculative. IV too high to buy calls cost-effectively right now.',
+     watch:['IV 98% — wait for it to drop before buying','BTC holding $90K is the base case','Less interesting than MARA given AI pivot narrative'],
+     options:'Skip — IV too elevated at 98%. Wait for pullback and IV compression.',
+     signal:'WAIT — HIGH IV', signalColor:'var(--orange)'},
+  ],
+};
+
+const SCENARIOS = [
+  {id:'fed_cut',icon:'✂️',title:'Fed Rate Cut',desc:'-0.25% surprise cut',impact:{port:+18,sail:+25,growth:+30,gold:+5,comment:'Green light for all growth/tech. Best case for your full watchlist. IONQ, RKLB, PLTR all rip. Add exposure immediately after announcement.'}},
+  {id:'ai_boom',icon:'🤖',title:'AI Breakthrough',desc:'Major AI milestone',impact:{port:+40,sail:+50,growth:+60,gold:-5,comment:'EXTREME upside. IONQ, PLTR, NVDA, AMD all surge. This is your 10x scenario. If this triggers, maximize options exposure immediately.'}},
+  {id:'quantum_break',icon:'🔬',title:'Quantum Leap',desc:'Quantum supremacy milestone',impact:{port:+55,sail:+10,growth:+120,gold:-8,comment:'IONQ is the primary beneficiary. RGTI/QBTS also spike. This is the lottery ticket scenario for quantum positions.'}},
+  {id:'spacex_ipo',icon:'🚀',title:'SpaceX IPO Filed',desc:'SpaceX files S-1',impact:{port:+30,sail:+15,growth:+20,gold:-3,comment:'RKLB, ASTS, LUNR all surge 20-40% on the same day. Space ETF buying accelerates. Best single-day catalyst for space plays.'}},
+  {id:'fed_hike',icon:'📈',title:'Rate Hike Surprise',desc:'+0.5% unexpected hike',impact:{port:-8,sail:-15,growth:-20,gold:+12,comment:'Growth names sell off hard. Cut options exposure. Rotate to GDX/SLV. PLTR and IONQ would be hit hardest.'}},
+  {id:'crash',icon:'💥',title:'Market Crash -20%',desc:'S&P drops 20%',impact:{port:-45,sail:-65,growth:-55,gold:+20,comment:'Severe impact. Stop losses are your lifeline. GDX is the only safe spot. This is why you never risk more than 50% of buying power.'}},
+  {id:'vix_spike',icon:'⚡',title:'VIX Spikes 35+',desc:'Fear event, vol explosion',impact:{port:-20,sail:-30,growth:-25,gold:+8,comment:'Existing calls lose value fast. New options get expensive. This is the time to SELL premium (covered calls) not buy it.'}},
+  {id:'btc_100k',icon:'₿',title:'Bitcoin $100K',desc:'BTC breaks six figures',impact:{port:+20,sail:+5,growth:+15,gold:+2,comment:'MARA, RIOT, COIN all spike 20-40%. If you have any crypto plays on, this is your exit into strength.'}},
+];
+
+const ALERTS_DATA = [
+  {icon:'⚠️',title:'SAIL — Earnings Hard Deadline',sub:'Jun 10 pre-market · Sell by 9:45 AM · Set calendar reminder NOW',on:true},
+  {icon:'📊',title:'LUNR — Exit Alert May 13',sub:'Earnings May 14 pre-market · Exit by close May 13',on:true},
+  {icon:'📈',title:'RGTI — Post-Earnings Entry Watch',sub:'Earnings May 11 · Alert when earnings are out + stock holds $18',on:true},
+  {icon:'🔔',title:'NVDA — IV Spike Warning',sub:'Alert when NVDA IV exceeds 60% (approaching earnings May 28)',on:false},
+  {icon:'₿',title:'Bitcoin $100K Watch',sub:'Alert when BTC crosses $100,000 — crypto plays activate',on:false},
+  {icon:'🔴',title:'VIX Danger Zone',sub:'Alert when VIX exceeds 25 — reduce all options exposure',on:true},
+  {icon:'🎯',title:'IONQ — Price Target Hit',sub:'Alert when IONQ crosses $60 (next resistance)',on:false},
+];
+
+const PHILOS = [
+  {icon:'⚡',name:'Aggressive Growth',desc:'Options, momentum, high-risk/reward',active:true},
+  {icon:'📈',name:'Swing Trading',desc:'1–4 week technical setups',active:false},
+  {icon:'🎯',name:'Value Investing',desc:'Undervalued + strong fundamentals',active:false},
+  {icon:'💰',name:'Options Income',desc:'Covered calls, cash-secured puts',active:false},
+  {icon:'🏗️',name:'Growth at Value',desc:'Growth companies at fair entry',active:false},
+  {icon:'🛡️',name:'Conservative',desc:'Quality, dividends, lower risk',active:false},
+];
+
+const EXIT_RULES = [
+  {lbl:'Options — 50% gain',val:'Sell ½ position, let rest ride free'},
+  {lbl:'Options — Stop loss',val:'Cut at -40% to -50% from entry'},
+  {lbl:'Options — Earnings rule',val:'NEVER hold through earnings unintentionally'},
+  {lbl:'Swing — Take profits',val:'Scale at +15%, +25%, +40%'},
+  {lbl:'Swing — Stop loss',val:'Cut at -7% to -10%'},
+  {lbl:'Max per trade',val:'50% of buying power ($147 current max)'},
+  {lbl:'Cash reserve',val:'Always keep ≥25% cash ($73 minimum)'},
+  {lbl:'Chasing rule',val:'Skip any stock up 5%+ at market open'},
+];
+
+const SCORES = [
+  {lbl:'Opportunity Score',v:82,color:'var(--green)'},
+  {lbl:'Risk Level',v:72,color:'var(--gold)'},
+  {lbl:'Volatility',v:68,color:'var(--orange)'},
+  {lbl:'AI Confidence',v:78,color:'var(--cyan)'},
+  {lbl:'Market Sentiment',v:64,color:'var(--blue)'},
+  {lbl:'Options Value',v:71,color:'var(--purple)'},
+];
+
+const TICKER_COLORS = {
+  IONQ:'#06b6d4',RGTI:'#8b5cf6',QBTS:'#06b6d4',QUBT:'#ec4899',
+  RKLB:'#f59e0b',ASTS:'#ec4899',LUNR:'#a78bfa',JOBY:'#10b981',
+  PLTR:'#3b82f6',BBAI:'#f97316',NVDA:'#10b981',AMD:'#8b5cf6',
+  MU:'#3b82f6',SMCI:'#f59e0b',CRWD:'#ef4444',S:'#06b6d4',
+  PANW:'#f97316',MARA:'#f59e0b',RIOT:'#ef4444',COIN:'#3b82f6',
+  GDX:'#f59e0b',SLV:'#94a3b8',FCX:'#f97316',
+  DKNG:'#8b5cf6',TOST:'#f97316',RBLX:'#3b82f6',SOFI:'#10b981',SAIL:'#06b6d4'
+};
+
+const SIG_BADGE = {
+  'Strong Buy':'b-green','Buy':'b-cyan','Buy Post-Earn':'b-cyan','Value Buy':'b-green',
+  'Quick Flip':'b-gold','Bounce Play':'b-gold','Wait Pullback':'b-orange','Wait/Pullback':'b-orange',
+  'BUY (AFTER EARNINGS PRINT)':'b-cyan','BUY → Exit May 21':'b-gold','Buy → Exit May 21':'b-gold',
+  'AVOID — Earn':'b-red','Hold':'b-gray','Speculative':'b-orange'
+};
+
+// ════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════
+function showSec(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  const map = {picks:'AI Picks',portfolio:'Portfolio',options:'Options',watchlist:'Watchlist',intel:'Intel',scenarios:'Scenario',mode40:'40%',alerts:'Alerts',settings:'Strategy'};
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.textContent.includes(map[id] || '')) n.classList.add('active');
+  });
+  syncMobNav(id);
+}
+
+// ── MOBILE NAV ──────────────────────────────────
+const MOB_MAIN = ['picks','portfolio','options','mode40'];
+const MOB_DRAWER_IDS = ['watchlist','intel','scenarios','alerts','settings'];
+
+function mobNav(id) {
+  showSec(id);
+  syncMobNav(id);
+  window.scrollTo(0,0);
+}
+
+function syncMobNav(id) {
+  // reset all bottom nav items
+  document.querySelectorAll('.mob-nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.mob-drawer-item').forEach(el => el.classList.remove('active'));
+  if (MOB_MAIN.includes(id)) {
+    const el = document.getElementById('mni-' + id);
+    if (el) el.classList.add('active');
+  } else if (MOB_DRAWER_IDS.includes(id)) {
+    // highlight the More button
+    document.getElementById('mni-more').classList.add('active');
+    const el = document.getElementById('mdi-' + id);
+    if (el) el.classList.add('active');
+  }
+}
+
+function toggleDrawer() {
+  const d = document.getElementById('mobDrawer');
+  const o = document.getElementById('mobOverlay');
+  const open = d.classList.toggle('open');
+  o.classList.toggle('open', open);
+  document.getElementById('mni-more').classList.toggle('active', open);
+}
+
+function closeDrawer() {
+  document.getElementById('mobDrawer').classList.remove('open');
+  document.getElementById('mobOverlay').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════
+// CLOCK
+// ════════════════════════════════════════════════
+function initClock() {
+  const clk = document.getElementById('clk');
+  setInterval(() => {
+    const d = new Date();
+    clk.textContent = d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) + ' ET';
+  }, 1000);
+}
+
+// ════════════════════════════════════════════════
+// AI PICKS
+// ════════════════════════════════════════════════
+function initPicks() {
+  const container = document.getElementById('picksContainer');
+  container.innerHTML = PICKS.map(p => {
+    const gradeCls = {A:'grade-a-card',B:'grade-b-card',C:'grade-c-card',D:'grade-d-card'}[p.grade] || 'grade-b-card';
+    const gradeBox = {A:'grade-a',B:'grade-b',C:'grade-c',D:'grade-d'}[p.grade] || 'grade-b';
+    const sigCls = {buy:'es-buy',wait:'es-wait',avoid:'es-avoid'}[p.signal] || 'es-wait';
+    const ivWarning = p.ivFlag ? `<span class="badge b-orange">⚡ IV ${p.iv}% ELEVATED</span>` : `<span class="badge b-gray">IV ${p.iv}%</span>`;
+    const watchItems = p.watch.map(w => `<li>→ ${w}</li>`).join('');
+    const threshNote = p.thresh ? `<div style="padding:8px 10px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.18);border-radius:6px;font-size:11px;color:var(--orange);margin-bottom:8px;font-weight:600">${p.thresh}</div>` : '';
+    return `
+    <div class="pick-card ${gradeCls}">
+      <div class="pick-hdr">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div class="grade ${gradeBox}">${p.grade}</div>
+          <div>
+            <div class="pick-ticker">${p.ticker}</div>
+            <div class="pick-contract">${p.contract} · Earnings: ${p.earn}</div>
+          </div>
+        </div>
+        <div class="pick-cost">
+          <div class="pick-price">$${p.price.toFixed(2)}</div>
+          <div class="pick-total">$${p.total} total · 1 contract</div>
+        </div>
+      </div>
+      ${threshNote}
+      <div class="pick-stats">
+        <div class="pstat"><div class="pstat-val" style="color:var(--red)">$${p.stop.toFixed(2)}</div><div class="pstat-lbl">Stop Loss</div></div>
+        <div class="pstat"><div class="pstat-val" style="color:var(--green)">$${p.t1.toFixed(2)}</div><div class="pstat-lbl">T1 +${Math.round((p.t1-p.price)/p.price*100)}%</div></div>
+        <div class="pstat"><div class="pstat-val" style="color:var(--cyan)">$${p.t2.toFixed(2)}</div><div class="pstat-lbl">T2 +${Math.round((p.t2-p.price)/p.price*100)}%</div></div>
+        <div class="pstat"><div class="pstat-val" style="color:var(--purple)">$${p.t3.toFixed(2)}</div><div class="pstat-lbl">T3 +${Math.round((p.t3-p.price)/p.price*100)}%</div></div>
+      </div>
+      <div class="pick-thesis">${p.thesis}</div>
+      <div style="margin-bottom:8px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:5px">What to Watch</div>
+        <ul style="list-style:none;padding:0">${watchItems.replace(/<li>/g,'<li style="font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border2);display:flex;gap:6px"><span style=\'color:var(--cyan);flex-shrink:0\'>→</span>')}</ul>
+      </div>
+      <div class="pick-footer">
+        <div class="entry-signal ${sigCls}">🚦 ${p.signalText}</div>
+        ${ivWarning}
+        <span class="badge b-gray">Max Hold: ${p.holdMax}</span>
+        <span class="badge b-gray">Cost: $${p.total}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// PORTFOLIO CHARTS
+// ════════════════════════════════════════════════
+function initPortCharts() { renderPortfolio(); }
+
+// ════════════════════════════════════════════════
+// P&L DIAGRAM
+// ════════════════════════════════════════════════
+function initPLChart() {
+  const ctx = document.getElementById('plChart').getContext('2d');
+  const premium=.6, strike=15, pts=[], pls=[];
+  for(let p=10;p<=22;p+=.5){pts.push('$'+p.toFixed(1));pls.push((Math.max(0,p-strike)-premium)*100);}
+  const grad = ctx.createLinearGradient(0,0,0,220);
+  grad.addColorStop(0,'rgba(16,185,129,.2)');
+  grad.addColorStop(1,'rgba(239,68,68,.1)');
+  new Chart(ctx, {
+    type:'line',
+    data:{labels:pts,datasets:[{label:'P&L',data:pls,borderWidth:2,segment:{borderColor:c=>c.p1.parsed.y<0?'#ef4444':'#10b981'},pointRadius:0,fill:true,backgroundColor:grad,tension:.1}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#0d0d14',borderColor:'rgba(255,255,255,.1)',borderWidth:1,callbacks:{label:c=>' P&L: $'+c.parsed.y.toFixed(0)}}},scales:{x:{grid:{color:'rgba(255,255,255,.03)'},ticks:{color:'#64748b',font:{size:8},maxTicksLimit:8}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#64748b',font:{size:9},callback:v=>'$'+v}}}}
+  });
+}
+
+// ════════════════════════════════════════════════
+// OPTIONS PLAYS (in Options Center tab)
+// ════════════════════════════════════════════════
+function initOptionPlays() {
+  document.getElementById('optionPlays').innerHTML = PICKS.slice(0,5).map(p => {
+    const warn = p.ivFlag ? `<div style="font-size:10px;color:var(--orange);font-weight:700;margin-top:4px">⚡ IV ${p.iv}% ELEVATED</div>` : '';
+    const entryColor = p.signal==='buy'?'var(--green)':p.signal==='wait'?'var(--gold)':'var(--red)';
+    return `<div class="card-dark" style="margin-bottom:9px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div>
+          <span style="font-size:17px;font-weight:900;font-family:monospace">${p.ticker}</span>
+          <span style="font-size:12px;color:var(--muted);margin-left:8px">${p.contract}</span>
+          ${warn}
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:16px;font-weight:800;color:var(--gold)">$${p.total}</div>
+          <div style="font-size:10px;color:var(--muted)">total cost</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
+        <div class="pstat"><div class="pstat-val">$${p.price}</div><div class="pstat-lbl">Entry</div></div>
+        <div class="pstat"><div class="pstat-val" style="color:var(--red)">$${p.stop}</div><div class="pstat-lbl">Stop</div></div>
+        <div class="pstat"><div class="pstat-val" style="color:var(--green)">$${p.t1}</div><div class="pstat-lbl">T1</div></div>
+        <div class="pstat"><div class="pstat-val" style="color:var(--cyan)">$${p.t2}</div><div class="pstat-lbl">T2</div></div>
+        <div class="pstat"><div class="pstat-val" style="color:var(--purple)">$${p.t3}</div><div class="pstat-lbl">T3</div></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px">
+        <span style="font-size:11px;color:${entryColor};font-weight:700">🚦 ${p.signalText}</span>
+        <span style="font-size:11px;color:var(--muted)">Earn: ${p.earn}</span>
+        <span class="badge b-gray">Max: ${p.holdMax}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// WATCHLIST
+// ════════════════════════════════════════════════
+function initWatchlist() {
+  renderMyWatchlist();
+  const keys = Object.keys(WATCHLISTS);
+  document.getElementById('wlTabs').innerHTML = keys.map((k,i)=>`<div class="tab ${i===0?'active':''}" onclick="showWL('${k}')">${k}</div>`).join('');
+  showWL(keys[0]);
+}
+function showWL(key) {
+  document.querySelectorAll('#wlTabs .tab').forEach(t=>t.classList.toggle('active',t.textContent===key));
+  const rows = WATCHLISTS[key]||[];
+  document.getElementById('wlBody').innerHTML = rows.map(r => {
+    const up = ((r.tgt-r.p)/r.p*100).toFixed(0);
+    const ivWarn = r.iv>80;
+    const sig = r.sig||'Hold';
+    return `<tr>
+      <td><div class="tick-cell"><div class="tick-dot" style="background:${TICKER_COLORS[r.t]||'#3b82f6'}">${r.t.slice(0,3)}</div><div><div style="font-weight:700;font-size:12px">${r.t}</div><div style="font-size:10px;color:var(--muted)">${r.n}</div></div></div></td>
+      <td style="font-family:monospace;font-weight:700">$${r.p.toFixed(2)}</td>
+      <td class="${r.c>=0?'up':'dn'}" style="font-family:monospace;font-weight:700">${r.c>=0?'+':''}${r.c.toFixed(1)}%</td>
+      <td style="font-family:monospace">$${r.tgt}</td>
+      <td><span class="delta ${up>0?'up':'dn'}">+${up}%</span></td>
+      <td>${ivWarn?`<span style="color:var(--orange);font-weight:700;font-size:11px">⚡${r.iv}%</span>`:`<span style="color:var(--muted);font-size:11px">${r.iv}%</span>`}</td>
+      <td><div style="display:flex;align-items:center;gap:5px"><div style="width:55px;height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden"><div style="width:${r.conv*10}%;height:100%;background:${r.conv>=8?'var(--green)':r.conv>=6?'var(--gold)':'var(--red)'}"></div></div><span style="font-size:11px;font-weight:700;color:${r.conv>=8?'var(--green)':r.conv>=6?'var(--gold)':'var(--red)'}">${r.conv}</span></div></td>
+      <td><span style="font-size:11px;font-weight:700;color:${r.risk>=8?'var(--red)':r.risk>=6?'var(--gold)':'var(--green)'}">${r.risk}/10</span></td>
+      <td><span style="font-size:11px;color:${r.earn.includes('⚠')||r.earn==='TODAY'?'var(--orange)':r.earn.includes('May')?'var(--gold)':'var(--muted)'}">${r.earn}</span></td>
+      <td><span class="badge ${SIG_BADGE[sig]||'b-gray'}">${sig}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// AI INTEL HUB
+// ════════════════════════════════════════════════
+function initIntel() {
+  const sectors = Object.keys(INTEL);
+  document.getElementById('intelTabs').innerHTML = sectors.map((s,i)=>`<div class="tab ${i===0?'active':''}" onclick="showIntel('${s}')">${s}</div>`).join('');
+  showIntel(sectors[0]);
+}
+function showIntel(sector) {
+  document.querySelectorAll('#intelTabs .tab').forEach(t=>t.classList.toggle('active',t.textContent===sector));
+  const stocks = INTEL[sector]||[];
+  document.getElementById('intelBody').innerHTML = stocks.map(s=>{
+    const watchLis = s.watch.map(w=>`<li style="font-size:11px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border2);display:flex;gap:5px;align-items:flex-start"><span style="color:var(--cyan);flex-shrink:0">→</span>${w}</li>`).join('');
+    return `<div class="intel-card">
+      <div class="intel-hdr">
+        <div class="intel-ticker" style="background:${s.color||'#3b82f6'}">${s.t.slice(0,4)}</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="intel-name">${s.t}</div>
+            <span class="badge ${s.signal.includes('STRONG')||s.signal.includes('VALUE')?'b-green':s.signal.includes('AVOID')||s.signal.includes('HIGH IV')?'b-red':s.signal.includes('WAIT')||s.signal.includes('FLIP')||s.signal.includes('EXIT')?'b-gold':'b-cyan'}" style="color:${s.signalColor}">${s.signal}</span>
+          </div>
+          <div class="intel-price">${s.name} · $${s.p.toFixed(2)} <span class="${s.c>=0?'up':'dn'}" style="font-size:11px">${s.c>=0?'+':''}${s.c.toFixed(1)}%</span></div>
+        </div>
+      </div>
+      <div class="intel-body">
+        <div class="intel-section">
+          <div class="intel-section-title">📰 Latest Research</div>
+          <p>${s.news}</p>
+        </div>
+        <div class="intel-section">
+          <div class="intel-section-title">📐 Setup Analysis</div>
+          <p>${s.setup}</p>
+        </div>
+        <div class="intel-section">
+          <div class="intel-section-title">🔍 What to Watch</div>
+          <ul style="list-style:none;padding:0">${watchLis}</ul>
+        </div>
+        <div class="intel-section">
+          <div class="intel-section-title">⚡ Options Play</div>
+          <p>${s.options}</p>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// SCENARIOS
+// ════════════════════════════════════════════════
+function initScenarios() {
+  document.getElementById('scGrid').innerHTML = SCENARIOS.map(s=>`
+    <div class="sc-card" id="sc-${s.id}" onclick="runScenario('${s.id}')">
+      <div class="sc-icon">${s.icon}</div>
+      <div class="sc-title">${s.title}</div>
+      <div class="sc-desc">${s.desc}</div>
+    </div>`).join('');
+}
+function runScenario(id) {
+  document.querySelectorAll('.sc-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('sc-'+id).classList.add('active');
+  const s = SCENARIOS.find(x=>x.id===id);
+  const i = s.impact;
+  const portAfter = (325.75*(1+i.port/100)).toFixed(0);
+  document.getElementById('scResult').innerHTML = `
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">${s.icon} ${s.title} — Portfolio Impact Analysis</div><button class="btn btn-ghost btn-sm" onclick="document.getElementById('scResult').innerHTML=''">✕</button></div>
+      <div class="grid4" style="margin-bottom:14px">
+        <div class="pstat"><div class="pstat-val ${i.port>=0?'up':'dn'}">$${portAfter}</div><div class="pstat-lbl">Portfolio</div></div>
+        <div class="pstat"><div class="pstat-val ${i.sail>=0?'up':'dn'}">${i.sail>=0?'+':''}${i.sail}%</div><div class="pstat-lbl">SAIL $15C</div></div>
+        <div class="pstat"><div class="pstat-val ${i.growth>=0?'up':'dn'}">${i.growth>=0?'+':''}${i.growth}%</div><div class="pstat-lbl">Growth Sector</div></div>
+        <div class="pstat"><div class="pstat-val ${i.gold>=0?'up':'dn'}">${i.gold>=0?'+':''}${i.gold}%</div><div class="pstat-lbl">Gold/Hedge</div></div>
+      </div>
+      <div style="padding:12px 14px;background:rgba(6,182,212,.05);border-left:2px solid var(--cyan);border-radius:0 7px 7px 0;font-size:12px;line-height:1.7"><strong style="color:var(--cyan)">AI Analysis:</strong><br>${i.comment}</div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════
+// ALERTS
+// ════════════════════════════════════════════════
+function initAlerts() {
+  document.getElementById('alertRules').innerHTML = ALERTS_DATA.map(a=>`
+    <div class="alert-rule">
+      <div class="alert-icon-box">${a.icon}</div>
+      <div class="alert-info"><div class="alert-title">${a.title}</div><div class="alert-sub">${a.sub}</div></div>
+      <div class="toggle ${a.on?'on':''}" onclick="this.classList.toggle('on')"></div>
+    </div>`).join('');
+  document.getElementById('recentAlerts').innerHTML = [
+    {icon:'✅',t:'SAIL up 25% from entry'},
+    {icon:'📈',t:'MARA unusual volume — 2.4x average'},
+    {icon:'⚠️',t:'RGTI earnings May 11 — 4 days away'},
+    {icon:'🚀',t:'RKLB FCC catalyst — space stocks rally'},
+  ].map(a=>`<div style="display:flex;gap:9px;align-items:center;padding:8px;background:rgba(255,255,255,.02);border-radius:7px;margin-bottom:5px"><span style="font-size:16px">${a.icon}</span><div style="font-size:12px">${a.t}</div></div>`).join('');
+}
+
+// ════════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════════
+function initSettings() {
+  document.getElementById('philGrid').innerHTML = PHILOS.map((p,i)=>`
+    <div class="phil-card ${p.active?'active':''}" onclick="selectPhil(${i})">
+      <div class="phil-icon">${p.icon}</div>
+      <div class="phil-name">${p.name}</div>
+      <div class="phil-desc">${p.desc}</div>
+    </div>`).join('');
+  document.getElementById('exitRules').innerHTML = EXIT_RULES.map(r=>`
+    <div class="rule-row"><span class="rule-lbl">${r.lbl}</span><span class="rule-val">${r.val}</span></div>`).join('');
+  document.getElementById('scoreDisplay').innerHTML = SCORES.map(s=>`
+    <div class="score-row">
+      <span class="score-lbl">${s.lbl}</span>
+      <div class="score-bar"><div class="score-bar-fill" style="width:${s.v}%;background:${s.color}"></div></div>
+      <span class="score-num" style="color:${s.color}">${s.v}</span>
+    </div>`).join('') + `<div class="divider"></div><div style="text-align:center"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">Overall AI Rating</div><div style="font-size:28px;font-weight:900;color:var(--cyan)">73</div><div style="font-size:11px;color:var(--cyan);font-weight:600">High Opportunity · Elevated Risk</div></div>`;
+}
+function selectPhil(idx) {
+  document.querySelectorAll('.phil-card').forEach((c,i)=>c.classList.toggle('active',i===idx));
+}
+
+// ════════════════════════════════════════════════
+// 40% MODE DATA
+// ════════════════════════════════════════════════
+
+const PLAYS_40 = [
+  {
+    rank:1, ticker:'IONQ', contract:'$55C May 16', type:'Short Call', setup:'Breakout + NVIDIA catalyst',
+    price:0.75, totalCost:75, stopPct:50, stopPrice:0.38,
+    t1:1.13, t2:1.50, t3:2.25,
+    t1pct:51, t2pct:100, t3pct:200,
+    earn:'Aug 6 (safe)', holdMax:'May 15', daysHold:8,
+    expectedMove:'+18–25% on stock', ivCurrent:71, ivCrush:'LOW — earnings Aug 6, no crush risk',
+    liquidity:'HIGH — 50k+ open interest', spread:'$0.02–$0.05 typical',
+    popEstimate:38, lossChance:62,
+    breakEven:55.75,
+    catalyst:'NVIDIA Ising quantum platform + 755% Q1 revenue growth. Short-dated May 16 gives 8 days of momentum window after the NVIDIA-driven sector breakout.',
+    whyWin:'IONQ is in active breakout mode post-NVIDIA announcement. 755% YoY revenue growth finally getting priced in. Sector momentum self-reinforcing. Near-term options cheap relative to historic moves.',
+    whyFail:'Stock already ran +9% today. Profit-taking could pull it back below $50. Theta on 8-day option is brutal — stock must move quickly. If NVIDIA news is already priced in, vol collapses.',
+    chips:['⚡ IV 71% — manageable','🕐 8 DTE — Theta burns fast','✅ High liquidity','🚀 NVIDIA catalyst active'],
+    chipsStyle:['wchip-gold','wchip-orange','wchip-green','wchip-green'],
+    score:91
+  },
+  {
+    rank:2, ticker:'LUNR', contract:'$28C May 16', type:'Short Call — SpaceX Proxy', setup:'Momentum + SpaceX IPO fever',
+    price:0.70, totalCost:70, stopPct:50, stopPrice:0.35,
+    t1:1.05, t2:1.40, t3:2.10,
+    t1pct:50, t2pct:100, t3pct:200,
+    earn:'May 14 — ⚠️ EXIT May 13', holdMax:'May 13 EOD', daysHold:6,
+    expectedMove:'+12–20% on stock', ivCurrent:85, ivCrush:'SEVERE if held through May 14 earnings — MUST EXIT May 13',
+    liquidity:'MEDIUM — adequate for small account', spread:'$0.05–$0.10',
+    popEstimate:35, lossChance:65,
+    breakEven:28.70,
+    catalyst:'SpaceX IPO hype driving all space proxies. LUNR beta 2.95 = 3x market moves. Space ETF mechanical demand. FCC spectrum rules. Quick 6-day flip.',
+    whyWin:'Beta 2.95 means if SPY moves 1%, LUNR moves 3%. SpaceX IPO news could drop any day — immediate 15-20% spike. Nine new space ETFs require LUNR shares. $175M strategic investment shows institutional confidence.',
+    whyFail:'Earnings May 14 = HARD STOP. If SpaceX IPO news is delayed, no catalyst. Beta 2.95 cuts both ways — -5% SPY day = -15% LUNR. IV 85% means options are expensive.',
+    chips:['⚠️ EXIT May 13','⚡ IV 85% — elevated','🚀 SpaceX catalyst','⏰ 6 days max'],
+    chipsStyle:['wchip-red','wchip-orange','wchip-green','wchip-gold'],
+    score:83
+  },
+  {
+    rank:3, ticker:'RKLB', contract:'$30C May 16', type:'Short Call — Earnings Reaction', setup:'Post-earnings breakout',
+    price:0.80, totalCost:80, stopPct:45, stopPrice:0.44,
+    t1:1.20, t2:1.60, t3:2.40,
+    t1pct:50, t2pct:100, t3pct:200,
+    earn:'Q1 TODAY — post-print entry only', holdMax:'May 15', daysHold:8,
+    expectedMove:'+10–18% on stock', ivCurrent:68, ivCrush:'MODERATE — IV may compress after earnings print',
+    liquidity:'HIGH — major space name', spread:'$0.03–$0.07',
+    popEstimate:36, lossChance:64,
+    breakEven:30.80,
+    catalyst:'Q1 earnings TODAY. FCC spectrum overhaul. Two launches in 48 hours. Neutron Q4 2026 = $5.6B contract unlock. SpaceX IPO hype. Only enter AFTER post-earnings reaction confirms stock holds $28.',
+    whyWin:'RKLB has the strongest fundamental catalyst pipeline in the space sector. Neutron rocket is the real prize — Q4 2026 debut. If Q1 beats estimates, stock breaks $30 with volume. FCC rules are a permanent tailwind.',
+    whyFail:'If Q1 disappoints, stock could drop 10-15% — this is an earnings reaction play, wait for the print. IV crush after earnings could offset 30-40% of option value even on a flat stock.',
+    chips:['⚠️ Wait for earnings print','📋 Post-print entry only','✅ Strong catalyst','🚀 Neutron milestone'],
+    chipsStyle:['wchip-red','wchip-orange','wchip-green','wchip-green'],
+    score:79
+  },
+  {
+    rank:4, ticker:'PLTR', contract:'$52C May 16', type:'Short Call — Value Bounce', setup:'Oversold + 85% revenue growth',
+    price:0.82, totalCost:82, stopPct:45, stopPrice:0.45,
+    t1:1.23, t2:1.64, t3:2.46,
+    t1pct:50, t2pct:100, t3pct:200,
+    earn:'Aug 4 (very safe)', holdMax:'May 15', daysHold:8,
+    expectedMove:'+8–15% on stock', ivCurrent:52, ivCrush:'LOW — earnings Aug 4, no near-term risk',
+    liquidity:'VERY HIGH — mega cap name', spread:'$0.01–$0.03',
+    popEstimate:40, lossChance:60,
+    breakEven:52.82,
+    catalyst:'Q1 revenue $1.63B up 85% YoY. Guidance raised to $7.66B. Stock down 20% YTD despite blowout numbers. AIP enterprise expansion accelerating. Cheapest IV on the short-dated list.',
+    whyWin:'85% revenue growth + guidance raise + 20% drawdown = explosive when sentiment flips. AIP deal announcements cause 5-10% daily spikes. Low IV 52% means you get maximum leverage per dollar spent.',
+    whyFail:'Stock below all moving averages. High valuation even after selloff. If broader market sells off, high-multiple names hit hardest. 8-day window is tight — needs a catalyst.',
+    chips:['✅ IV 52% — cheapest','📈 85% revenue growth','💎 Value entry setup','✅ High liquidity'],
+    chipsStyle:['wchip-green','wchip-green','wchip-gold','wchip-green'],
+    score:76
+  },
+  {
+    rank:5, ticker:'ACHR', contract:'$14C May 16', type:'Post-Earnings Momentum', setup:'Beat + breakout',
+    price:0.72, totalCost:72, stopPct:50, stopPrice:0.36,
+    t1:1.08, t2:1.44, t3:2.16,
+    t1pct:50, t2pct:100, t3pct:200,
+    earn:'TODAY — ⚠️ EARNINGS PLAY — enter after print', holdMax:'May 15', daysHold:8,
+    expectedMove:'+15–30% on stock if beat', ivCurrent:88, ivCrush:'SEVERE if entering today — IV crush after print. Only enter day after earnings.',
+    liquidity:'MEDIUM', spread:'$0.05–$0.12',
+    popEstimate:33, lossChance:67,
+    breakEven:14.72,
+    catalyst:'$2B cash, $6B order backlog, White House pilot program. Analysts project 130% upside. Earnings today — if the company beats on any metric, stock rips. Post-earnings entry next day when IV compresses.',
+    whyWin:'130% analyst upside consensus. White House program adds political tailwind. $2B cash = zero financial stress. If FAA certification news comes, stock doubles. Post-earnings IV compression makes options cheaper.',
+    whyFail:'⚡ IV 88% TODAY. Do not buy before earnings — massive IV crush risk. eVTOL companies are perpetually "almost there." Any certification delay crushes the stock.',
+    chips:['⚠️ WAIT for print','⚡ IV 88% — elevated','📋 Post-print only','🛫 FAA catalyst'],
+    chipsStyle:['wchip-red','wchip-orange','wchip-red','wchip-green'],
+    score:70
+  },
+  {
+    rank:6, ticker:'SOFI', contract:'$17C May 16', type:'Oversold Bounce', setup:'Post-earnings snap-back',
+    price:0.48, totalCost:48, stopPct:50, stopPrice:0.24,
+    t1:0.72, t2:0.96, t3:1.44,
+    t1pct:50, t2pct:100, t3pct:200,
+    earn:'Jul 28 (safe)', holdMax:'May 15', daysHold:8,
+    expectedMove:'+8–14% on stock', ivCurrent:62, ivCrush:'LOW — earnings July, no near-term risk',
+    liquidity:'HIGH', spread:'$0.02–$0.05',
+    popEstimate:36, lossChance:64,
+    breakEven:17.48,
+    catalyst:'Down 28% YTD, down 15% on earnings day despite revenue beat. Analysts: "market overreacted to one soft segment." $1.10B Q1 revenue beat. Record $12.18B loan originations up 68% YoY. Rate cut narrative.',
+    whyWin:'Post-earnings selloffs of 15% in quality fintech that beat revenue historically bounce hard within 2-3 weeks. Rate cut expectations are a structural tailwind for fintech. Multiple analysts upgraded the stock this week.',
+    whyFail:'Stock below 20-day (6.7%) and 100-day (22.6%) SMA. Could continue grinding lower. 8-day option needs immediate price action — bounce plays can take weeks.',
+    chips:['📉 Down 28% YTD','✅ IV 62% — moderate','📈 Revenue beat','💰 Cheapest play ($48)'],
+    chipsStyle:['wchip-gold','wchip-green','wchip-green','wchip-green'],
+    score:65
+  },
+  {
+    rank:7, ticker:'S', contract:'$13C May 16', type:'52-Week Low Bounce', setup:'Deep value + sector catalyst',
+    price:0.55, totalCost:55, stopPct:50, stopPrice:0.28,
+    t1:0.83, t2:1.10, t3:1.65,
+    t1pct:51, t2pct:100, t3pct:200,
+    earn:'Jun 3 (safe for this expiry)', holdMax:'May 15', daysHold:8,
+    expectedMove:'+8–16% on stock', ivCurrent:48, ivCrush:'VERY LOW — lowest IV on the list',
+    liquidity:'MEDIUM-HIGH', spread:'$0.03–$0.07',
+    popEstimate:34, lossChance:66,
+    breakEven:13.55,
+    catalyst:'52-week low zone at $12.23. Trading at 3.5x forward revenue vs CrowdStrike 18x. 43% revenue growth. CRWD earnings Jun 4 will lift all cybersecurity names. AI-native SOC platform fastest-growing product.',
+    whyWin:'Cheapest IV on the entire list (48%) = maximum leverage. CRWD earnings Jun 4 lifts all cyber stocks — rising tide. 5x valuation discount to peers cannot persist. Selling exhaustion visible in declining volume.',
+    whyFail:'Smallest market cap — institutional interest limited. Stock below all moving averages. Cybersecurity can stay cheap longer than expected. Short window of 8 days may not be enough for the bounce.',
+    chips:['💎 IV 48% — lowest','📊 3.5x revenue (vs CRWD 18x)','✅ 43% growth','⏳ Patience needed'],
+    chipsStyle:['wchip-green','wchip-green','wchip-green','wchip-gold'],
+    score:62
+  },
+  {
+    rank:8, ticker:'MARA', contract:'$14C May 16', type:'BTC Momentum + AI Pivot', setup:'Pullback entry only',
+    price:0.65, totalCost:65, stopPct:55, stopPrice:0.29,
+    t1:0.98, t2:1.30, t3:1.95,
+    t1pct:51, t2pct:100, t3pct:200,
+    earn:'Aug 5 (safe)', holdMax:'May 15', daysHold:8,
+    expectedMove:'+15–25% on stock (after pullback)', ivCurrent:105, ivCrush:'ELEVATED — IV 105%, wait for compression',
+    liquidity:'HIGH — crypto stocks very liquid', spread:'$0.03–$0.08',
+    popEstimate:30, lossChance:70,
+    breakEven:14.65,
+    catalyst:'AI data center pivot story is completely new narrative. Long Ridge Energy acquisition = 505MW power + 1,600 acres. Macquarie $29 target. BTC above $96K. Wait for today\'s 8.5% move to pull back 3-5% first.',
+    whyWin:'When BTC breaks $100K (watching closely), all miners gap up 20-40% in a single day. The AI pivot narrative is genuinely new and unpriced — Macquarie $29 vs current $12 is a big gap. Short-dated option captures a BTC spike.',
+    whyFail:'⚡ IV 105% = very expensive options. Already up 8.5% today — chasing is the #1 killer. Bitcoin is correlated to everything — if risk-off hits, BTC drops and MARA drops 2x. Must wait for pullback.',
+    chips:['⚡ IV 105% — HIGH RISK','₿ BTC correlated','⚠️ Wait for pullback','🏭 AI pivot story'],
+    chipsStyle:['wchip-red','wchip-orange','wchip-orange','wchip-gold'],
+    score:55
+  }
+];
+
+// ════════════════════════════════════════════════
+// 40% MODE FUNCTIONS
+// ════════════════════════════════════════════════
+function init40Mode() {
+  renderGoalTracker();
+  recalc();
+  renderPlays40();
+}
+
+function renderGoalTracker() {
+  const bal = 325.75, weeklyTarget = 0.40, openPL = 15;
+  const goal = bal * weeklyTarget;
+  const remaining = Math.max(0, goal - openPL);
+  const pct = Math.min(100, (openPL / goal * 100)).toFixed(0);
+  document.getElementById('goalTracker').innerHTML = `
+    <div class="gt-cell"><div class="gt-val" style="color:var(--cyan)">$${bal.toFixed(2)}</div><div class="gt-lbl">Starting Balance</div></div>
+    <div class="gt-cell"><div class="gt-val" style="color:var(--gold)">+40%</div><div class="gt-lbl">Weekly Target</div></div>
+    <div class="gt-cell"><div class="gt-val" style="color:var(--green)">+$${openPL.toFixed(2)}</div><div class="gt-lbl">Gained This Week</div></div>
+    <div class="gt-cell"><div class="gt-val" style="color:var(--red)">$${remaining.toFixed(2)}</div><div class="gt-lbl">Still Needed</div></div>
+    <div class="gt-cell"><div class="gt-val">${pct}%</div><div class="gt-lbl">Progress to Goal</div></div>`;
+  document.getElementById('progressLabel').textContent = `$${openPL.toFixed(2)} / $${goal.toFixed(2)} needed`;
+  document.getElementById('weeklyProgressBar').style.width = pct + '%';
+}
+
+function recalc() {
+  const bal = parseFloat(document.getElementById('calcBal').value) || 325.75;
+  const riskPct = parseInt(document.getElementById('riskSlider').value) || 40;
+  document.getElementById('riskPct').textContent = riskPct + '%';
+  const dollarRisk = bal * riskPct / 100;
+  const weeklyGoalDollar = bal * 0.40;
+  const reqReturn = ((weeklyGoalDollar / dollarRisk) * 100).toFixed(0);
+  document.getElementById('dollarRisk').textContent = '$' + dollarRisk.toFixed(2);
+  document.getElementById('reqReturn').textContent = reqReturn + '%';
+  document.getElementById('mathBreakdown').innerHTML = `
+    <div class="pstat"><div class="pstat-val" style="color:var(--cyan)">$${bal.toFixed(0)}</div><div class="pstat-lbl">Account Size</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--gold)">$${weeklyGoalDollar.toFixed(0)}</div><div class="pstat-lbl">Weekly +40% Target</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--red)">$${dollarRisk.toFixed(0)}</div><div class="pstat-lbl">Amount Risked</div></div>
+    <div class="pstat"><div class="pstat-val" style="color:var(--orange)">${reqReturn}%</div><div class="pstat-lbl">Return Required</div></div>`;
+}
+
+function renderPlays40() {
+  const bal = 325.75, riskPct = 0.40;
+  const dollarRisk = bal * riskPct;
+  const weeklyGoal = bal * 0.40;
+  document.getElementById('plays40Container').innerHTML = PLAYS_40.map((p, idx) => {
+    const rankClass = ['rank-1','rank-2','rank-3','rank-4'][Math.min(idx,3)];
+    const reqReturnForThis = ((weeklyGoal / (p.totalCost)) * 100).toFixed(0);
+    const potentialGain3 = (p.t3 - p.price) * 100;
+    const potentialLoss = p.totalCost;
+    const rr = (potentialGain3 / potentialLoss).toFixed(1);
+    const chipHtml = p.chips.map((c,ci)=>`<span class="wchip ${p.chipsStyle[ci]}">${c}</span>`).join('');
+    const scoreColor = p.score >= 80 ? 'var(--green)' : p.score >= 65 ? 'var(--gold)' : 'var(--orange)';
+    return `
+    <div class="play40-card ${rankClass}">
+      <div class="play40-hdr">
+        <div style="display:flex;align-items:flex-start;gap:10px">
+          <div class="p40-rank">#${p.rank}</div>
+          <div>
+            <div class="p40-ticker">${p.ticker}</div>
+            <div class="p40-contract">${p.contract} · ${p.type}</div>
+            <div style="margin-top:4px"><span class="badge b-gray">${p.setup}</span></div>
+          </div>
+        </div>
+        <div class="p40-cost">
+          <div class="p40-price">$${p.totalCost}</div>
+          <div class="p40-label">total cost</div>
+          <div style="margin-top:5px;text-align:right">
+            <span style="font-size:13px;font-weight:800;color:${scoreColor}">AI Score: ${p.score}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MATH BOX -->
+      <div class="math-box">
+        <div class="math-title">📐 The Math — Does This Reach +40% Weekly Goal?</div>
+        <div class="math-grid">
+          <div class="math-item"><div class="math-val" style="color:var(--red)">$${p.totalCost}</div><div class="math-lbl">Cost / Risk</div></div>
+          <div class="math-item"><div class="math-val" style="color:var(--gold)">${reqReturnForThis}%</div><div class="math-lbl">Return Needed for 40% acct</div></div>
+          <div class="math-item"><div class="math-val" style="color:var(--green)">+${p.t2pct}% @ T2</div><div class="math-lbl">Realistic Target</div></div>
+          <div class="math-item"><div class="math-val" style="color:var(--purple)">${rr}:1</div><div class="math-lbl">R/R Ratio (T3)</div></div>
+          <div class="math-item"><div class="math-val" style="color:var(--cyan)">$${p.breakEven}</div><div class="math-lbl">Break-Even (stock)</div></div>
+          <div class="math-item"><div class="math-val" style="color:var(--green)">${p.popEstimate}%</div><div class="math-lbl">Prob. of Profit</div></div>
+          <div class="math-item"><div class="math-val" style="color:var(--red)">${p.lossChance}%</div><div class="math-lbl">Chance of Loss</div></div>
+          <div class="math-item"><div class="math-val">${p.daysHold}d</div><div class="math-lbl">Max Hold</div></div>
+        </div>
+      </div>
+
+      <!-- TARGETS -->
+      <div class="targets-row" style="margin-bottom:10px">
+        <div class="tgt tgt-1">$${p.t1} (+${p.t1pct}%)<div class="tgt-lbl">T1 — Sell ½</div></div>
+        <div class="tgt tgt-2">$${p.t2} (+${p.t2pct}%)<div class="tgt-lbl">T2 — Sell ¼</div></div>
+        <div class="tgt tgt-3">$${p.t3} (+${p.t3pct}%)<div class="tgt-lbl">T3 — Sell ¼</div></div>
+      </div>
+
+      <!-- WHY WIN / WHY FAIL -->
+      <div class="why-grid">
+        <div class="why-box why-yes">
+          <div class="why-title">✅ Why this could hit +40%</div>
+          <div class="why-text">${p.whyWin}</div>
+        </div>
+        <div class="why-box why-no">
+          <div class="why-title">❌ Why this could fail</div>
+          <div class="why-text">${p.whyFail}</div>
+        </div>
+      </div>
+
+      <!-- RISK DETAILS -->
+      <div style="background:rgba(255,255,255,0.02);border-radius:7px;padding:9px 11px;margin-top:8px;font-size:11px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;color:var(--muted)">
+          <div>📅 <strong style="color:var(--text)">Expiry Risk:</strong> ${p.holdMax}</div>
+          <div>⚡ <strong style="color:var(--text)">IV Crush:</strong> ${p.ivCrush}</div>
+          <div>💧 <strong style="color:var(--text)">Liquidity:</strong> ${p.liquidity}</div>
+          <div>📊 <strong style="color:var(--text)">Spread:</strong> ${p.spread}</div>
+          <div>📈 <strong style="color:var(--text)">Expected Move:</strong> ${p.expectedMove}</div>
+          <div>🛑 <strong style="color:var(--text)">Stop Loss:</strong> $${p.stopPrice} (-${p.stopPct}%)</div>
+        </div>
+      </div>
+
+      <!-- CATALYST + WARNINGS -->
+      <div style="margin-top:8px;padding:8px 10px;background:rgba(6,182,212,.04);border-left:2px solid var(--cyan);border-radius:0 6px 6px 0;font-size:11px;color:var(--muted);line-height:1.55">
+        <strong style="color:var(--cyan)">Catalyst:</strong> ${p.catalyst}
+      </div>
+
+      <div class="warn-chips">${chipHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// INIT ALL
+// ════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  initClock();
+  initPicks();
+  initPortCharts();
+  initPLChart();
+  initOptionPlays();
+  initWatchlist();
+  initIntel();
+  initScenarios();
+  initAlerts();
+  initSettings();
+  init40Mode();
+  // Simulated live price flicker
+  setInterval(()=>{
+    const v = parseFloat('564.82') + (Math.random()-.49)*.08;
+  }, 3200);
+});
+</script>
+
+<!-- ══════════════════════════════════
+     PORTFOLIO EDIT MODAL
+══════════════════════════════════ -->
+<div class="pedit-overlay hidden" id="peditOverlay">
+  <div class="pedit-modal">
+    <div class="pedit-hdr">
+      <div class="pedit-hdr-title">✏️ Edit My Portfolio</div>
+      <button class="pedit-close" onclick="closePortEdit()">✕</button>
+    </div>
+    <div class="pedit-tabs">
+      <button class="pedit-tab active" onclick="peditTab('account')">Account</button>
+      <button class="pedit-tab" onclick="peditTab('active')">Active Positions</button>
+      <button class="pedit-tab" onclick="peditTab('closed')">Closed Trades</button>
+    </div>
+    <div class="pedit-body">
+
+      <!-- ACCOUNT TAB -->
+      <div class="pedit-panel active" id="ptab-account">
+        <div class="pf-section-title">Account Balances</div>
+        <div class="pf-row">
+          <div>
+            <div class="pf-label">Total Value ($)</div>
+            <input class="pf-input" id="pe-totalValue" type="number" step="0.01" placeholder="325.75">
+          </div>
+          <div>
+            <div class="pf-label">Buying Power ($)</div>
+            <input class="pf-input" id="pe-buyingPower" type="number" step="0.01" placeholder="295.75">
+          </div>
+        </div>
+        <div class="pf-row">
+          <div>
+            <div class="pf-label">Starting Value ($)</div>
+            <input class="pf-input" id="pe-startValue" type="number" step="0.01" placeholder="201.99">
+          </div>
+          <div>
+            <div class="pf-label">Goal ($)</div>
+            <input class="pf-input" id="pe-goal" type="number" step="1" placeholder="1000">
+          </div>
+        </div>
+        <div class="pf-section-title">Growth History (for chart)</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Comma-separated values for each checkpoint. Keep the same number of dates and values.</div>
+        <div class="pf-full">
+          <div class="pf-label">Dates (comma-separated)</div>
+          <input class="pf-input" id="pe-chartDates" type="text" placeholder="Mar 3, Mar 17, Apr 14, May 7">
+        </div>
+        <div class="pf-full">
+          <div class="pf-label">Values ($)</div>
+          <input class="pf-input" id="pe-chartValues" type="text" placeholder="201.99, 218, 271, 325.75">
+        </div>
+      </div>
+
+      <!-- ACTIVE POSITIONS TAB -->
+      <div class="pedit-panel" id="ptab-active">
+        <div id="active-pos-list"></div>
+        <button class="btn-add-pos" onclick="showAddPosForm()">＋ Add New Position</button>
+
+        <!-- ADD POSITION FORM -->
+        <div class="pos-form-wrap" id="addPosForm">
+          <div class="pos-form-title" id="addPosFormTitle">New Position</div>
+          <input type="hidden" id="editPosId" value="">
+          <div class="pf-row">
+            <div>
+              <div class="pf-label">Ticker</div>
+              <input class="pf-input" id="ap-ticker" type="text" placeholder="AAPL" style="text-transform:uppercase">
+            </div>
+            <div>
+              <div class="pf-label">Type</div>
+              <select class="pf-select" id="ap-type">
+                <option>Call</option>
+                <option>Put</option>
+                <option>Stock</option>
+              </select>
+            </div>
+          </div>
+          <div class="pf-row">
+            <div>
+              <div class="pf-label">Strike ($)</div>
+              <input class="pf-input" id="ap-strike" type="number" step="0.5" placeholder="15">
+            </div>
+            <div>
+              <div class="pf-label">Contracts / Shares</div>
+              <input class="pf-input" id="ap-contracts" type="number" step="1" min="1" placeholder="1">
+            </div>
+          </div>
+          <div class="pf-row">
+            <div>
+              <div class="pf-label">Entry Price ($)</div>
+              <input class="pf-input" id="ap-entry" type="number" step="0.01" placeholder="0.60">
+            </div>
+            <div>
+              <div class="pf-label">Current Price ($)</div>
+              <input class="pf-input" id="ap-current" type="number" step="0.01" placeholder="0.75">
+            </div>
+          </div>
+          <div class="pf-row">
+            <div>
+              <div class="pf-label">Stop Loss ($)</div>
+              <input class="pf-input" id="ap-stop" type="number" step="0.01" placeholder="0.25">
+            </div>
+            <div>
+              <div class="pf-label">Expiry / Exit Date</div>
+              <input class="pf-input" id="ap-expiry" type="text" placeholder="Jun 18, 2026">
+            </div>
+          </div>
+          <div class="pf-full">
+            <div class="pf-label">Hard Exit (optional)</div>
+            <input class="pf-input" id="ap-hardExit" type="text" placeholder="Jun 10, 9:45 AM">
+          </div>
+          <div class="pf-full">
+            <div class="pf-label">Earnings / Risk Warning (optional)</div>
+            <input class="pf-input" id="ap-warning" type="text" placeholder="Earnings Jun 10 pre-market — sell before open">
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn-save-port" style="font-size:12px;padding:9px" onclick="savePosEntry()">Save Position</button>
+            <button class="btn-cancel-port" style="font-size:12px;padding:9px" onclick="cancelAddPos()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLOSED TRADES TAB -->
+      <div class="pedit-panel" id="ptab-closed">
+        <div id="closed-trades-list"></div>
+        <button class="btn-add-pos" onclick="showAddClosedForm()">＋ Log Closed Trade</button>
+
+        <!-- ADD CLOSED TRADE FORM -->
+        <div class="pos-form-wrap" id="addClosedForm">
+          <div class="pos-form-title">Log Closed Trade</div>
+          <input type="hidden" id="editClosedId" value="">
+          <div class="pf-row">
+            <div>
+              <div class="pf-label">Ticker</div>
+              <input class="pf-input" id="ct-ticker" type="text" placeholder="SOUN" style="text-transform:uppercase">
+            </div>
+            <div>
+              <div class="pf-label">Contract / Description</div>
+              <input class="pf-input" id="ct-desc" type="text" placeholder="$8 Call">
+            </div>
+          </div>
+          <div class="pf-row">
+            <div>
+              <div class="pf-label">Entry Price ($)</div>
+              <input class="pf-input" id="ct-entry" type="number" step="0.01" placeholder="0.96">
+            </div>
+            <div>
+              <div class="pf-label">Exit Price ($)</div>
+              <input class="pf-input" id="ct-exit" type="number" step="0.01" placeholder="2.00">
+            </div>
+          </div>
+          <div class="pf-row">
+            <div>
+              <div class="pf-label">Realized P&L ($)</div>
+              <input class="pf-input" id="ct-pnl" type="number" step="0.01" placeholder="104">
+            </div>
+            <div>
+              <div class="pf-label">Result</div>
+              <select class="pf-select" id="ct-result">
+                <option value="win">Win ✅</option>
+                <option value="loss">Loss ❌</option>
+                <option value="break">Breakeven ➖</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="btn-save-port" style="font-size:12px;padding:9px" onclick="saveClosedEntry()">Save Trade</button>
+            <button class="btn-cancel-port" style="font-size:12px;padding:9px" onclick="cancelAddClosed()">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pedit-body -->
+    <div class="pedit-footer">
+      <button class="btn-cancel-port" onclick="closePortEdit()">Cancel</button>
+      <button class="btn-save-port" onclick="savePortfolio()">✓ Save All Changes</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
