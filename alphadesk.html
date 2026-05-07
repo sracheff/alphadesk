@@ -377,6 +377,46 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .pos-form-title{font-size:11px;font-weight:800;color:var(--cyan);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
 .warn-toggle{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:4px}
 .warn-toggle input{cursor:pointer}
+
+/* STOCK LOOKUP */
+.lookup-chip{padding:4px 10px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;font-size:11px;font-weight:700;font-family:monospace;cursor:pointer;color:var(--muted);transition:all .15s;letter-spacing:.3px}
+.lookup-chip:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(6,182,212,.07)}
+.lk-hero{display:flex;align-items:flex-start;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:12px}
+.lk-name{font-size:11px;color:var(--muted);margin-bottom:3px;font-weight:500}
+.lk-ticker{font-size:26px;font-weight:900;font-family:monospace;letter-spacing:-.5px;line-height:1}
+.lk-fullname{font-size:12px;color:var(--muted);margin-top:4px}
+.lk-price{font-size:30px;font-weight:900;font-family:monospace;letter-spacing:-.5px;line-height:1;text-align:right}
+.lk-change{font-size:13px;font-weight:700;text-align:right;margin-top:4px}
+.lk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border2);border-top:1px solid var(--border)}
+@media(max-width:600px){.lk-grid{grid-template-columns:repeat(2,1fr)}}
+.lk-cell{padding:11px 13px;background:var(--panel)}
+.lk-cell-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.lk-cell-val{font-size:13px;font-weight:700;font-family:monospace}
+.lk-ai-section{padding:15px 18px;border-top:1px solid var(--border)}
+.lk-ai-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--cyan);margin-bottom:10px}
+.lk-scores{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+@media(max-width:500px){.lk-scores{grid-template-columns:1fr 1fr}}
+.lk-score-card{background:var(--panel2);border:1px solid var(--border2);border-radius:9px;padding:10px;text-align:center}
+.lk-score-val{font-size:22px;font-weight:900;font-family:monospace}
+.lk-score-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:3px}
+.lk-verdict{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:14px}
+.lk-verdict-icon{font-size:28px;flex-shrink:0}
+.lk-verdict-title{font-size:14px;font-weight:800;margin-bottom:3px}
+.lk-verdict-sub{font-size:11px;line-height:1.55}
+.lk-play{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:13px;margin-bottom:10px}
+.lk-play-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.lk-play-title{font-size:12px;font-weight:700}
+.lk-zones{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.lk-zone{border-radius:8px;padding:10px;text-align:center}
+.lk-zone-buy{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.18)}
+.lk-zone-hold{background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.16)}
+.lk-zone-cut{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.15)}
+.lk-zone-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:700}
+.lk-zone-buy .lk-zone-lbl{color:var(--green)}
+.lk-zone-hold .lk-zone-lbl{color:var(--cyan)}
+.lk-zone-cut .lk-zone-lbl{color:var(--red)}
+.lk-zone-val{font-size:14px;font-weight:800;font-family:monospace}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -395,6 +435,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="nav-divider"></div>
     <div class="nav-item" onclick="showSec('watchlist')"><span class="nav-icon">👁</span>Watchlists</div>
     <div class="nav-item" onclick="showSec('intel')"><span class="nav-icon">🔬</span>AI Intel Hub</div>
+    <div class="nav-item" onclick="showSec('lookup')"><span class="nav-icon">🔍</span>Stock Lookup</div>
     <div class="nav-item" onclick="showSec('scenarios')"><span class="nav-icon">🔮</span>Scenario Engine</div>
     <div class="nav-divider"></div>
     <div class="nav-item" onclick="showSec('mode40')" style="border-left-color:transparent;position:relative"><span class="nav-icon">🎯</span>40% Mode <span class="nav-badge" style="background:var(--red)">HOT</span></div>
@@ -415,7 +456,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
-    <div class="searchbox"><span>🔍</span><input id="srch" type="text" placeholder="Search ticker, strategy…"></div>
+    <div class="searchbox" onclick="focusLookup()" style="cursor:text"><span>🔍</span><input id="srch" type="text" placeholder="Search ticker, strategy…" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter'){quickLookup(this.value.trim());this.value=''}"></div>
     <div class="mktchips">
       <div class="mkt"><span class="lb">SPY</span><span class="up">564.82</span><span class="up">+0.8%</span></div>
       <div class="mkt"><span class="lb">QQQ</span><span class="up">481.40</span><span class="up">+1.1%</span></div>
@@ -727,6 +768,71 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
   </div><!-- /mode40 -->
 
+  <!-- ══════════════════════════════════════════
+       STOCK LOOKUP
+  ══════════════════════════════════════════ -->
+  <div class="section" id="sec-lookup">
+    <div class="sec-title">🔍 Stock Lookup</div>
+    <div class="sec-sub">Search any ticker — get live quote data + AI-powered advice, options play ideas, and risk score</div>
+
+    <!-- SEARCH BAR -->
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;gap:10px;align-items:center">
+        <input id="lookupInput" type="text" placeholder="Enter ticker symbol (e.g. NVDA, TSLA, CRWD)…"
+               class="pf-input" style="flex:1;font-size:14px;padding:11px 14px;text-transform:uppercase;letter-spacing:.5px"
+               oninput="this.value=this.value.toUpperCase()"
+               onkeydown="if(event.key==='Enter')doLookup()">
+        <button class="btn btn-primary" style="padding:11px 22px;font-size:13px;flex-shrink:0" onclick="doLookup()">
+          Analyze ↗
+        </button>
+      </div>
+      <!-- Quick chips -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;align-items:center">
+        <span style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px">Quick:</span>
+        <span class="lookup-chip" onclick="quickLookup('NVDA')">NVDA</span>
+        <span class="lookup-chip" onclick="quickLookup('IONQ')">IONQ</span>
+        <span class="lookup-chip" onclick="quickLookup('PLTR')">PLTR</span>
+        <span class="lookup-chip" onclick="quickLookup('AMD')">AMD</span>
+        <span class="lookup-chip" onclick="quickLookup('CRWD')">CRWD</span>
+        <span class="lookup-chip" onclick="quickLookup('RKLB')">RKLB</span>
+        <span class="lookup-chip" onclick="quickLookup('ACHR')">ACHR</span>
+        <span class="lookup-chip" onclick="quickLookup('TSLA')">TSLA</span>
+        <span class="lookup-chip" onclick="quickLookup('SPY')">SPY</span>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div id="lookupLoading" style="display:none;text-align:center;padding:50px 20px">
+      <div style="font-size:32px;margin-bottom:12px;animation:spin 1s linear infinite;display:inline-block">⏳</div>
+      <div style="font-size:14px;color:var(--muted);margin-top:8px">Fetching live data + running AI analysis…</div>
+    </div>
+
+    <!-- ERROR -->
+    <div id="lookupError" style="display:none;text-align:center;padding:40px 20px">
+      <div style="font-size:32px;margin-bottom:10px">⚠️</div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:6px" id="lookupErrorMsg">Ticker not found</div>
+      <div style="font-size:12px;color:var(--muted)">Check the symbol and try again. Make sure it's a valid US equity ticker.</div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="lookupResults" style="display:none"></div>
+
+    <!-- EMPTY STATE -->
+    <div id="lookupEmpty" style="text-align:center;padding:60px 20px">
+      <div style="font-size:44px;margin-bottom:14px">🔍</div>
+      <div style="font-size:16px;font-weight:800;margin-bottom:7px">Analyze Any Stock</div>
+      <div style="font-size:12px;color:var(--muted);max-width:340px;margin:0 auto;line-height:1.7">
+        Type any ticker symbol and get instant AI analysis — price action, trend assessment, options play recommendation, risk score, and entry/exit guidance tailored to your account size.
+      </div>
+      <div style="margin-top:18px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px">
+        <div style="padding:7px 14px;background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.18);border-radius:7px;font-size:11px;color:var(--cyan)">📊 Live Quote</div>
+        <div style="padding:7px 14px;background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.18);border-radius:7px;font-size:11px;color:var(--purple)">🤖 AI Thesis</div>
+        <div style="padding:7px 14px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);border-radius:7px;font-size:11px;color:var(--green)">⚡ Options Idea</div>
+        <div style="padding:7px 14px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);border-radius:7px;font-size:11px;color:var(--gold)">🎯 Entry Zone</div>
+      </div>
+    </div>
+  </div><!-- /lookup -->
+
   </div><!-- /content -->
 </div><!-- /main -->
 </div><!-- /app -->
@@ -762,6 +868,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
     <div class="mob-drawer-item" id="mdi-intel" onclick="mobNav('intel');closeDrawer()">
       <span class="mni">🔬</span>Intel Hub
+    </div>
+    <div class="mob-drawer-item" id="mdi-lookup" onclick="mobNav('lookup');closeDrawer()">
+      <span class="mni">🔍</span>Lookup
     </div>
     <div class="mob-drawer-item" id="mdi-scenarios" onclick="mobNav('scenarios');closeDrawer()">
       <span class="mni">🔮</span>Scenarios
@@ -1609,7 +1718,7 @@ function showSec(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('sec-' + id).classList.add('active');
-  const map = {picks:'AI Picks',portfolio:'Portfolio',options:'Options',watchlist:'Watchlist',intel:'Intel',scenarios:'Scenario',mode40:'40%',alerts:'Alerts',settings:'Strategy'};
+  const map = {picks:'AI Picks',portfolio:'Portfolio',options:'Options',watchlist:'Watchlist',intel:'Intel',lookup:'Stock Lookup',scenarios:'Scenario',mode40:'40%',alerts:'Alerts',settings:'Strategy'};
   document.querySelectorAll('.nav-item').forEach(n => {
     if (n.textContent.includes(map[id] || '')) n.classList.add('active');
   });
@@ -1618,7 +1727,7 @@ function showSec(id) {
 
 // ── MOBILE NAV ──────────────────────────────────
 const MOB_MAIN = ['picks','portfolio','options','mode40'];
-const MOB_DRAWER_IDS = ['watchlist','intel','scenarios','alerts','settings'];
+const MOB_DRAWER_IDS = ['watchlist','intel','lookup','scenarios','alerts','settings'];
 
 function mobNav(id) {
   showSec(id);
@@ -1652,6 +1761,409 @@ function toggleDrawer() {
 function closeDrawer() {
   document.getElementById('mobDrawer').classList.remove('open');
   document.getElementById('mobOverlay').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════
+// STOCK LOOKUP
+// ════════════════════════════════════════════════
+function focusLookup() {
+  showSec('lookup');
+  setTimeout(() => document.getElementById('lookupInput').focus(), 80);
+}
+
+function quickLookup(ticker) {
+  document.getElementById('lookupInput').value = ticker.toUpperCase();
+  showSec('lookup');
+  doLookup();
+}
+
+async function doLookup() {
+  const raw = document.getElementById('lookupInput').value.trim().toUpperCase();
+  if (!raw) return;
+  const ticker = raw;
+  _setLookupState('loading');
+  try {
+    // Yahoo Finance via CORS proxy
+    const proxy = 'https://corsproxy.io/?';
+    const chartUrl = proxy + encodeURIComponent(
+      `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=5d&includePrePost=false`
+    );
+    const summUrl = proxy + encodeURIComponent(
+      `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?modules=summaryDetail,defaultKeyStatistics,financialData,price`
+    );
+
+    const [chartRes, summRes] = await Promise.all([fetch(chartUrl), fetch(summUrl)]);
+    const chartJson = await chartRes.json();
+    const summJson  = await summRes.json();
+
+    if (chartJson.chart?.error || !chartJson.chart?.result?.[0]) {
+      _setLookupState('error', `"${ticker}" not found. Check the symbol.`);
+      return;
+    }
+
+    const meta   = chartJson.chart.result[0].meta;
+    const summ   = summJson.quoteSummary?.result?.[0] || {};
+    renderLookupResult(ticker, meta, summ);
+  } catch(e) {
+    _setLookupState('error', 'Network error — check your connection and try again.');
+  }
+}
+
+function _setLookupState(state, msg) {
+  document.getElementById('lookupLoading').style.display = state === 'loading' ? 'block' : 'none';
+  document.getElementById('lookupError').style.display   = state === 'error'   ? 'block' : 'none';
+  document.getElementById('lookupResults').style.display = state === 'results' ? 'block' : 'none';
+  document.getElementById('lookupEmpty').style.display   = state === 'empty'   ? 'block' : 'none';
+  if (state === 'error' && msg) document.getElementById('lookupErrorMsg').textContent = msg;
+}
+
+function renderLookupResult(ticker, meta, summ) {
+  const price   = meta.regularMarketPrice || 0;
+  const prev    = meta.previousClose || meta.chartPreviousClose || price;
+  const chg     = price - prev;
+  const chgPct  = prev ? (chg / prev) * 100 : 0;
+  const hi52    = meta.fiftyTwoWeekHigh || price * 1.5;
+  const lo52    = meta.fiftyTwoWeekLow  || price * 0.5;
+  const vol     = meta.regularMarketVolume || 0;
+  const exch    = meta.exchangeName || '';
+  const name    = meta.shortName || ticker;
+
+  const sd   = summ.summaryDetail  || {};
+  const ks   = summ.defaultKeyStatistics || {};
+  const fd   = summ.financialData  || {};
+  const pr   = summ.price          || {};
+
+  const mktCap   = pr.marketCap?.raw     || sd.marketCap?.raw     || 0;
+  const avgVol   = sd.averageVolume?.raw  || 0;
+  const pe       = sd.trailingPE?.raw     || null;
+  const fwdPE    = sd.forwardPE?.raw      || null;
+  const beta     = sd.beta?.raw           || null;
+  const ma50     = sd.fiftyDayAverage?.raw  || 0;
+  const ma200    = sd.twoHundredDayAverage?.raw || 0;
+  const tgt      = fd.targetMeanPrice?.raw  || 0;
+  const recMean  = fd.recommendationMean?.raw || null; // 1=Strong Buy … 5=Strong Sell
+  const recKey   = fd.recommendationKey  || '';
+  const earningsGrowth = fd.earningsGrowth?.raw || null;
+  const peg      = ks.pegRatio?.raw       || null;
+  const shortFloat = ks.shortPercentOfFloat?.raw || null;
+
+  // ── Scoring ──────────────────────────────────
+  const range52Pct = hi52 > lo52 ? ((price - lo52) / (hi52 - lo52)) * 100 : 50;
+  let trendScore = 50;
+  if (ma50  && price > ma50)  trendScore += 15; else if (ma50)  trendScore -= 15;
+  if (ma200 && price > ma200) trendScore += 15; else if (ma200) trendScore -= 15;
+  if (vol && avgVol && vol > avgVol * 1.5) trendScore += 10;
+  if (chgPct > 3) trendScore += 8; else if (chgPct < -3) trendScore -= 8;
+  trendScore = Math.min(100, Math.max(0, Math.round(trendScore)));
+
+  let valueScore = 50;
+  if (pe !== null) {
+    if (pe < 15) valueScore += 20;
+    else if (pe < 25) valueScore += 10;
+    else if (pe > 60) valueScore -= 15;
+    else if (pe < 0)  valueScore -= 20;
+  }
+  if (peg !== null && peg > 0) {
+    if (peg < 1) valueScore += 20;
+    else if (peg < 2) valueScore += 8;
+    else if (peg > 3) valueScore -= 10;
+  }
+  if (tgt && price && tgt > price * 1.2) valueScore += 15;
+  else if (tgt && price && tgt < price) valueScore -= 10;
+  if (recMean !== null) {
+    if (recMean < 2)   valueScore += 15;
+    else if (recMean < 2.5) valueScore += 8;
+    else if (recMean > 3.5) valueScore -= 12;
+  }
+  valueScore = Math.min(100, Math.max(0, Math.round(valueScore)));
+
+  let riskScore = 50;
+  if (beta !== null) {
+    if (beta < 0.8)     riskScore = 25;
+    else if (beta < 1.2) riskScore = 40;
+    else if (beta < 1.8) riskScore = 58;
+    else if (beta < 2.5) riskScore = 72;
+    else                 riskScore = 88;
+  }
+  if (shortFloat !== null && shortFloat > 0.15) riskScore += 12;
+  if (range52Pct < 15) riskScore += 8;
+  riskScore = Math.min(100, Math.max(0, Math.round(riskScore)));
+
+  const overall = Math.round((trendScore * 0.4) + (valueScore * 0.35) + ((100 - riskScore) * 0.25));
+
+  // ── Verdict ──────────────────────────────────
+  function getVerdict(o, trend, risk) {
+    if (o >= 72 && trend >= 65) return {label:'STRONG BUY', icon:'🟢', cls:'lk-verdict-buy', thesis:'Momentum is strong, value metrics are favorable, and the trend is intact. This is a high-conviction setup — consider entering on any minor pullback.'};
+    if (o >= 60) return {label:'BUY / WATCH', icon:'🟡', cls:'lk-verdict-watch', thesis:'Decent setup with some positive signals. Wait for a clean entry — ideally a small dip to support or a confirmed breakout on volume.'};
+    if (o >= 45) return {label:'HOLD / NEUTRAL', icon:'⚪', cls:'lk-verdict-hold', thesis:'Mixed signals — not a clear buy or sell right now. Watch for a catalyst or wait for the chart to resolve the current range.'};
+    if (risk > 70) return {label:'HIGH RISK — CAUTION', icon:'🔴', cls:'lk-verdict-risk', thesis:'Elevated volatility and risk flags. If you have a position, tighten stops. If considering entry, keep size very small.'};
+    return {label:'AVOID / WAIT', icon:'🔴', cls:'lk-verdict-avoid', thesis:'Weak signals. The risk/reward is unfavorable at current levels. Better opportunities exist elsewhere — wait for a cleaner setup.'};
+  }
+  const verdict = getVerdict(overall, trendScore, riskScore);
+
+  // ── Options play suggestion ───────────────────
+  function getOptionsPlay(price, trend, risk, range52, beta, bp) {
+    bp = bp || 295.75;
+    const budget75 = bp * 0.25; // max per play rule
+    // directional bias
+    if (trend >= 65 && range52 < 80) {
+      // bullish, not at 52-wk high yet
+      const strike = (Math.ceil(price * 1.03 / 0.5) * 0.5); // ~3% OTM call
+      return {
+        type:'📈 BUY CALL',
+        idea:`~$${strike.toFixed(0)}C · 3–5 weeks out`,
+        why:'Strong uptrend + room to run before 52-week high. A slightly OTM call gives leverage with defined risk.',
+        budget: `Look for contracts $0.50–$0.75 ($50–$75 total)`,
+        entry:'Wait for a green open or small intraday dip — avoid chasing gaps',
+        cls:'b-green'
+      };
+    }
+    if (trend <= 35 && range52 > 60) {
+      // bearish from high
+      const strike = (Math.floor(price * 0.97 / 0.5) * 0.5);
+      return {
+        type:'📉 BUY PUT',
+        idea:`~$${strike.toFixed(0)}P · 2–4 weeks out`,
+        why:'Weakening trend from elevated levels. A put captures downside momentum with limited risk.',
+        budget:`Look for contracts $0.50–$0.75 ($50–$75 total)`,
+        entry:'Enter on a failed bounce or break below recent support',
+        cls:'b-red'
+      };
+    }
+    if (risk > 65 && beta && beta > 1.5) {
+      return {
+        type:'⚡ STRADDLE / AVOID',
+        idea:'High volatility — straddle or skip',
+        why:`Beta of ${beta.toFixed(1)} = big moves possible in either direction. A straddle profits from big moves but is expensive. Safer to wait for direction.`,
+        budget:'If doing straddle, size very small — 15% of buying power max',
+        entry:'Only enter straddle well before a known catalyst',
+        cls:'b-orange'
+      };
+    }
+    return {
+      type:'👁 WATCH LIST',
+      idea:'No strong play right now',
+      why:'Signals are mixed or neutral. Add to watchlist and wait for a cleaner setup — either a breakout with volume or a pullback to a key level.',
+      budget:'Save buying power for higher-conviction plays',
+      entry:'No entry recommended at this time',
+      cls:'b-gray'
+    };
+  }
+  const optPlay = getOptionsPlay(price, trendScore, riskScore, range52Pct, beta, PORTFOLIO.buyingPower);
+
+  // ── Entry / Exit zones ────────────────────────
+  const buyZone  = (price * 0.96).toFixed(2);
+  const holdZone = (price * 1.00).toFixed(2);
+  const cutZone  = (price * 0.92).toFixed(2);
+  const tgtZone  = tgt ? tgt.toFixed(2) : (price * 1.18).toFixed(2);
+
+  // ── Helpers ───────────────────────────────────
+  const fmt = n => n >= 1e12 ? (n/1e12).toFixed(2)+'T' : n >= 1e9 ? (n/1e9).toFixed(2)+'B' : n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n.toLocaleString();
+  const fmtN = (n,d=2) => n !== null && n !== undefined ? n.toFixed(d) : '—';
+  const scoreColor = s => s >= 65 ? 'var(--green)' : s >= 45 ? 'var(--gold)' : 'var(--red)';
+  const verdictBg = {
+    'lk-verdict-buy':'rgba(16,185,129,.09)',
+    'lk-verdict-watch':'rgba(245,158,11,.08)',
+    'lk-verdict-hold':'rgba(100,116,139,.08)',
+    'lk-verdict-risk':'rgba(239,68,68,.08)',
+    'lk-verdict-avoid':'rgba(239,68,68,.06)'
+  };
+  const verdictBorder = {
+    'lk-verdict-buy':'rgba(16,185,129,.22)',
+    'lk-verdict-watch':'rgba(245,158,11,.22)',
+    'lk-verdict-hold':'rgba(100,116,139,.2)',
+    'lk-verdict-risk':'rgba(239,68,68,.22)',
+    'lk-verdict-avoid':'rgba(239,68,68,.18)'
+  };
+  const recLabel = recKey ? recKey.replace(/-/g,' ').toUpperCase() : (recMean ? (recMean<2?'STRONG BUY':recMean<2.5?'BUY':recMean<3.5?'HOLD':'SELL') : '—');
+
+  document.getElementById('lookupResults').innerHTML = `
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
+
+      <!-- HERO -->
+      <div class="lk-hero">
+        <div>
+          <div class="lk-name">${exch}</div>
+          <div class="lk-ticker">${ticker}</div>
+          <div class="lk-fullname">${name}</div>
+        </div>
+        <div>
+          <div class="lk-price" style="color:${chg>=0?'var(--green)':'var(--red)'}">$${price.toFixed(2)}</div>
+          <div class="lk-change ${chg>=0?'up':'dn'}">
+            ${chg>=0?'▲':'▼'} $${Math.abs(chg).toFixed(2)} (${chgPct>=0?'+':''}${chgPct.toFixed(2)}%) today
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:5px;text-align:right">
+            52W: $${lo52.toFixed(2)} – $${hi52.toFixed(2)}
+          </div>
+        </div>
+      </div>
+
+      <!-- METRICS GRID -->
+      <div class="lk-grid">
+        <div class="lk-cell">
+          <div class="lk-cell-lbl">Market Cap</div>
+          <div class="lk-cell-val">${mktCap ? '$'+fmt(mktCap) : '—'}</div>
+        </div>
+        <div class="lk-cell">
+          <div class="lk-cell-lbl">P/E Ratio</div>
+          <div class="lk-cell-val">${pe !== null ? fmtN(pe,1) : '—'}</div>
+        </div>
+        <div class="lk-cell">
+          <div class="lk-cell-lbl">Fwd P/E</div>
+          <div class="lk-cell-val">${fwdPE !== null ? fmtN(fwdPE,1) : '—'}</div>
+        </div>
+        <div class="lk-cell">
+          <div class="lk-cell-lbl">Beta</div>
+          <div class="lk-cell-val" style="color:${beta!==null&&beta>2?'var(--red)':beta!==null&&beta>1.5?'var(--gold)':'var(--text)'}">${beta !== null ? fmtN(beta,2) : '—'}</div>
+        </div>
+        <div class="lk-cell">
+          <div class="lk-cell-lbl">Volume</div>
+          <div class="lk-cell-val" style="color:${vol>avgVol*1.5?'var(--cyan)':'var(--text)'}">${fmt(vol)}</div>
+        </div>
+        <div class="lk-cell">
+          <div class="lk-cell-lbl">Avg Volume</div>
+          <div class="lk-cell-val">${avgVol ? fmt(avgVol) : '—'}</div>
+        </div>
+        <div class="lk-cell">
+          <div class="lk-cell-lbl">50-Day MA</div>
+          <div class="lk-cell-val" style="color:${ma50&&price>ma50?'var(--green)':ma50?'var(--red)':'var(--text)'}">${ma50 ? '$'+ma50.toFixed(2) : '—'}</div>
+        </div>
+        <div class="lk-cell">
+          <div class="lk-cell-lbl">Analyst Target</div>
+          <div class="lk-cell-val" style="color:${tgt&&tgt>price?'var(--green)':'var(--text)'}">${tgt ? '$'+tgt.toFixed(2) : '—'}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI ANALYSIS CARD -->
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
+      <div class="lk-ai-section">
+        <div class="lk-ai-title">🤖 AI Analysis — ${ticker}</div>
+
+        <!-- SCORES -->
+        <div class="lk-scores">
+          <div class="lk-score-card">
+            <div class="lk-score-val" style="color:${scoreColor(trendScore)}">${trendScore}</div>
+            <div class="lk-score-lbl">Trend Score</div>
+          </div>
+          <div class="lk-score-card">
+            <div class="lk-score-val" style="color:${scoreColor(valueScore)}">${valueScore}</div>
+            <div class="lk-score-lbl">Value Score</div>
+          </div>
+          <div class="lk-score-card">
+            <div class="lk-score-val" style="color:${riskScore>65?'var(--red)':riskScore>40?'var(--gold)':'var(--green)'}">${riskScore}</div>
+            <div class="lk-score-lbl">Risk Score</div>
+          </div>
+        </div>
+
+        <!-- OVERALL RATING BAR -->
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+            <span style="font-size:11px;font-weight:700;color:var(--muted)">OVERALL RATING</span>
+            <span style="font-size:13px;font-weight:900;font-family:monospace;color:${scoreColor(overall)}">${overall}/100</span>
+          </div>
+          <div class="progress"><div class="progress-fill" style="width:${overall}%;background:${scoreColor(overall)}"></div></div>
+        </div>
+
+        <!-- VERDICT -->
+        <div class="lk-verdict" style="background:${verdictBg[verdict.cls]};border:1px solid ${verdictBorder[verdict.cls]}">
+          <div class="lk-verdict-icon">${verdict.icon}</div>
+          <div>
+            <div class="lk-verdict-title">${verdict.label}</div>
+            <div class="lk-verdict-sub" style="color:var(--muted)">${verdict.thesis}</div>
+          </div>
+        </div>
+
+        <!-- ANALYST CONSENSUS -->
+        ${recLabel !== '—' ? `
+        <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;margin-bottom:14px">
+          <span style="font-size:11px;color:var(--muted);font-weight:600">WALL STREET CONSENSUS:</span>
+          <span class="badge ${recMean<2.5?'b-green':recMean<3.5?'b-gold':'b-red'}">${recLabel}</span>
+          ${tgt ? `<span style="font-size:11px;color:var(--muted);margin-left:4px">Avg target <strong style="color:var(--text)">$${tgt.toFixed(2)}</strong> · ${tgt>price?(((tgt-price)/price)*100).toFixed(1)+'% upside':'below current price'}</span>` : ''}
+        </div>` : ''}
+
+        <!-- PRICE ZONES -->
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Entry / Exit Zones</div>
+        <div class="lk-zones">
+          <div class="lk-zone lk-zone-buy">
+            <div class="lk-zone-lbl">Buy Zone</div>
+            <div class="lk-zone-val" style="color:var(--green)">$${buyZone}</div>
+            <div style="font-size:9px;color:var(--muted);margin-top:3px">~4% below</div>
+          </div>
+          <div class="lk-zone lk-zone-hold">
+            <div class="lk-zone-lbl">Target</div>
+            <div class="lk-zone-val" style="color:var(--cyan)">$${tgtZone}</div>
+            <div style="font-size:9px;color:var(--muted);margin-top:3px">${tgt?'analyst avg':'est. +18%'}</div>
+          </div>
+          <div class="lk-zone lk-zone-cut">
+            <div class="lk-zone-lbl">Stop Loss</div>
+            <div class="lk-zone-val" style="color:var(--red)">$${cutZone}</div>
+            <div style="font-size:9px;color:var(--muted);margin-top:3px">~8% below</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OPTIONS PLAY -->
+      <div style="padding:0 18px 16px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Options Play Idea</div>
+        <div class="lk-play">
+          <div class="lk-play-hdr">
+            <span class="badge ${optPlay.cls}" style="font-size:11px">${optPlay.type}</span>
+            <span style="font-size:12px;font-weight:700;font-family:monospace;color:var(--text)">${optPlay.idea}</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:7px">${optPlay.why}</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:11px"><span style="color:var(--cyan);font-weight:700">Budget: </span><span style="color:var(--muted)">${optPlay.budget}</span></div>
+            <div style="font-size:11px"><span style="color:var(--gold);font-weight:700">Entry timing: </span><span style="color:var(--muted)">${optPlay.entry}</span></div>
+          </div>
+        </div>
+
+        <!-- 52-WEEK POSITION BAR -->
+        <div style="margin-top:4px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:9px;color:var(--muted)">52-WK LOW $${lo52.toFixed(2)}</span>
+            <span style="font-size:9px;font-weight:700;color:var(--cyan)">NOW ${range52Pct.toFixed(0)}% of range</span>
+            <span style="font-size:9px;color:var(--muted)">HIGH $${hi52.toFixed(2)}</span>
+          </div>
+          <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;position:relative">
+            <div style="position:absolute;left:0;top:0;height:100%;width:${range52Pct.toFixed(1)}%;background:linear-gradient(90deg,var(--green),var(--cyan));border-radius:3px"></div>
+            <div style="position:absolute;top:-2px;height:10px;width:3px;background:white;border-radius:1px;left:calc(${range52Pct.toFixed(1)}% - 1px)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW: quick stats -->
+    <div class="grid3" style="margin-bottom:6px">
+      <div class="card-sm">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Earnings Growth</div>
+        <div style="font-size:17px;font-weight:800;font-family:monospace;color:${earningsGrowth!==null&&earningsGrowth>0?'var(--green)':'var(--red)'}">
+          ${earningsGrowth !== null ? (earningsGrowth*100).toFixed(1)+'%' : '—'}
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">YoY earnings</div>
+      </div>
+      <div class="card-sm">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">PEG Ratio</div>
+        <div style="font-size:17px;font-weight:800;font-family:monospace;color:${peg!==null&&peg<1?'var(--green)':peg!==null&&peg<2?'var(--gold)':'var(--red)'}">
+          ${peg !== null ? fmtN(peg,2) : '—'}
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">${peg!==null&&peg<1?'Undervalued':peg!==null&&peg<2?'Fair value':'Elevated'}</div>
+      </div>
+      <div class="card-sm">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Short Interest</div>
+        <div style="font-size:17px;font-weight:800;font-family:monospace;color:${shortFloat!==null&&shortFloat>0.15?'var(--red)':shortFloat!==null&&shortFloat>0.08?'var(--gold)':'var(--green)'}">
+          ${shortFloat !== null ? (shortFloat*100).toFixed(1)+'%' : '—'}
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">${shortFloat!==null&&shortFloat>0.15?'High short — squeeze risk':shortFloat!==null&&shortFloat>0.08?'Moderate short':'Low short interest'}</div>
+      </div>
+    </div>
+
+    <div style="font-size:10px;color:var(--dim);text-align:center;padding:8px 0 4px">
+      Data via Yahoo Finance · AI scores are algorithmic, not financial advice · Always verify before trading
+    </div>
+  `;
+
+  _setLookupState('results');
 }
 
 // ════════════════════════════════════════════════
