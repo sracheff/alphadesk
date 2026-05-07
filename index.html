@@ -378,6 +378,33 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .warn-toggle{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:4px}
 .warn-toggle input{cursor:pointer}
 
+/* TRADE JOURNAL */
+.jnl-stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.jnl-stat-val{font-size:22px;font-weight:900;font-family:monospace;letter-spacing:-.5px}
+.jnl-stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.jnl-card{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.jnl-card:hover{border-color:rgba(255,255,255,.14)}
+.jnl-card.win{border-left:3px solid var(--green)}
+.jnl-card.loss{border-left:3px solid var(--red)}
+.jnl-card.breakeven{border-left:3px solid var(--muted)}
+.jnl-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+.jnl-ticker{font-size:18px;font-weight:900;font-family:monospace}
+.jnl-contract{font-size:11px;color:var(--muted);margin-top:2px}
+.jnl-pnl{font-size:18px;font-weight:900;font-family:monospace;text-align:right}
+.jnl-date{font-size:10px;color:var(--muted);text-align:right;margin-top:2px}
+.jnl-lesson{font-size:12px;color:var(--muted);line-height:1.6;padding:8px 10px;background:rgba(255,255,255,.025);border-left:2px solid var(--cyan);border-radius:0 6px 6px 0;margin-top:8px}
+.jnl-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.jnl-tag{padding:2px 7px;background:rgba(255,255,255,.05);border:1px solid var(--border2);border-radius:10px;font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.grade-pill{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0}
+.gp-a{background:rgba(16,185,129,.18);color:var(--green)}
+.gp-b{background:rgba(6,182,212,.18);color:var(--cyan)}
+.gp-c{background:rgba(245,158,11,.18);color:var(--gold)}
+.gp-d{background:rgba(239,68,68,.18);color:var(--red)}
+.jnl-form{background:rgba(6,182,212,.04);border:1px solid rgba(6,182,212,.2);border-radius:11px;padding:16px;margin-bottom:16px}
+.jnl-form-title{font-size:12px;font-weight:800;color:var(--cyan);letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px}
+.jnl-filter-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.jnl-filter{padding:4px 11px;border-radius:14px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);transition:all .15s}
+.jnl-filter.active{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.3);color:var(--cyan)}
 /* EARNINGS CALENDAR */
 .ec-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border2);flex-wrap:wrap}
 .ec-row:last-child{border-bottom:none}
@@ -453,6 +480,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   <nav class="nav">
     <div class="nav-item active" onclick="showSec('picks')"><span class="nav-icon">🤖</span>AI Picks <span class="nav-badge-green">8</span></div>
     <div class="nav-item" onclick="showSec('portfolio')"><span class="nav-icon">💼</span>My Portfolio</div>
+    <div class="nav-item" onclick="showSec('journal')"><span class="nav-icon">📓</span>Trade Journal</div>
     <div class="nav-item" onclick="showSec('options')"><span class="nav-icon">⚡</span>Options Center</div>
     <div class="nav-divider"></div>
     <div class="nav-item" onclick="showSec('watchlist')"><span class="nav-icon">👁</span>Watchlists</div>
@@ -635,11 +663,110 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   </div>
 
   <!-- ══════════════════════════════════════════
+       TRADE JOURNAL
+  ══════════════════════════════════════════ -->
+  <div class="section" id="sec-journal">
+    <div class="sec-title">📓 Trade Journal</div>
+    <div class="sec-sub">Log every trade · Track what you learned · Grade your discipline · Build the habits that compound</div>
+
+    <!-- STATS STRIP -->
+    <div id="jnl-stats" style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px"></div>
+
+    <!-- ADD TRADE BUTTON -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="jnl-filter-row" style="margin-bottom:0" id="jnlFilters">
+        <div class="jnl-filter active" onclick="filterJournal('all',this)">All</div>
+        <div class="jnl-filter" onclick="filterJournal('win',this)">✅ Wins</div>
+        <div class="jnl-filter" onclick="filterJournal('loss',this)">❌ Losses</div>
+        <div class="jnl-filter" onclick="filterJournal('A',this)">Grade A</div>
+        <div class="jnl-filter" onclick="filterJournal('violation',this)">⚠️ Rule Breaks</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="toggleJournalForm()">＋ Log Trade</button>
+    </div>
+
+    <!-- ADD TRADE FORM -->
+    <div class="jnl-form" id="jnlForm" style="display:none">
+      <div class="jnl-form-title">Log a Trade</div>
+      <input type="hidden" id="jnl-edit-id" value="">
+      <div class="pf-row">
+        <div><div class="pf-label">Date</div><input class="pf-input" id="jnl-date" type="date"></div>
+        <div><div class="pf-label">Ticker</div><input class="pf-input" id="jnl-ticker" type="text" placeholder="NVDA" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"></div>
+      </div>
+      <div class="pf-row">
+        <div><div class="pf-label">Contract / Description</div><input class="pf-input" id="jnl-contract" type="text" placeholder="$55C Jun 20"></div>
+        <div>
+          <div class="pf-label">Type</div>
+          <select class="pf-select" id="jnl-type">
+            <option value="call">📈 Call</option>
+            <option value="put">📉 Put</option>
+            <option value="stock">📊 Stock</option>
+            <option value="spread">🦋 Spread</option>
+          </select>
+        </div>
+      </div>
+      <div class="pf-row-3">
+        <div><div class="pf-label">Entry Price ($)</div><input class="pf-input" id="jnl-entry" type="number" step="0.01" placeholder="0.75"></div>
+        <div><div class="pf-label">Exit Price ($)</div><input class="pf-input" id="jnl-exit" type="number" step="0.01" placeholder="1.50"></div>
+        <div><div class="pf-label">Contracts</div><input class="pf-input" id="jnl-contracts" type="number" step="1" min="1" value="1"></div>
+      </div>
+      <div class="pf-row">
+        <div>
+          <div class="pf-label">Result</div>
+          <select class="pf-select" id="jnl-result">
+            <option value="win">✅ Win</option>
+            <option value="loss">❌ Loss</option>
+            <option value="breakeven">➖ Breakeven</option>
+          </select>
+        </div>
+        <div>
+          <div class="pf-label">Grade — Did you follow your rules?</div>
+          <select class="pf-select" id="jnl-grade">
+            <option value="A">A — Perfect execution</option>
+            <option value="B">B — Minor deviation, controlled</option>
+            <option value="C">C — Broke a rule but got lucky</option>
+            <option value="D">D — Full rule violation</option>
+          </select>
+        </div>
+      </div>
+      <div class="pf-full">
+        <div class="pf-label">Tags (comma separated — e.g. momentum, earnings-play, quantum)</div>
+        <input class="pf-input" id="jnl-tags" type="text" placeholder="momentum, breakout, quantum">
+      </div>
+      <div class="pf-full">
+        <div class="pf-label">What did you learn? What would you do differently?</div>
+        <textarea class="pf-input" id="jnl-lesson" rows="3" placeholder="e.g. Sold at +50% target instead of letting it run. Next time I'll sell ⅓ at +50% and hold the rest..." style="resize:vertical;font-family:inherit;line-height:1.5"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn-save-port" style="font-size:12px;padding:9px" onclick="saveJournalEntry()">Save Trade</button>
+        <button class="btn-cancel-port" style="font-size:12px;padding:9px" onclick="toggleJournalForm()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- JOURNAL ENTRIES -->
+    <div id="jnl-entries"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
        WATCHLIST
   ══════════════════════════════════════════ -->
   <div class="section" id="sec-watchlist">
     <div class="sec-title">👁 Watchlists</div>
     <div class="sec-sub">Personal watchlist + AI sector research · IV flags · Earnings dates verified</div>
+
+    <!-- WHAT TO WATCH TODAY BANNER -->
+    <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,rgba(6,182,212,0.08),rgba(139,92,246,0.08));border-color:rgba(6,182,212,0.2)" id="wl-today-card">
+      <div class="card-hdr" style="margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:18px">🧠</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--cyan)">What to Watch Today</div>
+            <div style="font-size:10px;color:var(--muted)" id="wl-today-date"></div>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="refreshWatchToday()" style="font-size:10px">↻ Refresh</button>
+      </div>
+      <div id="wl-today-picks" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px"></div>
+    </div>
 
     <!-- MY WATCHLIST (personal, editable) -->
     <div class="card" style="margin-bottom:16px" id="my-wl-card">
@@ -951,6 +1078,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
     <div class="mob-drawer-item" id="mdi-lookup" onclick="mobNav('lookup');closeDrawer()">
       <span class="mni">🔍</span>Lookup
+    </div>
+    <div class="mob-drawer-item" id="mdi-journal" onclick="mobNav('journal');closeDrawer()">
+      <span class="mni">📓</span>Journal
     </div>
     <div class="mob-drawer-item" id="mdi-scenarios" onclick="mobNav('scenarios');closeDrawer()">
       <span class="mni">🔮</span>Scenarios
@@ -1609,6 +1739,33 @@ const WATCHLISTS = {
     {t:'PANW',n:'Palo Alto Networks',p:194.41,c:+5.84,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
     {t:'PLTR',n:'Palantir Technologies',p:136.79,c:+2.24,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
     {t:'NVDA',n:'NVIDIA Corp.',p:212.72,c:+2.35,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
+  ],
+  'Crypto-Adjacent': [
+    {t:'MARA',n:'MARA Holdings',p:16.42,c:-5.20,tgt:24,iv:88,conv:6,risk:9,earn:'Aug 2026',sig:'Speculative'},
+    {t:'RIOT',n:'Riot Platforms',p:9.87,c:-4.10,tgt:15,iv:85,conv:6,risk:9,earn:'Aug 2026',sig:'Speculative'},
+    {t:'COIN',n:'Coinbase Global',p:222.51,c:+3.40,tgt:270,iv:62,conv:7,risk:7,earn:'Aug 2026',sig:'Buy'},
+    {t:'MSTR',n:'Strategy (MicroStrategy)',p:398.70,c:+2.80,tgt:480,iv:78,conv:6,risk:8,earn:'Aug 2026',sig:'BTC Proxy'},
+  ],
+  'Clean Energy / EV': [
+    {t:'TSLA',n:'Tesla Inc.',p:289.34,c:-1.20,tgt:340,iv:55,conv:7,risk:6,earn:'Jul 2026',sig:'Hold'},
+    {t:'RIVN',n:'Rivian Automotive',p:12.88,c:-2.50,tgt:18,iv:80,conv:5,risk:9,earn:'Aug 2026',sig:'Speculative'},
+    {t:'PLUG',n:'Plug Power Inc.',p:2.11,c:-3.60,tgt:4,iv:92,conv:3,risk:10,earn:'Aug 2026',sig:'Lottery'},
+    {t:'FSLR',n:'First Solar',p:163.44,c:+1.80,tgt:200,iv:38,conv:7,risk:5,earn:'Jul 2026',sig:'Buy Dip'},
+  ],
+  'Fintech': [
+    {t:'SOFI',n:'SoFi Technologies',p:13.27,c:+2.10,tgt:18,iv:58,conv:7,risk:7,earn:'Jul 2026',sig:'Buy'},
+    {t:'UPST',n:'Upstart Holdings',p:68.45,c:-4.30,tgt:90,iv:72,conv:6,risk:8,earn:'Aug 2026',sig:'Buy Dip'},
+    {t:'AFRM',n:'Affirm Holdings',p:52.18,c:-1.90,tgt:70,iv:65,conv:7,risk:7,earn:'Aug 2026',sig:'Watch'},
+  ],
+  'Biotech / FDA': [
+    {t:'MRNA',n:'Moderna Inc.',p:34.22,c:-2.40,tgt:52,iv:58,conv:5,risk:8,earn:'Aug 2026',sig:'Speculative'},
+    {t:'RXRX',n:'Recursion Pharma',p:5.88,c:-6.10,tgt:10,iv:85,conv:4,risk:9,earn:'Aug 2026',sig:'Lottery'},
+    {t:'NVAX',n:'Novavax Inc.',p:6.44,c:-3.20,tgt:11,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Lottery'},
+  ],
+  'Oil & Energy': [
+    {t:'XLE',n:'Energy Select SPDR',p:84.12,c:+0.40,tgt:95,iv:22,conv:7,risk:4,earn:'N/A',sig:'Hold'},
+    {t:'OXY',n:'Occidental Petroleum',p:44.77,c:-0.80,tgt:55,iv:30,conv:7,risk:5,earn:'Aug 2026',sig:'Buy Dip'},
+    {t:'CVX',n:'Chevron Corp.',p:142.39,c:+0.60,tgt:160,iv:20,conv:7,risk:4,earn:'Aug 2026',sig:'Hold'},
   ]
 };
 
@@ -1798,7 +1955,7 @@ function showSec(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('sec-' + id).classList.add('active');
-  const map = {picks:'AI Picks',portfolio:'Portfolio',options:'Options',watchlist:'Watchlist',intel:'Intel',lookup:'Stock Lookup',scenarios:'Scenario',mode40:'40%',alerts:'Alerts',settings:'Strategy'};
+  const map = {picks:'AI Picks',portfolio:'Portfolio',journal:'Trade Journal',options:'Options',watchlist:'Watchlist',intel:'Intel',lookup:'Stock Lookup',scenarios:'Scenario',mode40:'40%',alerts:'Alerts',settings:'Strategy'};
   document.querySelectorAll('.nav-item').forEach(n => {
     if (n.textContent.includes(map[id] || '')) n.classList.add('active');
   });
@@ -1807,7 +1964,7 @@ function showSec(id) {
 
 // ── MOBILE NAV ──────────────────────────────────
 const MOB_MAIN = ['picks','portfolio','options','mode40'];
-const MOB_DRAWER_IDS = ['watchlist','intel','lookup','scenarios','alerts','settings'];
+const MOB_DRAWER_IDS = ['journal','watchlist','intel','lookup','scenarios','alerts','settings'];
 
 function mobNav(id) {
   showSec(id);
@@ -3080,6 +3237,276 @@ function renderPlays40() {
 }
 
 // ════════════════════════════════════════════════
+// TRADE JOURNAL
+// ════════════════════════════════════════════════
+let TRADE_JOURNAL = JSON.parse(localStorage.getItem('alphaJournal') || 'null') || [
+  {
+    id: 'j1',
+    date: '2025-11-14',
+    ticker: 'SOUN',
+    contract: '$10C Dec 20',
+    type: 'call',
+    entry: 0.35,
+    exit: 1.39,
+    contracts: 2,
+    pnl: 208,
+    pnlPct: +297,
+    result: 'win',
+    grade: 'B',
+    tags: ['momentum','AI-catalyst','earnings-reaction'],
+    lesson: 'Took profits at +300% but sold all at once. Should have trimmed ⅓ at +100%, ⅓ at +200%, held last third. Left money on the table.'
+  },
+  {
+    id: 'j2',
+    date: '2026-04-02',
+    ticker: 'RGTI',
+    contract: '$20C Apr 17',
+    type: 'call',
+    entry: 0.85,
+    exit: 1.35,
+    contracts: 1,
+    pnl: 50,
+    pnlPct: +59,
+    result: 'win',
+    grade: 'A',
+    tags: ['quantum','sector-halo','NVIDIA-catalyst'],
+    lesson: 'Followed the plan — bought after NVIDIA announcement, took 50%+ gain, held stop. Perfect execution.'
+  }
+];
+let jnlCurrentFilter = 'all';
+
+function saveJournalToStorage() {
+  localStorage.setItem('alphaJournal', JSON.stringify(TRADE_JOURNAL));
+}
+
+function renderJournalStats() {
+  const el = document.getElementById('jnl-stats');
+  if (!el) return;
+  const wins = TRADE_JOURNAL.filter(t => t.result === 'win');
+  const losses = TRADE_JOURNAL.filter(t => t.result === 'loss');
+  const total = TRADE_JOURNAL.length;
+  const totalPnl = TRADE_JOURNAL.reduce((s, t) => s + (t.pnl || 0), 0);
+  const avgPnlPct = total ? (TRADE_JOURNAL.reduce((s,t)=>s+(t.pnlPct||0),0)/total).toFixed(0) : 0;
+  const winRate = total ? Math.round(wins.length/total*100) : 0;
+  const gradeA = TRADE_JOURNAL.filter(t => t.grade === 'A').length;
+  const violations = TRADE_JOURNAL.filter(t => t.grade === 'D').length;
+
+  const stats = [
+    {label:'Total Trades', val: total, color:'var(--cyan)'},
+    {label:'Win Rate', val: winRate+'%', color: winRate>=50?'var(--green)':'var(--red)'},
+    {label:'Total P&L', val: (totalPnl>=0?'+':'')+totalPnl.toFixed(0), color: totalPnl>=0?'var(--green)':'var(--red)'},
+    {label:'Avg Return', val: (avgPnlPct>=0?'+':'')+avgPnlPct+'%', color: avgPnlPct>=0?'var(--green)':'var(--red)'},
+    {label:'Grade A', val: gradeA, color:'var(--gold)'},
+    {label:'Rule Breaks', val: violations, color: violations>0?'var(--orange)':'var(--muted)'},
+  ];
+
+  el.innerHTML = stats.map(s => `
+    <div class="jnl-stat card-sm" style="text-align:center">
+      <div style="font-size:18px;font-weight:800;color:${s.color};font-family:monospace">${s.val}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px">${s.label}</div>
+    </div>`).join('');
+}
+
+function renderJournal(filter) {
+  if (filter !== undefined) jnlCurrentFilter = filter;
+  renderJournalStats();
+  const el = document.getElementById('jnl-entries');
+  if (!el) return;
+
+  let entries = [...TRADE_JOURNAL].sort((a,b) => new Date(b.date)-new Date(a.date));
+  if (jnlCurrentFilter === 'win') entries = entries.filter(t => t.result === 'win');
+  else if (jnlCurrentFilter === 'loss') entries = entries.filter(t => t.result === 'loss');
+  else if (jnlCurrentFilter === 'A') entries = entries.filter(t => t.grade === 'A');
+  else if (jnlCurrentFilter === 'violation') entries = entries.filter(t => t.grade === 'D');
+
+  if (!entries.length) {
+    el.innerHTML = `<div style="text-align:center;color:var(--muted);padding:40px 0;font-size:13px">No trades yet. Log your first trade above.</div>`;
+    return;
+  }
+
+  el.innerHTML = entries.map(t => {
+    const cls = t.result === 'win' ? 'win' : t.result === 'loss' ? 'loss' : 'breakeven';
+    const pnlStr = (t.pnl >= 0 ? '+$' : '-$') + Math.abs(t.pnl).toFixed(0);
+    const pnlPctStr = (t.pnlPct >= 0 ? '+' : '') + t.pnlPct + '%';
+    const typeIcon = {call:'📈',put:'📉',stock:'📊',spread:'🦋'}[t.type] || '📊';
+    const gradeColor = {A:'var(--green)',B:'var(--cyan)',C:'var(--gold)',D:'var(--red)'}[t.grade]||'var(--muted)';
+    const tags = (t.tags||[]).map(tag => `<span class="jnl-tag">${tag}</span>`).join('');
+    return `
+    <div class="jnl-card ${cls}">
+      <div class="jnl-hdr">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="jnl-ticker">${typeIcon} ${t.ticker}</span>
+          <span style="font-size:12px;color:var(--muted)">${t.contract}</span>
+          <span class="grade-pill gp-${t.grade.toLowerCase()}" style="margin-left:4px">Grade ${t.grade}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="jnl-pnl ${cls}">${pnlStr} (${pnlPctStr})</span>
+          <span style="font-size:10px;color:var(--muted)">${t.date}</span>
+          <button class="btn btn-ghost btn-sm" onclick="editJournalEntry('${t.id}')" style="font-size:10px;padding:2px 7px">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteJournalEntry('${t.id}')" style="font-size:10px;padding:2px 7px">🗑</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin:4px 0 8px">
+        Entry: $${t.entry} → Exit: $${t.exit} · ${t.contracts} contract${t.contracts!==1?'s':''}
+      </div>
+      ${t.lesson ? `<div class="jnl-lesson">💡 ${t.lesson}</div>` : ''}
+      ${tags ? `<div class="jnl-tags" style="margin-top:8px">${tags}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function filterJournal(filter, el) {
+  jnlCurrentFilter = filter;
+  document.querySelectorAll('.jnl-filter').forEach(f => f.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderJournal();
+}
+
+function toggleJournalForm() {
+  const form = document.getElementById('jnlForm');
+  const isHidden = form.style.display === 'none';
+  form.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    // reset form
+    document.getElementById('jnl-edit-id').value = '';
+    document.getElementById('jnl-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('jnl-ticker').value = '';
+    document.getElementById('jnl-contract').value = '';
+    document.getElementById('jnl-type').value = 'call';
+    document.getElementById('jnl-entry').value = '';
+    document.getElementById('jnl-exit').value = '';
+    document.getElementById('jnl-contracts').value = '1';
+    document.getElementById('jnl-result').value = 'win';
+    document.getElementById('jnl-grade').value = 'A';
+    document.getElementById('jnl-tags').value = '';
+    document.getElementById('jnl-lesson').value = '';
+    form.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+function saveJournalEntry() {
+  const editId = document.getElementById('jnl-edit-id').value;
+  const entry = parseFloat(document.getElementById('jnl-entry').value) || 0;
+  const exit = parseFloat(document.getElementById('jnl-exit').value) || 0;
+  const contracts = parseInt(document.getElementById('jnl-contracts').value) || 1;
+  const pnl = (exit - entry) * contracts * 100;
+  const pnlPct = entry > 0 ? Math.round((exit - entry) / entry * 100) : 0;
+  const tags = document.getElementById('jnl-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+
+  const obj = {
+    id: editId || ('j' + Date.now()),
+    date: document.getElementById('jnl-date').value,
+    ticker: document.getElementById('jnl-ticker').value.toUpperCase(),
+    contract: document.getElementById('jnl-contract').value,
+    type: document.getElementById('jnl-type').value,
+    entry, exit, contracts,
+    pnl: parseFloat(pnl.toFixed(2)),
+    pnlPct,
+    result: document.getElementById('jnl-result').value,
+    grade: document.getElementById('jnl-grade').value,
+    tags,
+    lesson: document.getElementById('jnl-lesson').value.trim()
+  };
+
+  if (editId) {
+    const idx = TRADE_JOURNAL.findIndex(t => t.id === editId);
+    if (idx !== -1) TRADE_JOURNAL[idx] = obj;
+  } else {
+    TRADE_JOURNAL.unshift(obj);
+  }
+
+  saveJournalToStorage();
+  toggleJournalForm();
+  renderJournal();
+}
+
+function editJournalEntry(id) {
+  const t = TRADE_JOURNAL.find(e => e.id === id);
+  if (!t) return;
+  const form = document.getElementById('jnlForm');
+  form.style.display = 'block';
+  document.getElementById('jnl-edit-id').value = t.id;
+  document.getElementById('jnl-date').value = t.date;
+  document.getElementById('jnl-ticker').value = t.ticker;
+  document.getElementById('jnl-contract').value = t.contract;
+  document.getElementById('jnl-type').value = t.type;
+  document.getElementById('jnl-entry').value = t.entry;
+  document.getElementById('jnl-exit').value = t.exit;
+  document.getElementById('jnl-contracts').value = t.contracts;
+  document.getElementById('jnl-result').value = t.result;
+  document.getElementById('jnl-grade').value = t.grade;
+  document.getElementById('jnl-tags').value = (t.tags||[]).join(', ');
+  document.getElementById('jnl-lesson').value = t.lesson||'';
+  form.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function deleteJournalEntry(id) {
+  if (!confirm('Delete this trade from your journal?')) return;
+  TRADE_JOURNAL = TRADE_JOURNAL.filter(t => t.id !== id);
+  saveJournalToStorage();
+  renderJournal();
+}
+
+// ════════════════════════════════════════════════
+// DYNAMIC WATCHLIST — WHAT TO WATCH TODAY
+// ════════════════════════════════════════════════
+const WATCH_TODAY_POOL = [
+  {t:'IONQ',why:'Quantum sector momentum. NVIDIA Ising halo. 90 days to earnings — clean entry window. $55C Jun 20 at ~$0.90.',action:'BUY DIP',color:'var(--green)'},
+  {t:'CRWD',why:'Cybersecurity on technical breakout. Strong earnings growth. IV low at 35%. Sell-in-May rotation into defensives benefits this name.',action:'STRONG BUY',color:'var(--green)'},
+  {t:'PLTR',why:'Defense AI + NATO spending surge. Palantir wins government contracts in cycles. $140C Jun 20 priced well.',action:'STRONG BUY',color:'var(--green)'},
+  {t:'RKLB',why:'Two launches in 48 hours. Neutron rocket Q4 2026 catalyst. FCC space rule tailwind. Post-earnings dip = entry.',action:'BUY ON DIP',color:'var(--cyan)'},
+  {t:'ASTS',why:'FCC just approved 223 more satellites. BlueBird deployment catalysts every few weeks. Volatile but directional.',action:'BUY PULLBACK',color:'var(--cyan)'},
+  {t:'NVDA',why:'⚠️ EARNINGS MAY 28. Elevated IV. Consider waiting for post-print reaction — implied move ~8%. IV crush risk.',action:'WAIT EARNINGS',color:'var(--gold)'},
+  {t:'PANW',why:'⚠️ EARNINGS MAY 19. Cybersecurity leader. Post-earnings entry if holds $190. Do not buy calls before print.',action:'WAIT EARNINGS',color:'var(--gold)'},
+  {t:'AMD',why:'AI data center revenue accelerating. EPYC market share gains vs Intel. Dip into $95 is historically a buy.',action:'BUY DIP',color:'var(--cyan)'},
+  {t:'GDX',why:'Gold miners lag spot gold. GDX at relative discount. Macro uncertainty (tariffs/Fed) = gold hedge play.',action:'BUY',color:'var(--green)'},
+  {t:'SOFI',why:'Fintech with banking license. Rate cut environment benefits net interest margin. RSI not overbought.',action:'BUY',color:'var(--green)'},
+  {t:'COIN',why:'Bitcoin above $95K drives Coinbase volume. COIN is the ETF-adjacent BTC play with options.',action:'BUY DIP',color:'var(--cyan)'},
+  {t:'FCX',why:'Copper demand from AI data centers + EVs. China stimulus = commodity tailwind. $65C is a clean setup.',action:'BUY',color:'var(--green)'},
+  {t:'TSLA',why:'Volatile around delivery updates. Oversold on sentiment reset. Options premium elevated — wait for direction.',action:'NEUTRAL — WATCH',color:'var(--muted)'},
+  {t:'ACHR',why:'eVTOL sector early innings. FAA certification progress is the catalyst. Small size speculative entry only.',action:'SPECULATIVE',color:'var(--orange)'},
+  {t:'RGTI',why:'🚨 EARNINGS MAY 11 — 4 DAYS. DO NOT buy calls before print. Post-earnings entry if holds $18.',action:'AVOID — EARN',color:'var(--red)'},
+  {t:'QBTS',why:'⚠️ EARNINGS MAY 14 — 7 DAYS. Avoid calls until after print. Watch for post-earnings entry at $8+.',action:'AVOID — EARN',color:'var(--red)'},
+];
+
+function refreshWatchToday() {
+  const el = document.getElementById('wl-today-picks');
+  const dateEl = document.getElementById('wl-today-date');
+  if (!el) return;
+
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if (dateEl) dateEl.textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()} · Updated at market open`;
+
+  // Pick 6 tickers: prioritize by action priority (strong buy > buy > wait > avoid)
+  const priority = {'STRONG BUY':0,'BUY DIP':1,'BUY PULLBACK':1,'BUY':1,'WAIT EARNINGS':2,'NEUTRAL — WATCH':3,'SPECULATIVE':3,'AVOID — EARN':4};
+  const sorted = [...WATCH_TODAY_POOL].sort((a,b) => (priority[a.action]||5) - (priority[b.action]||5));
+  const picks = sorted.slice(0, 6);
+
+  el.innerHTML = picks.map(p => {
+    const actionBg = {
+      'STRONG BUY':'rgba(16,185,129,0.12)',
+      'BUY DIP':'rgba(6,182,212,0.10)',
+      'BUY PULLBACK':'rgba(6,182,212,0.10)',
+      'BUY':'rgba(6,182,212,0.10)',
+      'WAIT EARNINGS':'rgba(245,158,11,0.10)',
+      'NEUTRAL — WATCH':'rgba(100,116,139,0.10)',
+      'SPECULATIVE':'rgba(249,115,22,0.10)',
+      'AVOID — EARN':'rgba(239,68,68,0.10)',
+    }[p.action] || 'rgba(255,255,255,0.04)';
+    return `
+    <div style="background:${actionBg};border:1px solid rgba(255,255,255,0.07);border-radius:9px;padding:12px;cursor:pointer" onclick="showSec('intel')">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:14px;font-weight:800;color:var(--text)">${p.t}</span>
+        <span style="font-size:9px;font-weight:700;color:${p.color};background:rgba(0,0,0,0.3);padding:2px 7px;border-radius:5px">${p.action}</span>
+      </div>
+      <div style="font-size:10px;color:var(--muted);line-height:1.5">${p.why}</div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
 // INIT ALL
 // ════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
@@ -3088,7 +3515,9 @@ window.addEventListener('DOMContentLoaded', () => {
   initPortCharts();
   renderOptPositions();
   initOptionPlays();
+  renderJournal();
   initWatchlist();
+  refreshWatchToday();
   initIntel();
   initScenarios();
   initAlerts();
