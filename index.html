@@ -3157,16 +3157,19 @@ function recalc() {
 }
 
 function renderPlays40() {
-  const bal = 325.75, riskPct = 0.40;
+  const container = document.getElementById('plays40Container');
+  if (!container) return;
+  try {
+  const bal = 302.81, riskPct = 0.40;
   const dollarRisk = bal * riskPct;
   const weeklyGoal = bal * 0.40;
-  document.getElementById('plays40Container').innerHTML = PLAYS_40.map((p, idx) => {
+  container.innerHTML = PLAYS_40.map((p, idx) => {
     const rankClass = ['rank-1','rank-2','rank-3','rank-4'][Math.min(idx,3)];
     const reqReturnForThis = ((weeklyGoal / (p.totalCost)) * 100).toFixed(0);
     const potentialGain3 = (p.t3 - p.price) * 100;
     const potentialLoss = p.totalCost;
     const rr = (potentialGain3 / potentialLoss).toFixed(1);
-    const chipHtml = p.chips.map((c,ci)=>`<span class="wchip ${p.chipsStyle[ci]}">${c}</span>`).join('');
+    const chips = (p.chips||[]).map((c,ci) => '<span class="wchip ' + (p.chipsStyle[ci]||'wchip-gray') + '">' + c + '</span>').join('');
     const scoreColor = p.score >= 80 ? 'var(--green)' : p.score >= 65 ? 'var(--gold)' : 'var(--orange)';
     return `
     <div class="play40-card ${rankClass}">
@@ -3234,14 +3237,48 @@ function renderPlays40() {
         </div>
       </div>
 
+      <!-- HOW TO BUY THIS -->
+      <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:9px;padding:12px;margin-top:10px">
+        <div style="font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📋 How to Execute This Trade</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px">
+          <div style="background:rgba(0,0,0,0.3);border-radius:7px;padding:8px">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Step 1 — What you're buying</div>
+            <div style="font-size:11px;color:var(--text);font-weight:600">📈 <strong style="color:var(--cyan)">${p.contract}</strong> Call Option on ${p.ticker}</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">This is a CALL — you profit if ${p.ticker} stock price rises above $${p.breakEven} before ${p.holdMax}</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.3);border-radius:7px;padding:8px">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Step 2 — Entry order</div>
+            <div style="font-size:11px;color:var(--text)">Buy <strong style="color:var(--gold)">1 contract</strong> at <strong style="color:var(--gold)">~$${p.price}</strong> limit</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">Total cost: $${p.totalCost} · Use limit order, not market. Wait for ask price near $${p.price}.</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.3);border-radius:7px;padding:8px">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Step 3 — Stop loss</div>
+            <div style="font-size:11px;color:var(--red)">Sell if option drops to <strong>$${p.stopPrice}</strong></div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">That's -${p.stopPct}% from entry. Set a mental stop — do NOT let this go to zero.</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.3);border-radius:7px;padding:8px">
+            <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Step 4 — Take profits</div>
+            <div style="font-size:11px;color:var(--green)">Sell ½ at $${p.t1} · Hold rest to $${p.t2}+</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">Never hold past ${p.holdMax}. Consider selling all at +50% if uncertain.</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;padding:6px 10px;background:rgba(245,158,11,0.08);border-radius:6px;font-size:10px;color:var(--gold)">
+          ⚡ <strong>NOT a stock purchase.</strong> You're buying the RIGHT to buy ${p.ticker} at the strike price. If the stock doesn't move enough before expiry, the option expires worthless and you lose the $${p.totalCost} paid. Max loss = $${p.totalCost}.
+        </div>
+      </div>
+
       <!-- CATALYST + WARNINGS -->
       <div style="margin-top:8px;padding:8px 10px;background:rgba(6,182,212,.04);border-left:2px solid var(--cyan);border-radius:0 6px 6px 0;font-size:11px;color:var(--muted);line-height:1.55">
         <strong style="color:var(--cyan)">Catalyst:</strong> ${p.catalyst}
       </div>
 
-      <div class="warn-chips">${chipHtml}</div>
+      <div class="warn-chips">${chips}</div>
     </div>`;
   }).join('');
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--red);padding:20px;font-size:12px;background:rgba(239,68,68,0.08);border-radius:8px">⚠️ Render error: ' + e.message + '</div>';
+    console.error('renderPlays40:', e);
+  }
 }
 
 // ════════════════════════════════════════════════
