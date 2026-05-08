@@ -482,6 +482,50 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 </style>
 </head>
 <body>
+
+<!-- ══ PASSWORD GATE ══════════════════════════════════════════════ -->
+<div id="authGate" style="display:none;position:fixed;inset:0;z-index:9999;background:#0a0a0f;display:flex;align-items:center;justify-content:center;font-family:'Inter',system-ui,sans-serif">
+  <div style="width:100%;max-width:380px;padding:0 24px">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="font-size:36px;margin-bottom:12px">📈</div>
+      <div style="font-size:22px;font-weight:800;color:#f1f5f9;letter-spacing:-.5px">AlphaDesk</div>
+      <div style="font-size:12px;color:#64748b;margin-top:4px">Personal Trading Intelligence</div>
+    </div>
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:28px">
+      <div style="font-size:12px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Password</div>
+      <input id="authInput" type="password" placeholder="Enter password"
+        style="width:100%;padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#f1f5f9;font-size:14px;outline:none;box-sizing:border-box;transition:border-color .15s"
+        onkeydown="if(event.key==='Enter')checkAuth()"
+        onfocus="this.style.borderColor='rgba(6,182,212,.5)'"
+        onblur="this.style.borderColor='rgba(255,255,255,.1)'"
+      >
+      <div id="authError" style="display:none;margin-top:8px;font-size:11px;color:#ef4444;font-weight:600">⚠️ Incorrect password. Try again.</div>
+      <button onclick="checkAuth()"
+        style="width:100%;margin-top:14px;padding:12px;background:linear-gradient(135deg,#06b6d4,#8b5cf6);border:none;border-radius:9px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.3px;transition:opacity .15s"
+        onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+        Unlock AlphaDesk →
+      </button>
+    </div>
+    <div style="text-align:center;margin-top:16px;font-size:10px;color:#334155">Private — authorized access only</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const HASH = '7c9c1c7a0f6e3b2d5a8e4f1b9d2c6e0a3f7b5d8e2a4c1f9b6d3e7a0c5f2b8d4';
+  function h(s){let r=0;for(let i=0;i<s.length;i++){r=((r<<5)-r)+s.charCodeAt(i);r|=0;}return Math.abs(r).toString(16).padStart(8,'0').repeat(8).slice(0,64);}
+  const gate = document.getElementById('authGate');
+  if(localStorage.getItem('alphaAuth')==='ok'){gate.style.display='none';}
+  else{gate.style.display='flex';}
+  window.checkAuth=function(){
+    const v=document.getElementById('authInput').value;
+    if(v==='Money3690!'){localStorage.setItem('alphaAuth','ok');gate.style.display='none';}
+    else{const e=document.getElementById('authError');e.style.display='block';document.getElementById('authInput').value='';document.getElementById('authInput').focus();}
+  };
+  window.lockAlpha=function(){localStorage.removeItem('alphaAuth');location.reload();};
+})();
+</script>
+
 <div class="app">
 
 <!-- SIDEBAR -->
@@ -505,6 +549,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="nav-item" onclick="showSec('capitol')"><span class="nav-icon">🏛️</span>Capitol Desk <span class="nav-badge-green" id="capitolBadge" style="display:none">NEW</span></div>
     <div class="nav-item" onclick="showSec('alerts')"><span class="nav-icon">🔔</span>Alerts <span class="nav-badge">3</span></div>
     <div class="nav-item" onclick="showSec('settings')"><span class="nav-icon">⚙️</span>Strategy Settings</div>
+    <div class="nav-item" onclick="lockAlpha()" style="margin-top:auto;color:var(--muted)"><span class="nav-icon">🔒</span>Lock</div>
   </nav>
   <div class="sidebar-footer">
     <div class="acct-chip">
