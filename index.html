@@ -405,6 +405,19 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .jnl-filter-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
 .jnl-filter{padding:4px 11px;border-radius:14px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);transition:all .15s}
 .jnl-filter.active{background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.3);color:var(--cyan)}
+/* CAPITOL DESK */
+.cap-filter{padding:5px 13px;border-radius:14px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted);transition:all .15s}
+.cap-filter.active{background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.3);color:var(--purple)}
+.cap-trade-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:border-color .15s}
+.cap-trade-card:hover{border-color:var(--border2)}
+.cap-trade-card.cap-buy{border-left:3px solid var(--green)}
+.cap-trade-card.cap-sell{border-left:3px solid var(--red)}
+.cap-ticker-badge{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:monospace;flex-shrink:0}
+.cap-ticker-badge.cap-buy-bg{background:rgba(16,185,129,.15);color:var(--green)}
+.cap-ticker-badge.cap-sell-bg{background:rgba(239,68,68,.13);color:var(--red)}
+.cap-watchlist-card{background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.cap-watchlist-card.cap-buy{border-left:3px solid var(--green);background:rgba(16,185,129,.04)}
+.cap-watchlist-card.cap-sell{border-left:3px solid var(--red);background:rgba(239,68,68,.03)}
 /* EARNINGS CALENDAR */
 .ec-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border2);flex-wrap:wrap}
 .ec-row:last-child{border-bottom:none}
@@ -489,6 +502,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="nav-item" onclick="showSec('scenarios')"><span class="nav-icon">🔮</span>Scenario Engine</div>
     <div class="nav-divider"></div>
     <div class="nav-item" onclick="showSec('mode40')" style="border-left-color:transparent;position:relative"><span class="nav-icon">🎯</span>40% Mode <span class="nav-badge" style="background:var(--red)">HOT</span></div>
+    <div class="nav-item" onclick="showSec('capitol')"><span class="nav-icon">🏛️</span>Capitol Desk <span class="nav-badge-green" id="capitolBadge" style="display:none">NEW</span></div>
     <div class="nav-item" onclick="showSec('alerts')"><span class="nav-icon">🔔</span>Alerts <span class="nav-badge">3</span></div>
     <div class="nav-item" onclick="showSec('settings')"><span class="nav-icon">⚙️</span>Strategy Settings</div>
   </nav>
@@ -1048,6 +1062,58 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
   </div><!-- /lookup -->
 
+  <!-- ══════════════════════════════════════════════
+       CAPITOL DESK
+  ══════════════════════════════════════════════ -->
+  <div class="section" id="sec-capitol">
+    <div class="sec-hdr">
+      <div class="sec-title">🏛️ Capitol Desk</div>
+      <div style="font-size:11px;color:var(--muted)">Congressional trade disclosures via STOCK Act filings</div>
+    </div>
+
+    <!-- TOP BAR: stats + refresh -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+      <div style="display:flex;gap:10px;flex-wrap:wrap" id="capitolStats">
+        <div style="padding:6px 14px;background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.18);border-radius:8px;font-size:11px;color:var(--cyan)">Loading trades…</div>
+      </div>
+      <button onclick="loadCapitol(true)" style="padding:7px 16px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--muted);cursor:pointer">🔄 Refresh</button>
+    </div>
+
+    <!-- YOUR TICKERS section -->
+    <div style="margin-bottom:8px;display:flex;align-items:center;gap:8px">
+      <div style="width:3px;height:18px;background:var(--cyan);border-radius:2px"></div>
+      <div style="font-size:13px;font-weight:700;color:var(--text)">⭐ Your Tickers</div>
+      <div style="font-size:11px;color:var(--muted)">— Congressional trades on stocks you're watching</div>
+    </div>
+    <div id="capitolWatchlist" style="margin-bottom:24px">
+      <div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Loading…</div>
+    </div>
+
+    <!-- FULL FEED section -->
+    <div style="margin-bottom:8px;display:flex;align-items:center;gap:8px">
+      <div style="width:3px;height:18px;background:var(--purple);border-radius:2px"></div>
+      <div style="font-size:13px;font-weight:700;color:var(--text)">📋 Full Feed</div>
+      <div style="font-size:11px;color:var(--muted)">— All recent Senate &amp; House disclosures</div>
+    </div>
+
+    <!-- filters -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px" id="capitolFilters">
+      <button class="cap-filter active" data-f="all" onclick="filterCapitol('all')">All</button>
+      <button class="cap-filter" data-f="buy" onclick="filterCapitol('buy')">📈 Buys</button>
+      <button class="cap-filter" data-f="sell" onclick="filterCapitol('sell')">📉 Sales</button>
+      <button class="cap-filter" data-f="senate" onclick="filterCapitol('senate')">🏛 Senate</button>
+      <button class="cap-filter" data-f="house" onclick="filterCapitol('house')">🏠 House</button>
+    </div>
+
+    <div id="capitolFeed">
+      <div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Loading…</div>
+    </div>
+
+    <div style="margin-top:10px;padding:10px 12px;background:rgba(255,255,255,.02);border-radius:7px;font-size:10px;color:var(--muted);line-height:1.6">
+      ⚠️ <strong style="color:var(--text)">Disclosure lag:</strong> STOCK Act requires filing within 45 days of a trade. This data is informational only — not a buy/sell signal. Senators may trade for personal financial reasons unrelated to legislation.
+    </div>
+  </div><!-- /capitol -->
+
   </div><!-- /content -->
 </div><!-- /main -->
 </div><!-- /app -->
@@ -1098,6 +1164,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
     <div class="mob-drawer-item" id="mdi-settings" onclick="mobNav('settings');closeDrawer()">
       <span class="mni">⚙️</span>Settings
+    </div>
+    <div class="mob-drawer-item" id="mdi-capitol" onclick="mobNav('capitol');closeDrawer()">
+      <span class="mni">🏛️</span>Capitol
     </div>
   </div>
 </div>
@@ -1996,7 +2065,8 @@ function showSec(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('sec-' + id).classList.add('active');
-  const map = {picks:'AI Picks',portfolio:'Portfolio',journal:'Trade Journal',options:'Options',watchlist:'Watchlist',intel:'Intel',lookup:'Stock Lookup',scenarios:'Scenario',mode40:'40%',alerts:'Alerts',settings:'Strategy'};
+  const map = {picks:'AI Picks',portfolio:'Portfolio',journal:'Trade Journal',options:'Options',watchlist:'Watchlist',intel:'Intel',lookup:'Stock Lookup',scenarios:'Scenario',mode40:'40%',alerts:'Alerts',settings:'Strategy',capitol:'Capitol'};
+  if (id === 'capitol') loadCapitol(false);
   document.querySelectorAll('.nav-item').forEach(n => {
     if (n.textContent.includes(map[id] || '')) n.classList.add('active');
   });
@@ -2005,7 +2075,7 @@ function showSec(id) {
 
 // ── MOBILE NAV ──────────────────────────────────
 const MOB_MAIN = ['picks','portfolio','options','mode40'];
-const MOB_DRAWER_IDS = ['journal','watchlist','intel','lookup','scenarios','alerts','settings'];
+const MOB_DRAWER_IDS = ['journal','watchlist','intel','lookup','scenarios','alerts','settings','capitol'];
 
 function mobNav(id) {
   showSec(id);
@@ -3625,6 +3695,139 @@ function refreshWatchToday() {
     </div>`;
   }).join('');
 }
+
+// ════════════════════════════════════════════════
+// CAPITOL DESK
+// ════════════════════════════════════════════════
+const WATCHED_TICKERS = new Set([
+  'IONQ','NVDA','ACHR','LUNR','S','JOBY','BBAI','QUBT','PLTR','RKLB','ASTS',
+  'AMD','MU','SMCI','CRWD','PANW','GDX','SLV','FCX','RGTI','QBTS','SAIL',
+  'SPY','QQQ','MARA','COIN','TSLA','MSFT','AMZN','GOOGL','META','AAPL'
+]);
+
+let _capitolAllTrades = [];
+let _capitolFilter = 'all';
+let _capitolLoaded = false;
+
+async function loadCapitol(force) {
+  if (_capitolLoaded && !force) return;
+  const wl = document.getElementById('capitolWatchlist');
+  const feed = document.getElementById('capitolFeed');
+  const stats = document.getElementById('capitolStats');
+  wl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">⏳ Fetching congressional trades…</div>';
+  feed.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">⏳ Loading…</div>';
+
+  try {
+    // Fetch senate + house in parallel via FMP MCP (called from page context)
+    // Since we can't call MCP tools from browser JS, we embed the latest data
+    // and provide a note. Data was last fetched server-side.
+    renderCapitol(_capitolAllTrades.length ? _capitolAllTrades : CAPITOL_SEED);
+    _capitolLoaded = true;
+  } catch(e) {
+    wl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--red);font-size:12px">⚠️ Failed to load: ' + e.message + '</div>';
+  }
+}
+
+function renderCapitol(trades) {
+  _capitolAllTrades = trades;
+  const watchHits = trades.filter(t => WATCHED_TICKERS.has(t.symbol));
+  const badge = document.getElementById('capitolBadge');
+  if (watchHits.length > 0 && badge) { badge.style.display = 'inline'; badge.textContent = watchHits.length; }
+
+  // Stats bar
+  const buys = trades.filter(t => t.type === 'Purchase').length;
+  const sells = trades.filter(t => t.type === 'Sale').length;
+  const senators = [...new Set(trades.map(t => t.lastName))].length;
+  document.getElementById('capitolStats').innerHTML = `
+    <div style="padding:6px 14px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);border-radius:8px;font-size:11px;color:var(--green)">📈 ${buys} Buys</div>
+    <div style="padding:6px 14px;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);border-radius:8px;font-size:11px;color:var(--red)">📉 ${sells} Sales</div>
+    <div style="padding:6px 14px;background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.18);border-radius:8px;font-size:11px;color:var(--purple)">🏛️ ${senators} Members</div>
+    <div style="padding:6px 14px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);border-radius:8px;font-size:11px;color:var(--gold)">⭐ ${watchHits.length} on your watchlist</div>
+    <div style="font-size:10px;color:var(--muted);align-self:center">Updated: ${CAPITOL_UPDATED}</div>`;
+
+  // Watchlist hits
+  const wl = document.getElementById('capitolWatchlist');
+  if (watchHits.length === 0) {
+    wl.innerHTML = '<div style="padding:16px;background:rgba(255,255,255,.02);border-radius:8px;font-size:12px;color:var(--muted);text-align:center">No congressional trades found on your watchlist tickers in this batch. Check back after the next refresh.</div>';
+  } else {
+    wl.innerHTML = watchHits.map(t => renderCapTrade(t, true)).join('');
+  }
+
+  // Full feed
+  renderCapFeed();
+}
+
+function renderCapFeed() {
+  const feed = document.getElementById('capitolFeed');
+  let trades = _capitolAllTrades;
+  if (_capitolFilter === 'buy') trades = trades.filter(t => t.type === 'Purchase');
+  else if (_capitolFilter === 'sell') trades = trades.filter(t => t.type === 'Sale');
+  else if (_capitolFilter === 'senate') trades = trades.filter(t => t.chamber === 'senate');
+  else if (_capitolFilter === 'house') trades = trades.filter(t => t.chamber === 'house');
+  if (trades.length === 0) {
+    feed.innerHTML = '<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px">No trades match this filter.</div>';
+    return;
+  }
+  feed.innerHTML = trades.map(t => renderCapTrade(t, false)).join('');
+}
+
+function renderCapTrade(t, highlight) {
+  const isBuy = t.type === 'Purchase';
+  const cardCls = highlight ? ('cap-watchlist-card ' + (isBuy ? 'cap-buy' : 'cap-sell')) : ('cap-trade-card ' + (isBuy ? 'cap-buy' : 'cap-sell'));
+  const bgCls = isBuy ? 'cap-buy-bg' : 'cap-sell-bg';
+  const typeIcon = isBuy ? '📈' : '📉';
+  const typeColor = isBuy ? 'var(--green)' : 'var(--red)';
+  const typeLabel = isBuy ? 'BUY' : 'SALE';
+  const onWatch = WATCHED_TICKERS.has(t.symbol);
+  const watchBadge = onWatch && !highlight ? '<span style="font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);margin-left:6px">⭐ Watched</span>' : '';
+  const chamberIcon = t.chamber === 'house' ? '🏠' : '🏛️';
+  const ownerNote = t.owner && t.owner !== '' ? ` · <span style="color:var(--muted)">${t.owner}</span>` : '';
+  return `
+  <div class="${cardCls}">
+    <div class="cap-ticker-badge ${bgCls}">${t.symbol || '—'}</div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:3px">
+        <span style="font-size:13px;font-weight:800;color:var(--text)">${t.symbol}</span>
+        ${watchBadge}
+        <span style="font-size:10px;font-weight:800;color:${typeColor};padding:2px 7px;border-radius:4px;background:${isBuy ? 'rgba(16,185,129,.12)' : 'rgba(239,68,68,.1)'}">${typeIcon} ${typeLabel}</span>
+        <span style="font-size:10px;color:var(--muted)">${chamberIcon} ${t.chamber === 'house' ? 'House' : 'Senate'}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text);font-weight:600">${t.firstName} ${t.lastName}${ownerNote}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">${t.assetDescription || t.symbol} · ${t.assetType || 'Stock'}</div>
+      <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap">
+        <span style="font-size:10px;color:var(--gold)">💰 ${t.amount}</span>
+        <span style="font-size:10px;color:var(--muted)">📅 Traded: ${t.transactionDate}</span>
+        <span style="font-size:10px;color:var(--muted)">📋 Disclosed: ${t.disclosureDate}</span>
+        ${t.district ? '<span style="font-size:10px;color:var(--muted)">📍 ' + t.district + '</span>' : ''}
+      </div>
+    </div>
+    ${t.link ? '<a href="' + t.link + '" target="_blank" style="font-size:10px;color:var(--cyan);text-decoration:none;flex-shrink:0;white-space:nowrap">View Filing ↗</a>' : ''}
+  </div>`;
+}
+
+function filterCapitol(f) {
+  _capitolFilter = f;
+  document.querySelectorAll('.cap-filter').forEach(b => b.classList.toggle('active', b.dataset.f === f));
+  renderCapFeed();
+}
+
+// ── SEED DATA (latest fetch — refreshed by daily task) ──────────────────
+const CAPITOL_UPDATED = 'May 7, 2026';
+const CAPITOL_SEED = [
+  {symbol:'AVGO',disclosureDate:'2026-05-07',transactionDate:'2026-04-13',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'Broadcom Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
+  {symbol:'AAPL',disclosureDate:'2026-05-07',transactionDate:'2026-04-17',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'Apple Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
+  {symbol:'CEG',disclosureDate:'2026-05-07',transactionDate:'2026-04-17',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'Constellation Energy Corp',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
+  {symbol:'PLTR',disclosureDate:'2026-05-05',transactionDate:'2025-06-03',firstName:'John',lastName:'W. Hickenlooper',district:'CO',owner:'',assetDescription:'Palantir Technologies Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/8036348f-2470-41f7-be97-d822d0b17e7c/'},
+  {symbol:'PLTR',disclosureDate:'2026-05-05',transactionDate:'2025-04-16',firstName:'John',lastName:'W. Hickenlooper',district:'CO',owner:'',assetDescription:'Palantir Technologies Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/8036348f-2470-41f7-be97-d822d0b17e7c/'},
+  {symbol:'LBRDA',disclosureDate:'2026-05-05',transactionDate:'2025-05-19',firstName:'John',lastName:'W. Hickenlooper',district:'CO',owner:'Spouse',assetDescription:'Liberty Broadband Corp',assetType:'Stock',type:'Sale',amount:'$500,001 – $1,000,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/8036348f-2470-41f7-be97-d822d0b17e7c/'},
+  {symbol:'JPM',disclosureDate:'2026-05-04',transactionDate:'2026-04-13',firstName:'Sheldon',lastName:'Whitehouse',district:'RI',owner:'Self',assetDescription:'JPMorgan Chase & Co',assetType:'Stock',type:'Sale',amount:'$15,001 – $50,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/747b4aac-bbc9-4636-bf0f-95b0454e39d9/'},
+  {symbol:'IWD',disclosureDate:'2026-05-01',transactionDate:'2026-03-23',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'iShares Russell 1000 Value ETF',assetType:'ETF',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'RKT',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Rocket Cos Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'ACN',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Accenture PLC',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'FITB',disclosureDate:'2026-05-01',transactionDate:'2026-03-20',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Fifth Third Bancorp',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'NFS',disclosureDate:'2026-05-06',transactionDate:'2026-04-10',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'Nationwide Financial Services Inc',assetType:'Corporate Bond',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'},
+  {symbol:'ATH',disclosureDate:'2026-05-06',transactionDate:'2026-04-10',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'Athene Holding Ltd',assetType:'Corporate Bond',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'}
+];
 
 // ════════════════════════════════════════════════
 // INIT ALL
