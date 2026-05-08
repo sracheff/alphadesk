@@ -1104,9 +1104,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 
 <script>
 // ════════════════════════════════════════════════
-// PORTFOLIO DATA (editable)
+// PORTFOLIO DATA (editable + persisted)
 // ════════════════════════════════════════════════
-let PORTFOLIO = {
+const PORTFOLIO_DEFAULTS = {
   totalValue: 302.81,
   buyingPower: 120.81,
   startValue: 201.99,
@@ -1128,6 +1128,8 @@ let PORTFOLIO = {
   _nextActiveId: 2,
   _nextClosedId: 3
 };
+let PORTFOLIO = JSON.parse(localStorage.getItem('alphaPortfolio') || 'null') || PORTFOLIO_DEFAULTS;
+function persistPortfolio() { localStorage.setItem('alphaPortfolio', JSON.stringify(PORTFOLIO)); }
 
 // ════════════════════════════════════════════════
 // PORTFOLIO RENDER
@@ -1416,6 +1418,7 @@ function savePosEntry() {
   } else {
     PORTFOLIO.active.push(pos);
   }
+  persistPortfolio();
   cancelAddPos();
   renderActivePosEdit();
 }
@@ -1423,6 +1426,7 @@ function savePosEntry() {
 function deleteActivePos(id) {
   if (!confirm('Remove this position?')) return;
   PORTFOLIO.active = PORTFOLIO.active.filter(p => p.id !== id);
+  persistPortfolio();
   renderActivePosEdit();
 }
 
@@ -1470,6 +1474,7 @@ function saveClosedEntry() {
   } else {
     PORTFOLIO.closed.push(t);
   }
+  persistPortfolio();
   cancelAddClosed();
   renderClosedEdit();
 }
@@ -1477,6 +1482,7 @@ function saveClosedEntry() {
 function deleteClosedTrade(id) {
   if (!confirm('Remove this trade?')) return;
   PORTFOLIO.closed = PORTFOLIO.closed.filter(c => c.id !== id);
+  persistPortfolio();
   renderClosedEdit();
 }
 
@@ -1494,6 +1500,7 @@ function savePortfolio() {
   const rawValues = document.getElementById('pe-chartValues').value;
   if (rawDates.trim())  P.chartDates  = rawDates.split(',').map(s=>s.trim()).filter(Boolean);
   if (rawValues.trim()) P.chartValues = rawValues.split(',').map(s=>parseFloat(s.trim())).filter(v=>!isNaN(v));
+  persistPortfolio();
   closePortEdit();
   renderPortfolio();
 }
@@ -1501,12 +1508,14 @@ function savePortfolio() {
 // ════════════════════════════════════════════════
 // MY WATCHLIST (personal, editable)
 // ════════════════════════════════════════════════
-let MY_WATCHLIST = [
+const MY_WATCHLIST_DEFAULTS = [
   { id:1, ticker:'IONQ',  entry:52.00, stop:44.00, target:72.00, reason:'AI quantum leader, NVIDIA partnership catalyst, 755% revenue growth', notes:'Watch $54 breakout level' },
   { id:2, ticker:'RKLB',  entry:22.00, stop:18.00, target:32.00, reason:'Space + defense, NASA contract momentum, recurring revenue growing', notes:'Watching for re-test of $22 support' },
   { id:3, ticker:'PLTR',  entry:115.00,stop:98.00, target:145.00,reason:'Defense AI, massive US gov contracts, strong revenue growth', notes:'Want to enter on any pullback to $110-115' }
 ];
-let _nextWatchId = 4;
+let MY_WATCHLIST = JSON.parse(localStorage.getItem('alphaWatchlist') || 'null') || MY_WATCHLIST_DEFAULTS;
+let _nextWatchId = MY_WATCHLIST.length ? Math.max(...MY_WATCHLIST.map(w=>w.id)) + 1 : 1;
+function persistWatchlist() { localStorage.setItem('alphaWatchlist', JSON.stringify(MY_WATCHLIST)); }
 
 function renderMyWatchlist() {
   const list = document.getElementById('my-wl-list');
@@ -1587,6 +1596,7 @@ function saveWatchEntry() {
   } else {
     MY_WATCHLIST.push(entry);
   }
+  persistWatchlist();
   cancelAddWatch();
   renderMyWatchlist();
 }
@@ -1594,6 +1604,7 @@ function saveWatchEntry() {
 function deleteWatchEntry(id) {
   if (!confirm('Remove this ticker from your watchlist?')) return;
   MY_WATCHLIST = MY_WATCHLIST.filter(x => x.id !== id);
+  persistWatchlist();
   renderMyWatchlist();
 }
 
