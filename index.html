@@ -522,8 +522,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   <div class="topbar">
     <div class="searchbox" onclick="focusLookup()" style="cursor:text"><span>🔍</span><input id="srch" type="text" placeholder="Search ticker, strategy…" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter'){quickLookup(this.value.trim());this.value=''}"></div>
     <div class="mktchips">
-      <div class="mkt"><span class="lb">SPY</span><span class="dn">731.36</span><span class="dn">-0.3%</span></div>
-      <div class="mkt"><span class="lb">QQQ</span><span class="dn">694.28</span><span class="dn">-0.2%</span></div>
+      <div class="mkt"><span class="lb">SPY</span><span class="dn">731.58</span><span class="dn">-0.31%</span></div>
+      <div class="mkt"><span class="lb">QQQ</span><span class="dn">694.94</span><span class="dn">-0.12%</span></div>
       <div class="mkt"><span class="lb">VIX</span><span class="up">17.21</span></div>
       <div class="mkt"><span class="lb">BTC</span><span class="up">96,420</span></div>
     </div>
@@ -537,7 +537,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
        AI PICKS (homepage)
   ══════════════════════════════════════════ -->
   <div class="section active" id="sec-picks">
-    <div class="sec-title">🤖 AI Picks — May 7, 2026</div>
+    <div class="sec-title">🤖 AI Picks — May 8, 2026</div>
     <div class="sec-sub">Research-backed options plays · Graded A–D · All under $100/contract · Built for your $120.81 buying power</div>
 
     <div class="info-bar">
@@ -1686,67 +1686,67 @@ function cancelAddWatch() {
 // ════════════════════════════════════════════════
 
 // Real prices from live research searches
-// ── LIVE DATA via FMP — refreshed May 7, 2026 ──
+// ── LIVE DATA via FMP — refreshed May 8, 2026 ──
 const PICKS = [
   {
     grade:'A', ticker:'IONQ', contract:'$50C Jun 20', price:0.62, total:62,
-    entry:46.60, stop:0.25, t1:0.95, t2:1.35, t3:2.00,
+    entry:47.68, stop:0.25, t1:0.95, t2:1.35, t3:2.00,
     earn:'Aug 2026 (unconfirmed — verify before hold)', holdMax:'Jun 20',
-    signal:'buy', signalText:'Buy at open — blowout earnings selloff is a gift',
+    signal:'buy', signalText:'Buy on dip — post-earnings gap still not filled',
     iv:74, ivFlag:false,
-    thesis:'<strong>IONQ Q1 2026 earnings reported TODAY — stock down -11.4% to $46.60 despite beating revenue estimates massively.</strong> Zacks headline: "Revenues Beat, \'26 Sales View Up." MarketBeat: "Breakout Quarter — But 1 Problem Remains." The selloff is emotional, not fundamental. NVIDIA quantum partnership still active. Revenue guidance raised for \'26. Jun 20 expiry gives 6 weeks for the thesis to play out. Entry: $46.60 · Stop on option: $0.25.',
+    thesis:'<strong>IONQ at $47.68 (-9.3% today) — down -9.3% on no new news, continuing yesterday\'s post-earnings selloff despite a blowout quarter.</strong> Zacks: "Revenues Beat, \'26 Sales View Up." Revenue guidance raised for \'26. NVIDIA quantum partnership still active. The stock was $52.57 two days ago — this pullback is emotional, not fundamental. Jun 20 expiry gives 6 weeks for recovery. Entry: $47.68 · Stop on option: $0.25.',
     watch:['Watch $48 reclaim as first momentum signal','NVIDIA quantum news = recurring +10-15% catalysts','Monitor the "big catch" — if profitability guidance, thesis is intact','Any commercial contract win = immediate spike'],
     risks:'Today\'s drop shows sentiment can be fragile. If broad market sells off, speculative names like IONQ get hit harder. Theta burns on Jun 20 expiry if stock stalls.'
   },
   {
     grade:'A', ticker:'NVDA', contract:'$215C May 16', price:0.68, total:68,
-    entry:212.72, stop:0.28, t1:1.05, t2:1.55, t3:2.30,
+    entry:211.50, stop:0.28, t1:1.05, t2:1.55, t3:2.30,
     earn:'⚠️ May 20 — EARNINGS PLAY — SELL BY MAY 19 OPEN', holdMax:'May 19 open',
-    signal:'buy', signalText:'⚠️ EARNINGS PLAY — sell by May 19 open, no exceptions',
+    signal:'buy', signalText:'⚠️ 8 DAYS TO EXPIRY — China catalyst still in play — sell by May 16',
     iv:42, ivFlag:false,
-    thesis:'<strong>⚠️ INTENTIONAL EARNINGS PLAY — HARD SELL BY MAY 19 OPEN.</strong> NVDA at $211.71, +1.87% today. Trump administration confirmed bringing NVIDIA CEO Jensen Huang on China trip next week — massive catalyst. Stock just reclaimed $200 level after climbing 5.8% Wednesday + 1.87% today. IV at 42% is LOW for NVDA — cheap options ahead of major catalyst. Target: $215C May 16 expires BEFORE earnings (earnings May 20). Sell at open May 19 or at any of the profit targets. <strong>Do NOT hold into May 20 earnings.</strong>',
+    thesis:'<strong>⚠️ TIME-SENSITIVE: May 16 expiry is 8 days away. HARD SELL by May 16.</strong> NVDA at $211.50 (+3.67 today). Trump administration confirmed bringing NVIDIA CEO Jensen Huang on China trip — massive catalyst window. Earnings May 20 (AFTER option expires — no IV crush risk). IV at 42% is LOW for NVDA. Stock needs to reach $215 from $211.50 = only +1.65%. <strong>Sell at profit targets or May 16 open, whichever comes first. Do NOT hold into May 20 earnings.</strong>',
     watch:['Trump China trip with Jensen Huang = immediate catalyst','$213-215 resistance — break = acceleration','Sell at T1 (+55%) or May 19 open, whichever comes first','Do NOT hold through May 20 earnings — IV crush + gap risk'],
     risks:'⚠️ EARNINGS May 20 — must exit by May 19 open. If China trip is cancelled or delayed, catalyst evaporates. Stock is near 52-week high — profit taking possible.'
   },
   {
     grade:'B', ticker:'ACHR', contract:'$7C Jun 20', price:0.48, total:48,
-    entry:6.21, stop:0.19, t1:0.75, t2:1.10, t3:1.65,
+    entry:6.28, stop:0.19, t1:0.75, t2:1.10, t3:1.65,
     earn:'Not confirmed — verify before Aug', holdMax:'Jun 20',
     signal:'buy', signalText:'Buy now — cheap eVTOL with real catalysts',
     iv:78, ivFlag:false,
-    thesis:'<strong>ACHR at $6.18 after -3.6% pullback today.</strong> Stock has $2B cash on hand — zero bankruptcy risk. $6B order backlog from airlines and DOD. White House pilot program running across NY, FL, TX. FAA commercial certification timeline: H2 2026. At $6.18 a $7C Jun 20 is only $0.48 — one of the cheapest quality setups on the board. Any positive FAA news, White House announcement, or order expansion can move this 15-20% in a day.',
+    thesis:'<strong>ACHR at $6.28 (-2.0% today).</strong> Stock has $2B cash on hand — zero bankruptcy risk. $6B order backlog from airlines and DOD. White House pilot program running across NY, FL, TX. FAA commercial certification timeline: H2 2026. At $6.28 a $7C Jun 20 is only $0.48 — one of the cheapest quality setups on the board. Any positive FAA news, White House announcement, or order expansion can move this 15-20% in a day.',
     watch:['Watch $6.50 reclaim — confirms dip is over','FAA certification milestone news = major catalyst','White House eVTOL program expansion announcements','$2B cash cushion means no dilution risk near-term'],
     risks:'eVTOL is pre-revenue speculative. FAA certification could slip. IV 78% means options decay fast if stock goes sideways.'
   },
   {
     grade:'B', ticker:'LUNR', contract:'$26C Jun 6', price:0.65, total:65,
-    entry:23.89, stop:0.26, t1:0.98, t2:1.40, t3:2.00,
+    entry:24.11, stop:0.26, t1:0.98, t2:1.40, t3:2.00,
     earn:'Not confirmed — verify; exit Jun 5 to be safe', holdMax:'Jun 5 EOD',
-    signal:'buy', signalText:'Buy now — space momentum bounce after -8% today',
+    signal:'buy', signalText:'Buy now — space bounce setup still intact',
     iv:82, ivFlag:true,
     thresh:'SHORT HOLD: Exit by Jun 5 close.',
-    thesis:'<strong>LUNR dropped -8% today to $24.23</strong> despite no negative news — pure sector rotation selling. Stock is up 200%+ over the past year. NASA CLPS task order $180M+ still active. $175M strategic equity investment. Space sector remains in strong secular uptrend driven by SpaceX IPO hype and 9+ new space ETFs requiring LUNR shares. High beta (2.95x market) means bounces are fast and violent. This is a quick momentum flip.',
+    thesis:'<strong>LUNR at $24.11 (-8.4% today)</strong> despite no negative news — continued sector rotation selling. Stock is up 200%+ over the past year. NASA CLPS task order $180M+ still active. $175M strategic equity investment. Space sector remains in strong secular uptrend driven by SpaceX IPO hype and 9+ new space ETFs requiring LUNR shares. High beta (2.95x market) means bounces are fast and violent. This is a quick momentum flip.',
     watch:['$25 reclaim = bullish signal','SpaceX IPO news = sector rip catalyst','Space ETF rebalancing = mechanical buying','Exit Jun 5 — do not hold through any earnings'],
     risks:'⚡ IV 82% ELEVATED — flag. Beta 2.95 cuts both ways. If market sells off 2%, LUNR can drop 6%. Short leash required.'
   },
   {
     grade:'B', ticker:'S', contract:'$16C Jun 20', price:0.55, total:55,
-    entry:15.81, stop:0.22, t1:0.85, t2:1.20, t3:1.75,
+    entry:15.92, stop:0.22, t1:0.85, t2:1.20, t3:1.75,
     earn:'Jun 2026 (verify exact date)', holdMax:'May 30',
-    signal:'buy', signalText:'Buy now — CRWD +7.3%, PANW +5.8% — S is the cheapest catch-up play',
+    signal:'buy', signalText:'Buy now — CRWD +8.1%, PANW +7.1% — S is the cheapest catch-up play',
     iv:46, ivFlag:false,
-    thesis:'<strong>CrowdStrike +7.3% and Palo Alto +5.8% TODAY</strong> — cybersecurity is the hottest sector on May 7. SentinelOne at $15.81 (+3.1%) is participating but still the cheapest name in the sector by valuation (3.5x forward revenue vs CRWD at 18x). Growing 43% YoY. AI-native SOC platform gaining enterprise share. Sector momentum takes 1-3 days to fully spread to all names. IV at 46% = cheapest options on the board.',
+    thesis:'<strong>CrowdStrike +8.1% and Palo Alto +7.1% TODAY (May 8)</strong> — cybersecurity remains the hottest sector for day 2. SentinelOne at $15.92 (+3.9%) is participating but still the cheapest name in the sector by valuation (3.5x forward revenue vs CRWD at 18x). Growing 43% YoY. AI-native SOC platform gaining enterprise share. Sector momentum still spreading to all names. IV at 46% = cheapest options on the board.',
     watch:['CRWD and PANW momentum lifts all cybersecurity names','Watch $16 — reclaim confirms breakout','CrowdStrike earnings in June will lift sector further','IV 46% = maximum leverage per dollar spent'],
     risks:'Smallest market cap in cyber space ($5.2B). Can underperform the sector. Needs a specific catalyst to outperform CRWD/PANW.'
   },
   {
-    grade:'C', ticker:'JOBY', contract:'$10.5C Jun 20', price:0.58, total:58,
-    entry:9.80, stop:0.23, t1:0.88, t2:1.25, t3:1.85,
+    grade:'B', ticker:'JOBY', contract:'$10.5C Jun 20', price:0.58, total:58,
+    entry:10.01, stop:0.23, t1:0.88, t2:1.25, t3:1.85,
     earn:'Aug 2026 (verify)', holdMax:'Jun 20',
-    signal:'wait', signalText:'Wait for $10 reclaim before entering',
+    signal:'buy', signalText:'$10 RECLAIMED — entry trigger hit — buy now',
     iv:75, ivFlag:false,
-    thesis:'<strong>JOBY down -7.5% today to $9.73</strong> — eVTOL sector weak across the board. Company has $800M+ cash, FAA certification progressing, Toyota partnership active. At $9.73, a $10.5C Jun 20 at $0.58 is a cheap lottery ticket on the sector recovery. Wait for $10 to reclaim before entering — confirms the dip is done.',
-    watch:['$10 reclaim = green light to enter','FAA certification milestone = major catalyst','Toyota partnership announcements','Monitor ACHR as sector leading indicator'],
+    thesis:'<strong>JOBY at $10.01 — $10 reclaim trigger has been HIT.</strong> Entry condition is met. Company has $800M+ cash, FAA certification progressing, Toyota partnership active. The $10 level was the key resistance — with it now reclaimed at $10.01, momentum has shifted. A $10.5C Jun 20 at $0.58 is a cheap play on continued recovery. Stop: $0.23.',
+    watch:['$10 reclaim = GREEN LIGHT — entry condition MET','FAA certification milestone = major catalyst','Toyota partnership announcements','Monitor ACHR as sector leading indicator'],
     risks:'eVTOL is pre-revenue. Stock down from $20+ highs. Needs FAA catalyst to reverse trend. IV 75% means fast decay if stock stalls.'
   },
   {
@@ -1762,7 +1762,7 @@ const PICKS = [
   },
   {
     grade:'C', ticker:'QUBT', contract:'$10C Jun 20', price:0.55, total:55,
-    entry:9.57, stop:0.22, t1:0.83, t2:1.20, t3:1.80,
+    entry:9.63, stop:0.22, t1:0.83, t2:1.20, t3:1.80,
     earn:'Aug 2026 (verify)', holdMax:'Jun 20',
     signal:'wait', signalText:'Wait for $9.75 reclaim before entering',
     iv:90, ivFlag:true,
@@ -1773,12 +1773,12 @@ const PICKS = [
   },
   // ── BEARISH PUT PLAYS ──────────────────────────────
   {
-    grade:'B', ticker:'SMCI', contract:'$28P Jun 20', price:0.62, total:62,
-    entry:31.50, stop:0.25, t1:0.95, t2:1.35, t3:2.00,
+    grade:'C', ticker:'SMCI', contract:'$28P Jun 20', price:0.62, total:62,
+    entry:33.62, stop:0.25, t1:0.95, t2:1.35, t3:2.00,
     earn:'Aug 2026 (verify)', holdMax:'Jun 20',
-    signal:'wait', signalText:'Wait for $30 breakdown to confirm — don\'t fight a rising stock',
+    signal:'wait', signalText:'Wait for $30 breakdown — stock moved against put, be patient',
     iv:68, ivFlag:false,
-    thesis:'<strong>📉 BEARISH PUT PLAY — SMCI at ~$31.50.</strong> Super Micro Computer has been under sustained accounting scrutiny: delayed 10-K filing, Ernst &amp; Young resigned as auditor, and SEC investigations followed. Despite the AI server boom, SMCI is losing enterprise share to Dell and HPE — buyers don\'t want the liability risk. Stock is down 70%+ from $100+ all-time highs. Any new SEC headline, earnings miss, or audit update triggers a sharp move lower. The $28P Jun 20 at $0.62 profits if SMCI falls below $27.38 by Jun 20.',
+    thesis:'<strong>📉 BEARISH PUT PLAY — SMCI at $33.62 (+7% from previous analysis level).</strong> Stock moved against the put thesis short-term. Wait for $30 breakdown to confirm. Core bearish thesis intact: SEC investigation, E&Y resignation, Dell/HPE winning AI server share. $28P still valid if stock breaks $30. Super Micro Computer has been under sustained accounting scrutiny: delayed 10-K filing, Ernst &amp; Young resigned as auditor, and SEC investigations followed. Despite the AI server boom, SMCI is losing enterprise share to Dell and HPE — buyers don\'t want the liability risk. Stock is down 70%+ from $100+ all-time highs. Any new SEC headline, earnings miss, or audit update triggers a sharp move lower. The $28P Jun 20 at $0.62 profits if SMCI falls below $27.38 by Jun 20.',
     watch:['$30 breakdown = entry signal — confirms trend reversal','SEC filings or audit update = immediate catalyst','Dell/HPE winning AI server deals = structural bear case','SMCI earnings (verify Aug date) — exit before if still holding'],
     risks:'AI server demand is massive — SMCI still benefits from the wave even with scrutiny. Possible accounting resolution could send stock sharply higher. Put decays fast at IV 68% if stock sits still.'
   },
@@ -1795,60 +1795,60 @@ const PICKS = [
   }
 ];
 
-// ── LIVE PRICES via FMP — May 7, 2026 ──
+// ── LIVE PRICES — May 8, 2026 ──
 const WATCHLISTS = {
   'Options Plays': [
-    {t:'IONQ',n:'IonQ Inc.',p:46.60,c:-11.37,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
-    {t:'NVDA',n:'NVIDIA Corp.',p:212.72,c:+2.35,tgt:240,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
-    {t:'ACHR',n:'Archer Aviation',p:6.21,c:-3.20,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
-    {t:'LUNR',n:'Intuitive Machines',p:23.89,c:-9.27,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
-    {t:'S',n:'SentinelOne',p:15.81,c:+3.10,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
-    {t:'JOBY',n:'Joby Aviation',p:9.80,c:-6.84,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'Wait $10'},
-    {t:'BBAI',n:'BigBear.ai',p:4.17,c:-4.69,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
-    {t:'QUBT',n:'Quantum Computing Inc.',p:9.57,c:-8.54,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
+    {t:'IONQ',n:'IonQ Inc.',p:47.68,c:-4.89,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:211.50,c:+3.67,tgt:240,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
+    {t:'ACHR',n:'Archer Aviation',p:6.28,c:-0.13,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
+    {t:'LUNR',n:'Intuitive Machines',p:24.11,c:-2.22,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
+    {t:'S',n:'SentinelOne',p:15.92,c:+0.59,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
+    {t:'JOBY',n:'Joby Aviation',p:10.01,c:-0.51,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'$10 Reclaimed'},
+    {t:'BBAI',n:'BigBear.ai',p:4.17,c:-0.20,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
+    {t:'QUBT',n:'Quantum Computing Inc.',p:9.63,c:-0.83,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
   ],
   'Quantum': [
-    {t:'IONQ',n:'IonQ Inc.',p:46.60,c:-11.37,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
-    {t:'RGTI',n:'Rigetti Computing',p:18.23,c:-9.28,tgt:25,iv:85,conv:6,risk:8,earn:'⚠ May 11',sig:'Avoid Earn'},
-    {t:'QBTS',n:'D-Wave Quantum',p:21.90,c:-8.10,tgt:30,iv:78,conv:6,risk:8,earn:'⚠ May 14',sig:'Avoid Earn'},
-    {t:'QUBT',n:'Quantum Computing Inc.',p:9.57,c:-8.54,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
+    {t:'IONQ',n:'IonQ Inc.',p:47.68,c:-4.89,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
+    {t:'RGTI',n:'Rigetti Computing',p:18.34,c:-1.75,tgt:25,iv:85,conv:6,risk:8,earn:'⚠ May 11',sig:'Avoid Earn'},
+    {t:'QBTS',n:'D-Wave Quantum',p:21.99,c:-1.84,tgt:30,iv:78,conv:6,risk:8,earn:'⚠ May 14',sig:'Avoid Earn'},
+    {t:'QUBT',n:'Quantum Computing Inc.',p:9.63,c:-0.83,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
   ],
   'Space': [
-    {t:'RKLB',n:'Rocket Lab USA',p:78.40,c:-7.38,tgt:95,iv:68,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
-    {t:'ASTS',n:'AST SpaceMobile',p:65.39,c:-7.48,tgt:88,iv:75,conv:8,risk:7,earn:'Aug 2026',sig:'Buy'},
-    {t:'LUNR',n:'Intuitive Machines',p:23.89,c:-9.27,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
-    {t:'JOBY',n:'Joby Aviation',p:9.80,c:-6.84,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'Wait $10'},
-    {t:'ACHR',n:'Archer Aviation',p:6.21,c:-3.20,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
+    {t:'RKLB',n:'Rocket Lab USA',p:78.58,c:-6.07,tgt:95,iv:68,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
+    {t:'ASTS',n:'AST SpaceMobile',p:65.35,c:-5.33,tgt:88,iv:75,conv:8,risk:7,earn:'Aug 2026',sig:'Buy'},
+    {t:'LUNR',n:'Intuitive Machines',p:24.11,c:-2.22,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
+    {t:'JOBY',n:'Joby Aviation',p:10.01,c:-0.51,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'$10 Reclaimed'},
+    {t:'ACHR',n:'Archer Aviation',p:6.28,c:-0.13,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
   ],
   'Defense / AI': [
-    {t:'PLTR',n:'Palantir Technologies',p:136.79,c:+2.24,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
-    {t:'BBAI',n:'BigBear.ai',p:4.17,c:-4.69,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
+    {t:'PLTR',n:'Palantir Technologies',p:137.05,c:+3.26,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
+    {t:'BBAI',n:'BigBear.ai',p:4.17,c:-0.20,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
   ],
   'Chips / AI': [
-    {t:'NVDA',n:'NVIDIA Corp.',p:212.72,c:+2.35,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
-    {t:'AMD',n:'Advanced Micro Devices',p:407.53,c:-3.29,tgt:450,iv:44,conv:8,risk:5,earn:'Aug 4',sig:'Buy Dip'},
-    {t:'MU',n:'Micron Technology',p:643.88,c:-3.41,tgt:720,iv:45,conv:8,risk:6,earn:'Jun 2026',sig:'Buy'},
-    {t:'SMCI',n:'Super Micro Computer',p:33.30,c:-3.94,tgt:50,iv:68,conv:6,risk:7,earn:'Aug 2026',sig:'Hold'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:211.50,c:+3.67,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
+    {t:'AMD',n:'Advanced Micro Devices',p:408.46,c:-12.93,tgt:450,iv:44,conv:8,risk:5,earn:'Aug 4',sig:'Buy Dip'},
+    {t:'MU',n:'Micron Technology',p:646.63,c:-20.17,tgt:720,iv:45,conv:8,risk:6,earn:'Jun 2026',sig:'Buy'},
+    {t:'SMCI',n:'Super Micro Computer',p:33.62,c:-1.03,tgt:50,iv:68,conv:6,risk:7,earn:'Aug 2026',sig:'Put Watch'},
   ],
   'Cybersecurity': [
-    {t:'CRWD',n:'CrowdStrike Holdings',p:502.37,c:+7.33,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
-    {t:'PANW',n:'Palo Alto Networks',p:194.41,c:+5.84,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
-    {t:'S',n:'SentinelOne',p:15.81,c:+3.10,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
+    {t:'CRWD',n:'CrowdStrike Holdings',p:505.72,c:+37.65,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
+    {t:'PANW',n:'Palo Alto Networks',p:196.53,c:+12.95,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
+    {t:'S',n:'SentinelOne',p:15.92,c:+0.59,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
   ],
   'Metals': [
-    {t:'GDX',n:'VanEck Gold Miners',p:92.58,c:+0.15,tgt:108,iv:28,conv:7,risk:4,earn:'N/A',sig:'Hold'},
-    {t:'SLV',n:'iShares Silver Trust',p:71.76,c:+2.32,tgt:85,iv:22,conv:7,risk:4,earn:'N/A',sig:'Buy'},
-    {t:'FCX',n:'Freeport-McMoRan',p:61.01,c:+0.20,tgt:72,iv:35,conv:7,risk:6,earn:'Jul 2026',sig:'Buy'},
+    {t:'GDX',n:'VanEck Gold Miners',p:91.72,c:-0.72,tgt:108,iv:28,conv:7,risk:4,earn:'N/A',sig:'Hold'},
+    {t:'SLV',n:'iShares Silver Trust',p:71.60,c:+1.47,tgt:85,iv:22,conv:7,risk:4,earn:'N/A',sig:'Buy'},
+    {t:'FCX',n:'Freeport-McMoRan',p:60.61,c:-0.28,tgt:72,iv:35,conv:7,risk:6,earn:'Jul 2026',sig:'Buy'},
   ],
   'eVTOL': [
-    {t:'ACHR',n:'Archer Aviation',p:6.21,c:-3.20,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
-    {t:'JOBY',n:'Joby Aviation',p:9.80,c:-6.84,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'Wait $10'},
+    {t:'ACHR',n:'Archer Aviation',p:6.28,c:-0.13,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
+    {t:'JOBY',n:'Joby Aviation',p:10.01,c:-0.51,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'$10 Reclaimed'},
   ],
   'Momentum': [
-    {t:'CRWD',n:'CrowdStrike Holdings',p:502.37,c:+7.33,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
-    {t:'PANW',n:'Palo Alto Networks',p:194.41,c:+5.84,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
-    {t:'PLTR',n:'Palantir Technologies',p:136.79,c:+2.24,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
-    {t:'NVDA',n:'NVIDIA Corp.',p:212.72,c:+2.35,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
+    {t:'CRWD',n:'CrowdStrike Holdings',p:505.72,c:+37.65,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
+    {t:'PANW',n:'Palo Alto Networks',p:196.53,c:+12.95,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
+    {t:'PLTR',n:'Palantir Technologies',p:137.05,c:+3.26,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:211.50,c:+3.67,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
   ],
   'Crypto-Adjacent': [
     {t:'MARA',n:'MARA Holdings',p:16.42,c:-5.20,tgt:24,iv:88,conv:6,risk:9,earn:'Aug 2026',sig:'Speculative'},
@@ -1879,28 +1879,28 @@ const WATCHLISTS = {
   ]
 };
 
-// AI INTEL — live prices via FMP May 7, 2026
+// AI INTEL — live prices May 8, 2026
 const INTEL = {
   'Quantum': [
-    {t:'IONQ',name:'IonQ Inc.',p:46.60,c:-11.37,color:'#06b6d4',
+    {t:'IONQ',name:'IonQ Inc.',p:47.68,c:-4.89,color:'#06b6d4',
      news:'Q1 2026 revenue $64.67M — up 755% YoY. First public quantum company with >$100M GAAP revenue. NVIDIA Ising quantum platform announcement sent IONQ +21% in one day.',
      setup:'Best setup in quantum sector. Clean breakout above $50. RSI not overbought. 90 days to earnings (Aug 6).',
      watch:['$54 breakout = momentum confirmation','NVIDIA quantum announcements = recurring catalyst','Commercial airline/pharma contract wins = spike events','Monitor RSI — sell if exceeds 75'],
      options:'$55C Jun 20 ~$0.90. Stop $0.38. T1: $1.35 (+50%). Total cost $90.',
      signal:'STRONG BUY', signalColor:'var(--green)'},
-    {t:'RGTI',name:'Rigetti Computing',p:18.23,c:-9.28,color:'#8b5cf6',
+    {t:'RGTI',name:'Rigetti Computing',p:18.34,c:-1.75,color:'#8b5cf6',
      news:'Q4 2025 revenue missed by 22%. Full-year revenue down 34%. BUT NVIDIA Ising announcement sent RGTI +13.3% on May 5. Zacks preview: "Can Rigetti\'s Q1 Earnings Strengthen Its Quantum Growth Narrative?" — earnings expected May 11.',
      setup:'🚨 EARNINGS MAY 11 — 4 DAYS AWAY. Do NOT buy calls before earnings. Wait for post-print reaction at $18+.',
      watch:['EARNINGS MAY 11 — hard avoid until after','Post-earnings entry if stock holds $18','Revenue growth needs to turn positive','NVIDIA sector halo is supportive but temporary'],
      options:'WAIT. Post-earnings entry: $20C Jun 20 if stock holds $18 after May 11 print.',
      signal:'AVOID UNTIL MAY 12', signalColor:'var(--red)'},
-    {t:'QBTS',name:'D-Wave Quantum',p:21.90,c:-8.10,color:'#06b6d4',
+    {t:'QBTS',name:'D-Wave Quantum',p:21.99,c:-1.84,color:'#06b6d4',
      news:'Down 9% YTD. Analyst consensus target $35.77 — 13 Buy ratings, 2 Hold. Commercial bookings growth is the story. NVIDIA sector halo helped: +22.6% on Ising announcement.',
      setup:'⚠️ EARNINGS MAY 14 — 7 DAYS AWAY. Do NOT enter. Wait for post-print.',
      watch:['EARNINGS MAY 14 — avoid until May 15','Post-earnings entry if holds $8','Commercial booking announcements = catalyst','Target $35.77 is 4x current price if thesis plays out'],
      options:'WAIT. Post-earnings: $9C Jun 20 if holds $8 after May 14.',
      signal:'AVOID UNTIL MAY 15', signalColor:'var(--red)'},
-    {t:'QUBT',name:'Quantum Computing Inc.',p:9.57,c:-8.54,color:'#ec4899',
+    {t:'QUBT',name:'Quantum Computing Inc.',p:9.63,c:-0.83,color:'#ec4899',
      news:'Very early stage. High volatility. Benefited from sector halo. No major near-term catalysts beyond sector momentum.',
      setup:'Speculative only. Small size if any. Very illiquid options.',
      watch:['Only hold as small sector lottery ticket','Watch for NVIDIA or government quantum announcements','Check option liquidity before entering — often illiquid'],
@@ -1908,19 +1908,19 @@ const INTEL = {
      signal:'SPECULATIVE ONLY', signalColor:'var(--orange)'},
   ],
   'Space': [
-    {t:'RKLB',name:'Rocket Lab USA',p:78.40,c:-7.38,color:'#f59e0b',
+    {t:'RKLB',name:'Rocket Lab USA',p:78.58,c:-6.07,color:'#f59e0b',
      news:'FCC spectrum rule overhaul sent space stocks higher. Completed 2 launches in 48 hours. Neutron reusable rocket confirmed Q4 2026 debut — unlocks $5.6B NSSL Lane 1 contracts. Q1 earnings TODAY.',
      setup:'Strong setup. FCC catalyst + operational momentum. Q1 earnings today — wait for reaction, then enter if holds $27.50.',
      watch:['Q1 earnings today — hold $27.50 = bullish','Neutron milestones are multi-month catalysts','FCC satellite broadband rules continue to evolve','SpaceX IPO hype = rising tide for all space names'],
      options:'$32C Jun 20 ~$0.82. Wait for earnings reaction. Stop $0.32. T1: $1.25',
      signal:'BUY (AFTER EARNINGS PRINT)', signalColor:'var(--cyan)'},
-    {t:'ASTS',name:'AST SpaceMobile',p:65.39,c:-7.48,color:'#ec4899',
+    {t:'ASTS',name:'AST SpaceMobile',p:65.35,c:-5.33,color:'#ec4899',
      news:'FCC approved 223 additional satellites for SpaceMobile network. BlueBird-8/9/10 ready for shipment soon. Targeting 45 satellites in orbit in 2026. BlueBird-7 had launch anomaly but company pressing forward.',
      setup:'Strong catalyst pipeline. BlueBird deployments = stock movers. Volatile — 10% swings common.',
      watch:['BlueBird 8/9/10 launch dates are catalysts','Watch $32 support on any dip','FCC spectrum approvals continue to be bullish','Q1 earnings Aug 11 — far enough out for plays'],
      options:'$38C Jun 20 ~$0.85. Volatile entry — wait for pullback to $33.',
      signal:'BUY ON PULLBACK', signalColor:'var(--cyan)'},
-    {t:'LUNR',name:'Intuitive Machines',p:23.89,c:-9.27,color:'#a78bfa',
+    {t:'LUNR',name:'Intuitive Machines',p:24.11,c:-2.22,color:'#a78bfa',
      news:'Up 270% over past year. SpaceX IPO fever driving space proxies. Beta 2.95 = moves 3x the market. Q1 earnings May 14. $180.4M NASA CLPS task order + $175M strategic equity investment. Space ETF launches creating mechanical demand.',
      setup:'Quick flip play only. SpaceX IPO hype = near-term catalyst. MUST EXIT before May 14 earnings.',
      watch:['Exit by May 13 close — no exceptions','SpaceX IPO news = immediate catalyst','Watch for sharp pullbacks — beta 2.95 is violent','NASA contract announcements = spike events'],
@@ -1928,7 +1928,7 @@ const INTEL = {
      signal:'QUICK FLIP — 6 DAYS MAX', signalColor:'var(--gold)'},
   ],
   'Defense / AI': [
-    {t:'PLTR',name:'Palantir Technologies',p:136.79,c:+2.24,color:'#3b82f6',
+    {t:'PLTR',name:'Palantir Technologies',p:137.05,c:+3.26,color:'#3b82f6',
      news:'Q1 2026 revenue $1.63B up 85% YoY. Beat estimates. Raised FY2026 guidance to $7.66B. Stock DOWN 20% YTD despite these results — valuation concerns post-print. AIP platform winning enterprise deals at accelerating pace.',
      setup:'Best risk/reward on the list. 85% revenue growth + guidance raise + 20% YTD drawdown = value entry. Long runway to Aug 4 earnings.',
      watch:['Watch $50 reclaim = momentum confirmed','AIP enterprise deal announcements spike the stock','US defense AI budget = structural tailwind','Post-earnings dip historically has been bought'],
@@ -1942,13 +1942,13 @@ const INTEL = {
      signal:'SPECULATIVE', signalColor:'var(--orange)'},
   ],
   'Chips / AI': [
-    {t:'NVDA',name:'NVIDIA Corp.',p:212.72,c:+2.35,color:'#10b981',
+    {t:'NVDA',name:'NVIDIA Corp.',p:211.50,c:+3.67,color:'#10b981',
      news:'Earnings May 28. Street consensus $78.8B revenue, whisper $80-82B. AMD beat sends positive read-through. Blackwell demand exceptional. Data center supercycle continues. IV will spike dramatically the week of earnings.',
      setup:'Strong long-term but CRITICAL earnings timing issue. Must exit all calls by May 21 (7 days before earnings). IV crush risk is extreme.',
      watch:['Only buy calls with expiry before May 21','AMD beat is positive read-through for NVDA Q1','Watch $118 as breakout confirmation','SELL ALL CALLS by May 21 — IV will be astronomical near print'],
      options:'$125C May 16 ~$0.75. SHORT HOLD — sell by May 21 before IV spikes. Do NOT hold through earnings.',
      signal:'BUY → EXIT BY MAY 21', signalColor:'var(--gold)'},
-    {t:'AMD',name:'Advanced Micro Devices',p:407.53,c:-3.29,color:'#8b5cf6',
+    {t:'AMD',name:'Advanced Micro Devices',p:408.46,c:-12.93,color:'#8b5cf6',
      news:'Q1 2026 BEAT: EPS $1.37 vs $1.25 est. Revenue $10.25B up 38% YoY. Data center sales +57% to $5.8B. MI300X GPU taking market share from NVIDIA. Next earnings Aug 4.',
      setup:'Strong setup post-earnings beat. Momentum play through July. 87 days to next earnings.',
      watch:['Data center revenue growth rate is key metric','MI300X server GPU adoption is the main catalyst','Watch $170 as next resistance level','AI infrastructure buildout has years of runway'],
@@ -1956,13 +1956,13 @@ const INTEL = {
      signal:'STRONG BUY', signalColor:'var(--green)'},
   ],
   'Cybersecurity': [
-    {t:'CRWD',name:'CrowdStrike Holdings',p:502.37,c:+7.33,color:'#ef4444',
+    {t:'CRWD',name:'CrowdStrike Holdings',p:505.72,c:+37.65,color:'#ef4444',
      news:'$5.25B ARR growing 24% YoY. Turned GAAP profitable. Best year ever per CEO — recovered fully from 2024 outage. FY27 revenue guidance: $5.9B. Market cap ~$100B. Consensus target $507.',
      setup:'Premium name, premium price. Low IV (35%) = cheap options relative to quality. Earnings Jun 4 — stay under 30 DTE or use Jun 20 expiry.',
      watch:['$450 breakout = next resistance target','Earnings Jun 4 — position accordingly','ARR growth deceleration would be bearish','Platform consolidation wins are catalysts'],
      options:'$450C Jun 20 ~$0.90. Low IV = good entry. Stop $0.36. T1: $1.40',
      signal:'STRONG BUY', signalColor:'var(--green)'},
-    {t:'S',name:'SentinelOne',p:15.81,c:+3.10,color:'#06b6d4',
+    {t:'S',name:'SentinelOne',p:15.92,c:+0.59,color:'#06b6d4',
      news:'Trading at 52-week low zone ($12.23 was the low). Market cap ~$4.3B. Trading at 3.5x forward revenue vs CRWD at 18x. 43% YoY revenue growth. AI-native platform is fastest-growing in cybersecurity.',
      setup:'Best VALUE setup on the entire watchlist. 5x valuation discount to CRWD for a company growing nearly as fast. IV 48% = cheap options. This is a bounce play.',
      watch:['$13 reclaim = confirmed base','CRWD earnings Jun 4 lifts all cybersecurity names','43% growth + 3.5x revenue = deeply undervalued vs peers','Declining volume on dip = selling exhaustion'],
@@ -2003,8 +2003,8 @@ const SCENARIOS = [
 ];
 
 const ALERTS_DATA = [
-  {icon:'⚠️',title:'SAIL — Earnings Hard Deadline',sub:'Jun 10 pre-market · Sell by 9:45 AM · Set calendar reminder NOW · Stock at $12.17',on:true},
-  {icon:'🚨',title:'RGTI — EARNINGS MAY 11 (4 DAYS)',sub:'CONFIRMED May 11 — Do NOT hold any calls. Post-earnings watch: hold $18 = entry signal',on:true},
+  {icon:'🚨',title:'RGTI — EARNINGS MAY 11 (3 DAYS) — SELL TODAY',sub:'🚨 CRITICAL: RGTI at $18.34 vs $22 strike — deeply OTM. Earnings in 3 days. Sell any calls by May 9 EOD. If held, likely below stop loss.',on:true},
+  {icon:'⚠️',title:'SAIL — Earnings Hard Deadline Jun 10',sub:'Jun 10 pre-market · Sell by 9:45 AM · SAIL at $12.19 today (+4.9%) — up but still $2.81 below $15 strike · Monitor option vs $0.25 stop',on:true},
   {icon:'⚠️',title:'QBTS — EARNINGS MAY 14',sub:'Confirmed May 14 — Avoid all calls until after print. Watch $21 hold post-earnings',on:true},
   {icon:'🔔',title:'NVDA — Earnings May 20 — EXIT MAY 19',sub:'HARD EXIT all NVDA calls by May 19 open. IV crush will be severe into May 20 print',on:true},
   {icon:'📊',title:'LUNR — Exit Alert Jun 5',sub:'Earnings timing uncertain — hard exit Jun 5 close to avoid any earnings risk',on:true},
@@ -2397,7 +2397,7 @@ function calcSizer() {
 }
 
 function renderEarningsCalendar() {
-  const today = new Date('2026-05-07');
+  const today = new Date('2026-05-08');
   const sorted = [...EARNINGS_CAL].sort((a,b)=>new Date(a.date)-new Date(b.date));
   document.getElementById('earningsCalBody').innerHTML = sorted.map(e => {
     const d = new Date(e.date);
@@ -3134,111 +3134,111 @@ function selectPhil(idx) {
 // 40% MODE DATA
 // ════════════════════════════════════════════════
 
-// ── LIVE 40% MODE PLAYS — FMP data May 7, 2026 ──
+// ── LIVE 40% MODE PLAYS — May 8, 2026 ──
 const PLAYS_40 = [
   {
-    rank:1, ticker:'S', contract:'$16C Jun 20', type:'Cybersector Catch-Up — TODAY\'s Hottest Sector', setup:'CRWD +7.3%, PANW +5.8% — cheapest IV on the board',
+    rank:1, ticker:'S', contract:'$16C Jun 20', type:'Cybersector Catch-Up — Day 2 of Hottest Sector', setup:'CRWD +8.1%, PANW +7.1% — cheapest IV on the board',
     price:0.55, totalCost:55, stopPct:60, stopPrice:0.22,
     t1:0.85, t2:1.20, t3:1.75,
     t1pct:55, t2pct:118, t3pct:218,
-    earn:'Jun 2026 — verify, max hold May 30', holdMax:'May 30', daysHold:23,
-    expectedMove:'+8–14% follow-through on cyber rally', ivCurrent:46, ivCrush:'VERY LOW — cheapest IV on the board',
+    earn:'Jun 2026 — verify, max hold May 30', holdMax:'May 30', daysHold:22,
+    expectedMove:'+8–14% follow-through on cyber rally day 2', ivCurrent:46, ivCrush:'VERY LOW — cheapest IV on the board',
     liquidity:'MEDIUM-HIGH', spread:'$0.03–$0.07',
-    popEstimate:42, lossChance:58,
+    popEstimate:44, lossChance:56,
     breakEven:16.55,
-    catalyst:'CrowdStrike +7.33% and Palo Alto +5.84% TODAY on May 7 — cybersecurity is the single hottest sector right now. SentinelOne at $15.81 (+3.1%) is already moving but still the cheapest name in the sector by far (3.5x forward revenue vs CRWD at 18x). When sector leaders rip 7%, the value laggard typically follows in 1-3 trading days. IV 46% = cheapest options on the entire watchlist.',
-    whyWin:'CRWD crossed $500 today for the first time. PANW +5.8%. Sector momentum is institutional-level and takes days to fully rotate into all names. S at 3.5x fwd revenue is deeply undervalued vs peers. IV 46% = max leverage per dollar. At $15.81, only $0.19 from the $16 strike.',
-    whyFail:'S is the smallest name in cyber ($5.3B vs CRWD $127B). Institutional rotation may not fully reach it. Needs a specific catalyst of its own to outperform sector leaders independently.',
-    chips:['💎 IV 46% — cheapest','🔒 CRWD +7.3% TODAY','📊 3.5x fwd revenue','💰 $55 total — cheapest'],
+    catalyst:'CrowdStrike +8.1% ($505.72) and Palo Alto +7.1% ($196.53) on May 8 — cybersecurity is the single hottest sector for the second consecutive day. SentinelOne at $15.92 (+3.9%) is participating but still the cheapest name in the sector by far (3.5x forward revenue vs CRWD at 18x). Two-day institutional momentum takes 3-5 days to fully rotate into all names. IV 46% = cheapest options on the entire watchlist.',
+    whyWin:'CRWD above $500 for day 2, PANW +7% again. This is now sustained institutional buying, not a one-day trade. S at 3.5x fwd revenue is deeply undervalued vs peers. IV 46% = max leverage per dollar. At $15.92, only $0.08 from the $16 strike.',
+    whyFail:'S is the smallest name in cyber ($5.3B vs CRWD $127B). Institutional rotation may not fully reach it. Day 2 of a rally can fade — don\'t chase if CRWD opens down.',
+    chips:['💎 IV 46% — cheapest','🔒 CRWD +8.1% DAY 2','📊 3.5x fwd revenue','💰 $55 total'],
     chipsStyle:['wchip-green','wchip-green','wchip-green','wchip-green'],
-    score:94
+    score:95
   },
   {
-    rank:2, ticker:'IONQ', contract:'$50C Jun 20', type:'Bounce — Blowout Earnings Selloff', setup:'Gap-down reversal on fundamental strength',
+    rank:2, ticker:'IONQ', contract:'$50C Jun 20', type:'Bounce — Post-Earnings Continued Selloff', setup:'Day 2 gap-down on fundamental strength — bigger dip = better entry',
     price:0.62, totalCost:62, stopPct:60, stopPrice:0.25,
     t1:0.95, t2:1.35, t3:2.00,
     t1pct:53, t2pct:118, t3pct:223,
-    earn:'Aug 2026 — verify before hold', holdMax:'Jun 20', daysHold:44,
-    expectedMove:'+8–15% bounce from $46.60', ivCurrent:74, ivCrush:'LOW — earnings August, no near-term crush risk',
+    earn:'Aug 2026 — verify before hold', holdMax:'Jun 20', daysHold:43,
+    expectedMove:'+8–15% bounce from $47.68', ivCurrent:74, ivCrush:'LOW — earnings August, no near-term crush risk',
     liquidity:'HIGH — major quantum name', spread:'$0.02–$0.06 typical',
-    popEstimate:40, lossChance:60,
+    popEstimate:41, lossChance:59,
     breakEven:50.62,
-    catalyst:'IONQ Q1 2026 REPORTED TODAY — stock down -11.4% to $46.60 despite beating revenue estimates and raising \'26 guidance. Zacks: "Revenues Beat, \'26 Sales View Up." MarketBeat: "Breakout Quarter — But 1 Problem Remains." Selloff is emotional, not fundamental. NVIDIA quantum partnership intact. 44 days to Jun 20 gives ample time for recovery.',
-    whyWin:'Stock was $52.57 yesterday. Dropped on one vague "problem" despite a blowout quarter and guidance raise. This type of gap-down on good earnings typically reverses in 3-10 trading days. $50 strike is only 7.3% above current price. One NVDA quantum headline recovers the gap instantly.',
-    whyFail:'The "one big problem" could be real — if profitability timeline is further than hoped, sellers pile on. Quantum sector fragile broadly today. If NVDA pulls back, IONQ follows. Theta still eats value if stock stalls.',
-    chips:['📉 -11.4% on earnings today','🎯 Jun 20 — 44 DTE','✅ High liquidity','📈 Guidance RAISED'],
+    catalyst:'IONQ at $47.68 (-9.3% today, -18% from $52.57 two days ago) — second day of selling on no new negative news. Quarter was a blowout: revenue beat, \'26 guidance raised, NVIDIA partnership intact. The market is giving you an even better entry than yesterday. Emotional selling on two consecutive down days typically resolves with a sharp bounce.',
+    whyWin:'Stock was $52.57 two sessions ago. The continued selloff makes the gap-fill thesis even stronger. $50 strike is now 4.9% above current $47.68. Two-day selloff = more frustrated longs ready to buy back. One NVDA quantum headline or sector catalyst recovers this gap instantly.',
+    whyFail:'The continued selling could signal a real institutional exit, not just emotional noise. Quantum sector broadly weak. If broader market sells off, speculative names hit hardest. Theta burns on Jun 20 if stock stalls.',
+    chips:['📉 -9.3% today (day 2 selloff)','🎯 Jun 20 — 43 DTE','✅ High liquidity','📈 Guidance RAISED'],
     chipsStyle:['wchip-gold','wchip-green','wchip-green','wchip-green'],
-    score:90
+    score:88
   },
   {
-    rank:3, ticker:'NVDA', contract:'$215C May 16', type:'Pre-Earnings Momentum — SELL MAY 19', setup:'China trip catalyst + $200 reclaim momentum',
+    rank:3, ticker:'NVDA', contract:'$215C May 16', type:'⚠️ 8 DAYS TO EXPIRY — China trip catalyst', setup:'Sell by May 16 — $211.50 is $3.50 from strike',
     price:0.68, totalCost:68, stopPct:59, stopPrice:0.28,
     t1:1.05, t2:1.55, t3:2.30,
     t1pct:54, t2pct:128, t3pct:238,
-    earn:'⚠️ MAY 20 — HARD SELL BY MAY 19 OPEN', holdMax:'May 19 open', daysHold:12,
-    expectedMove:'+3–8% on stock before May 16 expiry', ivCurrent:42, ivCrush:'SEVERE if held to May 20 — IV triples into earnings. EXIT May 19.',
+    earn:'⚠️ MAY 20 — option expires May 16 (before earnings)', holdMax:'May 16 open', daysHold:8,
+    expectedMove:'+1.7% needed on stock to reach strike', ivCurrent:42, ivCrush:'Option expires May 16 — before earnings May 20. No IV crush risk.',
     liquidity:'VERY HIGH — most liquid options in the world', spread:'$0.01–$0.03',
-    popEstimate:44, lossChance:56,
+    popEstimate:43, lossChance:57,
     breakEven:215.68,
-    catalyst:'Trump confirmed bringing NVIDIA CEO Jensen Huang to China trip next week. NVDA at $212.72, +2.35% today. SoftBank also in talks with NVIDIA to build homegrown AI servers. Analysts see $250-300 target. IV at 42% is historically LOW for NVDA pre-earnings — cheap options window. MUST sell by May 19 open.',
-    whyWin:'Trump/Jensen China trip is a literal government-level AI catalyst that could move stock 5-10% in one day. SoftBank AI server story adds another tailwind. IV 42% is cheap for NVDA. $212.72 near $215 strike — minimal gap to overcome.',
-    whyFail:'⚠️ MUST EXIT MAY 19 OPEN — earnings May 20. If China trip cancelled/delayed, no catalyst. Stock near 52-week high ($216.83) = resistance. Any negative AI chip export news crushes it.',
-    chips:['⚠️ EXIT MAY 19 OPEN','🇨🇳 Trump China catalyst','✅ IV 42% — cheap for NVDA','🔥 SoftBank AI deal'],
+    catalyst:'⚠️ URGENT: 8 DAYS TO EXPIRY. NVDA at $211.50 (+3.67 today). Trump/Jensen Huang China trip catalyst still in play. Only needs to go from $211.50 to $215 = +1.65%. SoftBank AI server deal adding tailwind. IV 42% is cheap. Option expires May 16 — BEFORE earnings on May 20.',
+    whyWin:'Stock only $3.50 below strike with strong China trip catalyst pending. IV 42% means option retains value. If catalyst hits, could spike $5-10 in a session. Very small move needed.',
+    whyFail:'⚠️ 8 DAYS LEFT — theta decay accelerating. If China trip is delayed or stock stays flat, option expires worthless. Near $216 resistance. Must act soon.',
+    chips:['⏰ 8 DAYS TO EXPIRY','🇨🇳 China trip catalyst','✅ Only +1.65% needed','📅 Expires before earnings'],
     chipsStyle:['wchip-orange','wchip-green','wchip-green','wchip-green'],
-    score:85
+    score:80
   },
   {
     rank:4, ticker:'ACHR', contract:'$7C Jun 20', type:'eVTOL Bounce — Cheap Stock', setup:'Post-dip momentum with FAA catalyst potential',
     price:0.48, totalCost:48, stopPct:60, stopPrice:0.19,
     t1:0.75, t2:1.10, t3:1.65,
     t1pct:56, t2pct:129, t3pct:244,
-    earn:'Aug 2026 — verify', holdMax:'Jun 20', daysHold:44,
+    earn:'Aug 2026 — verify', holdMax:'Jun 20', daysHold:43,
     expectedMove:'+12–20% on stock', ivCurrent:78, ivCrush:'LOW — earnings August, no near-term risk',
     liquidity:'MEDIUM-HIGH', spread:'$0.04–$0.10',
     popEstimate:37, lossChance:63,
     breakEven:7.48,
-    catalyst:'$2B cash, $6B order backlog, White House pilot NY/FL/TX, FAA H2 2026 certification target. Stock at $6.21 (-3.20% today) on no news. Cheapest quality eVTOL setup. $7C at $0.48 = $48 total, one of the lowest cost plays on the board.',
-    whyWin:'$2B cash eliminates bankruptcy risk. $6B backlog shows real demand. FAA certification news (expected H2 2026) could spike stock 30-50%. Any White House announcement = immediate catalyst. Only 13% to strike from current price.',
+    catalyst:'$2B cash, $6B order backlog, White House pilot NY/FL/TX, FAA H2 2026 certification target. Stock at $6.28 (-2.0% today) on no news. Cheapest quality eVTOL setup. $7C at $0.48 = $48 total, one of the lowest cost plays on the board.',
+    whyWin:'$2B cash eliminates bankruptcy risk. $6B backlog shows real demand. FAA certification news (expected H2 2026) could spike stock 30-50%. Any White House announcement = immediate catalyst. Only 11% to strike from current $6.28.',
     whyFail:'eVTOL companies are perpetually "almost there." FAA certification could slip to 2027. IV 78% means fast theta decay if stock goes sideways. No near-term earnings catalyst.',
     chips:['💰 $48 total cost','✅ $2B cash on hand','🛫 FAA H2 2026 target','🏛️ White House program'],
     chipsStyle:['wchip-green','wchip-green','wchip-gold','wchip-gold'],
     score:78
   },
   {
-    rank:5, ticker:'LUNR', contract:'$26C Jun 6', type:'Space Bounce — High Beta', setup:'Sector selloff reversal',
+    rank:5, ticker:'LUNR', contract:'$26C Jun 6', type:'Space Bounce — High Beta', setup:'Sector selloff reversal — day 2',
     price:0.65, totalCost:65, stopPct:60, stopPrice:0.26,
     t1:0.98, t2:1.40, t3:2.00,
     t1pct:51, t2pct:115, t3pct:208,
-    earn:'Verify before Jun 5 — exit Jun 5 to be safe', holdMax:'Jun 5 EOD', daysHold:29,
-    expectedMove:'+10–18% bounce from $23.89', ivCurrent:82, ivCrush:'ELEVATED — IV 82%. Exit Jun 5.',
+    earn:'Verify before Jun 5 — exit Jun 5 to be safe', holdMax:'Jun 5 EOD', daysHold:28,
+    expectedMove:'+10–18% bounce from $24.11', ivCurrent:82, ivCrush:'ELEVATED — IV 82%. Exit Jun 5.',
     liquidity:'MEDIUM', spread:'$0.05–$0.12',
     popEstimate:34, lossChance:66,
     breakEven:26.65,
-    catalyst:'LUNR dropped -9.27% today to $23.89 on no stock-specific news — pure sector rotation. Beta 2.95x market. Up 200%+ over the past year. $180M+ NASA CLPS task order active. 9+ space ETFs require LUNR shares for mechanical rebalancing. SpaceX IPO hype is a recurring catalyst.',
-    whyWin:'Beta 2.95 — when market bounces 2%, LUNR bounces 6%. SpaceX IPO news could drop any day and send all space names up 15-20% instantly. 9 new space ETFs = forced mechanical buying. $175M strategic investment = institutional confidence.',
-    whyFail:'⚡ IV 82% ELEVATED. Beta 2.95 cuts both ways — market selloff hits LUNR 3x harder. More red today (-9.27%) confirms sector weakness. Must exit Jun 5 to avoid any earnings risk.',
-    chips:['📉 -9.3% today on no news','⚡ IV 82% — elevated','🚀 Beta 2.95x','🛸 SpaceX IPO catalyst'],
+    catalyst:'LUNR at $24.11 (-8.4% today) on no stock-specific news — continued sector rotation. Beta 2.95x market. Up 200%+ over the past year. $180M+ NASA CLPS task order active. 9+ space ETFs require LUNR shares for mechanical rebalancing. SpaceX IPO hype is a recurring catalyst.',
+    whyWin:'Beta 2.95 — when market bounces 2%, LUNR bounces 6%. SpaceX IPO news could drop any day and send all space names up 15-20% instantly. 9 new space ETFs = forced mechanical buying. Two-day selloff with no news = oversold bounce setup.',
+    whyFail:'⚡ IV 82% ELEVATED. Beta 2.95 cuts both ways — market selloff hits LUNR 3x harder. Two days red confirms sector weakness may persist. Must exit Jun 5 to avoid any earnings risk.',
+    chips:['📉 -8.4% today (day 2)','⚡ IV 82% — elevated','🚀 Beta 2.95x','🛸 SpaceX IPO catalyst'],
     chipsStyle:['wchip-gold','wchip-orange','wchip-green','wchip-green'],
-    score:71
+    score:70
   },
   // ── BEARISH PUT PLAYS ──────────────────────────────
   {
-    rank:6, ticker:'SMCI', contract:'$28P Jun 20', type:'Accounting Overhang — Bearish PUT', setup:'SEC scrutiny + losing AI server share to Dell/HPE',
+    rank:6, ticker:'SMCI', contract:'$28P Jun 20', type:'Accounting Overhang — Bearish PUT', setup:'SEC scrutiny + losing AI server share — wait for $30 breakdown',
     dir:'put',
     price:0.62, totalCost:62, stopPct:60, stopPrice:0.25,
     t1:0.95, t2:1.35, t3:2.00,
     t1pct:53, t2pct:118, t3pct:223,
-    earn:'Aug 2026 — verify before hold', holdMax:'Jun 20', daysHold:44,
-    expectedMove:'-8 to -15% on stock from ~$31.50', ivCurrent:68, ivCrush:'LOW — earnings August, no near-term crush risk',
+    earn:'Aug 2026 — verify before hold', holdMax:'Jun 20', daysHold:43,
+    expectedMove:'-15 to -20% on stock from $33.62', ivCurrent:68, ivCrush:'LOW — earnings August, no near-term crush risk',
     liquidity:'HIGH — major AI infrastructure name', spread:'$0.03–$0.08',
-    popEstimate:35, lossChance:65,
+    popEstimate:32, lossChance:68,
     breakEven:27.38,
-    catalyst:'SMCI at ~$31.50. Accounting scandals have piled up: delayed 10-K filing, Ernst & Young resigned as auditor, SEC investigation ongoing. Meanwhile Dell and HPE are winning AI server deals away from SMCI — enterprise buyers avoid liability risk. Stock is down 70%+ from $100+ all-time highs and the accounting overhang has not resolved. One bad headline = 10-15% drop. $28P profits if stock breaks below $27.38.',
-    whyWin:'Accounting investigations don\'t resolve quickly. Dell/HPE enterprise server wins are ongoing and structural. Any new SEC filing, audit update, or earnings miss = sharp move lower. $30 is key support — break = accelerated selling. This is a "sell the bounce" put when SMCI fails at $33+.',
-    whyFail:'AI server demand is massive — even a scrutinized company benefits from the wave. Possible accounting resolution could send stock sharply higher. Put decays fast at IV 68% if stock sits still.',
-    chips:['⚖️ SEC investigation active','📉 Down 70% from highs','🏢 Dell/HPE winning share','💰 $62 total cost'],
-    chipsStyle:['wchip-orange','wchip-orange','wchip-red','wchip-green'],
-    score:72
+    catalyst:'SMCI at $33.62 (-3.0% today). Stock moved against put thesis short-term — wait for $30 breakdown to confirm. Core thesis intact: delayed 10-K filing, Ernst & Young resigned as auditor, SEC investigation ongoing. Dell and HPE winning AI server deals. One bad headline = 10-15% drop. $28P profits if stock breaks below $27.38.',
+    whyWin:'Accounting investigations don\'t resolve quickly. Dell/HPE enterprise server wins are ongoing. Stock at $33 is still down 70% from highs — no recovery in sight. Patient entry at $30 breakdown is the right trigger.',
+    whyFail:'AI server demand is massive. Short-term price action ($33 level) working against the put. IV 68% means fast decay if stock sits still. Don\'t enter until $30 breaks.',
+    chips:['⚖️ SEC investigation active','📉 Down 70% from highs','🏢 Dell/HPE winning share','⏳ Wait for $30 breakdown'],
+    chipsStyle:['wchip-orange','wchip-orange','wchip-red','wchip-orange'],
+    score:68
   },
   {
     rank:7, ticker:'MARA', contract:'$12P Jun 20', type:'Bitcoin Proxy Short — Bearish PUT', setup:'BTC weakness amplified 2-3x in miners',
@@ -3812,21 +3812,39 @@ function filterCapitol(f) {
 }
 
 // ── SEED DATA (latest fetch — refreshed by daily task) ──────────────────
-const CAPITOL_UPDATED = 'May 7, 2026';
+const CAPITOL_UPDATED = 'May 8, 2026';
 const CAPITOL_SEED = [
   {symbol:'AVGO',disclosureDate:'2026-05-07',transactionDate:'2026-04-13',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'Broadcom Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
   {symbol:'AAPL',disclosureDate:'2026-05-07',transactionDate:'2026-04-17',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'Apple Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
-  {symbol:'CEG',disclosureDate:'2026-05-07',transactionDate:'2026-04-17',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'Constellation Energy Corp',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
+  {symbol:'CEG',disclosureDate:'2026-05-07',transactionDate:'2026-04-17',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'CONSTELLATION ENE CORP',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
+  {symbol:'NFS',disclosureDate:'2026-05-06',transactionDate:'2026-04-10',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'Nationwide Financial Services Inc',assetType:'Corporate Bond',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'},
+  {symbol:'BXSL',disclosureDate:'2026-05-06',transactionDate:'2026-04-13',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'BLACKSTONE SECURED LENDING F',assetType:'Corporate Bond',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'},
+  {symbol:'ATH',disclosureDate:'2026-05-06',transactionDate:'2026-04-10',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'Athene Holding Ltd',assetType:'Corporate Bond',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'},
+  {symbol:'LBRDA',disclosureDate:'2026-05-05',transactionDate:'2025-05-19',firstName:'John',lastName:'W. Hickenlooper',district:'CO',owner:'Spouse',assetDescription:'Liberty Broadband Corp',assetType:'Stock',type:'Sale',amount:'$500,001 – $1,000,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/8036348f-2470-41f7-be97-d822d0b17e7c/'},
   {symbol:'PLTR',disclosureDate:'2026-05-05',transactionDate:'2025-06-03',firstName:'John',lastName:'W. Hickenlooper',district:'CO',owner:'',assetDescription:'Palantir Technologies Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/8036348f-2470-41f7-be97-d822d0b17e7c/'},
   {symbol:'PLTR',disclosureDate:'2026-05-05',transactionDate:'2025-04-16',firstName:'John',lastName:'W. Hickenlooper',district:'CO',owner:'',assetDescription:'Palantir Technologies Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/8036348f-2470-41f7-be97-d822d0b17e7c/'},
-  {symbol:'LBRDA',disclosureDate:'2026-05-05',transactionDate:'2025-05-19',firstName:'John',lastName:'W. Hickenlooper',district:'CO',owner:'Spouse',assetDescription:'Liberty Broadband Corp',assetType:'Stock',type:'Sale',amount:'$500,001 – $1,000,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/8036348f-2470-41f7-be97-d822d0b17e7c/'},
   {symbol:'JPM',disclosureDate:'2026-05-04',transactionDate:'2026-04-13',firstName:'Sheldon',lastName:'Whitehouse',district:'RI',owner:'Self',assetDescription:'JPMorgan Chase & Co',assetType:'Stock',type:'Sale',amount:'$15,001 – $50,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/747b4aac-bbc9-4636-bf0f-95b0454e39d9/'},
   {symbol:'IWD',disclosureDate:'2026-05-01',transactionDate:'2026-03-23',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'iShares Russell 1000 Value ETF',assetType:'ETF',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'RKT',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Rocket Cos Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'ACN',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Accenture PLC',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
   {symbol:'FITB',disclosureDate:'2026-05-01',transactionDate:'2026-03-20',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Fifth Third Bancorp',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'NFS',disclosureDate:'2026-05-06',transactionDate:'2026-04-10',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'Nationwide Financial Services Inc',assetType:'Corporate Bond',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'},
-  {symbol:'ATH',disclosureDate:'2026-05-06',transactionDate:'2026-04-10',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'Athene Holding Ltd',assetType:'Corporate Bond',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'}
+  {symbol:'RKT',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Rocket Cos Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'ACN',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Accenture PLC (1)',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'ACN',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Accenture PLC (2)',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'WFC',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Wells Fargo & Co',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'DBEU',disclosureDate:'2026-05-01',transactionDate:'2026-04-01',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'XTRACKERS MSCI EU HGD EQ ETF',assetType:'ETF',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'VUG',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Vanguard Growth ETF',assetType:'ETF',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'LNG',disclosureDate:'2026-05-01',transactionDate:'2026-03-20',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Cheniere Energy Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'MKL',disclosureDate:'2026-05-07',transactionDate:'2026-04-30',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Markel Corp',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'MORN',disclosureDate:'2026-05-07',transactionDate:'2026-04-16',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Morningstar Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'TDG',disclosureDate:'2026-05-07',transactionDate:'2026-04-29',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'TransDigm Group Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'TDG',disclosureDate:'2026-05-07',transactionDate:'2026-04-16',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'TransDigm Group Inc',assetType:'Stock',type:'Purchase',amount:'$15,001 – $50,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'BRO',disclosureDate:'2026-05-07',transactionDate:'2026-04-17',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Brown & Brown Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'PKG',disclosureDate:'2026-05-07',transactionDate:'2026-04-24',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Packaging Corp Of America',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'NDAQ',disclosureDate:'2026-05-07',transactionDate:'2026-04-24',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Nasdaq Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'ENTG',disclosureDate:'2026-05-07',transactionDate:'2026-04-15',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Entegris Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'CLH',disclosureDate:'2026-05-07',transactionDate:'2026-04-30',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Clean Harbors Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'CHRW',disclosureDate:'2026-05-07',transactionDate:'2026-04-24',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'C.H. Robinson Worldwide Inc',assetType:'Stock',type:'Sale',amount:'$15,001 – $50,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'STE',disclosureDate:'2026-05-07',transactionDate:'2026-04-30',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Steris PLC',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'KO',disclosureDate:'2026-05-07',transactionDate:'2026-04-01',firstName:'Lloyd',lastName:'Doggett',district:'TX37',owner:'',assetDescription:'The Coca-Cola Co',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034486.pdf'}
 ];
 
 // ════════════════════════════════════════════════
