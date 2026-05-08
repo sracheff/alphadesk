@@ -1701,6 +1701,28 @@ const PICKS = [
     thesis:'<strong>QUBT at $9.39, down -10.2% today</strong> in the quantum sector selloff. Quantum Computing Inc. is the smallest name in the sector ($1.3B market cap) but trades with the highest beta. On any NVIDIA quantum announcement or sector news day, QUBT moves 20-40%. At $9.39, a $10C Jun 20 at $0.55 is a cheap sector bet. Only enter if you can accept losing the full $55.',
     watch:['NVIDIA quantum news = 20-40% QUBT spike','Watch for volume surge as signal','$10 reclaim = momentum confirmation','Sector correlation: IONQ moves, QUBT follows'],
     risks:'⚡ IV 90% ELEVATED. Smallest quantum company. Options often have wide spreads. Very speculative — treat as lottery ticket only.'
+  },
+  // ── BEARISH PUT PLAYS ──────────────────────────────
+  {
+    grade:'B', ticker:'SMCI', contract:'$28P Jun 20', price:0.62, total:62,
+    entry:31.50, stop:0.25, t1:0.95, t2:1.35, t3:2.00,
+    earn:'Aug 2026 (verify)', holdMax:'Jun 20',
+    signal:'wait', signalText:'Wait for $30 breakdown to confirm — don\'t fight a rising stock',
+    iv:68, ivFlag:false,
+    thesis:'<strong>📉 BEARISH PUT PLAY — SMCI at ~$31.50.</strong> Super Micro Computer has been under sustained accounting scrutiny: delayed 10-K filing, Ernst &amp; Young resigned as auditor, and SEC investigations followed. Despite the AI server boom, SMCI is losing enterprise share to Dell and HPE — buyers don\'t want the liability risk. Stock is down 70%+ from $100+ all-time highs. Any new SEC headline, earnings miss, or audit update triggers a sharp move lower. The $28P Jun 20 at $0.62 profits if SMCI falls below $27.38 by Jun 20.',
+    watch:['$30 breakdown = entry signal — confirms trend reversal','SEC filings or audit update = immediate catalyst','Dell/HPE winning AI server deals = structural bear case','SMCI earnings (verify Aug date) — exit before if still holding'],
+    risks:'AI server demand is massive — SMCI still benefits from the wave even with scrutiny. Possible accounting resolution could send stock sharply higher. Put decays fast at IV 68% if stock sits still.'
+  },
+  {
+    grade:'C', ticker:'MARA', contract:'$12P Jun 20', price:0.55, total:55,
+    entry:14.80, stop:0.22, t1:0.85, t2:1.20, t3:1.75,
+    earn:'Aug 2026 (verify)', holdMax:'Jun 20',
+    signal:'wait', signalText:'Wait for Bitcoin to show distribution — this is a BTC proxy put',
+    iv:85, ivFlag:true,
+    thresh:'⚡ IV 85% ELEVATED — LOTTERY PLAY. Only enter if BTC shows clear weakness. Max 1 contract.',
+    thesis:'<strong>📉 BEARISH PUT PLAY — MARA at ~$14.80 (Bitcoin proxy).</strong> Marathon Digital Holdings is a pure Bitcoin miner. When BTC drops 10%, MARA drops 20-30%. When BTC drops 20%, MARA can fall 40-50%. Mining economics are worsening post-halving: profit-per-block compressed, network hashrate at all-time highs, electricity costs rising. At $14.80, a $12P Jun 20 at $0.55 profits if MARA falls below $11.45 by Jun 20. This is a pure "BTC shows weakness → MARA put" play — only enter when Bitcoin breaks below key support.',
+    watch:['Bitcoin daily close below $90K = put entry signal','MARA $13 breakdown = confirmation','Rising hashrate difficulty reports = bearish fundamentals','Bitcoin fear/greed index below 30 = entry zone'],
+    risks:'⚡ IV 85% ELEVATED. Bitcoin trends reverse instantly on ETF inflow data. Any positive BTC news = MARA rips. Pure directional lottery — max 1 contract, accept full $55 loss.'
   }
 ];
 
@@ -2792,13 +2814,17 @@ function initPicks() {
     const ivWarning = p.ivFlag ? `<span class="badge b-orange">⚡ IV ${p.iv}% ELEVATED</span>` : `<span class="badge b-gray">IV ${p.iv}%</span>`;
     const watchItems = p.watch.map(w => `<li>→ ${w}</li>`).join('');
     const threshNote = p.thresh ? `<div style="padding:8px 10px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.18);border-radius:6px;font-size:11px;color:var(--orange);margin-bottom:8px;font-weight:600">${p.thresh}</div>` : '';
+    const isPut = /\$[\d.]+P\b/.test(p.contract);
+    const dirBadge = isPut
+      ? `<span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)">📉 PUT</span>`
+      : `<span style="display:inline-block;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.25)">📈 CALL</span>`;
     return `
     <div class="pick-card ${gradeCls}">
       <div class="pick-hdr">
         <div style="display:flex;align-items:flex-start;gap:10px">
           <div class="grade ${gradeBox}">${p.grade}</div>
           <div>
-            <div class="pick-ticker">${p.ticker}</div>
+            <div class="pick-ticker">${p.ticker} ${dirBadge}</div>
             <div class="pick-contract">${p.contract} · Earnings: ${p.earn}</div>
           </div>
         </div>
@@ -3124,6 +3150,43 @@ const PLAYS_40 = [
     chips:['📉 -9.3% today on no news','⚡ IV 82% — elevated','🚀 Beta 2.95x','🛸 SpaceX IPO catalyst'],
     chipsStyle:['wchip-gold','wchip-orange','wchip-green','wchip-green'],
     score:71
+  },
+  // ── BEARISH PUT PLAYS ──────────────────────────────
+  {
+    rank:6, ticker:'SMCI', contract:'$28P Jun 20', type:'Accounting Overhang — Bearish PUT', setup:'SEC scrutiny + losing AI server share to Dell/HPE',
+    dir:'put',
+    price:0.62, totalCost:62, stopPct:60, stopPrice:0.25,
+    t1:0.95, t2:1.35, t3:2.00,
+    t1pct:53, t2pct:118, t3pct:223,
+    earn:'Aug 2026 — verify before hold', holdMax:'Jun 20', daysHold:44,
+    expectedMove:'-8 to -15% on stock from ~$31.50', ivCurrent:68, ivCrush:'LOW — earnings August, no near-term crush risk',
+    liquidity:'HIGH — major AI infrastructure name', spread:'$0.03–$0.08',
+    popEstimate:35, lossChance:65,
+    breakEven:27.38,
+    catalyst:'SMCI at ~$31.50. Accounting scandals have piled up: delayed 10-K filing, Ernst & Young resigned as auditor, SEC investigation ongoing. Meanwhile Dell and HPE are winning AI server deals away from SMCI — enterprise buyers avoid liability risk. Stock is down 70%+ from $100+ all-time highs and the accounting overhang has not resolved. One bad headline = 10-15% drop. $28P profits if stock breaks below $27.38.',
+    whyWin:'Accounting investigations don\'t resolve quickly. Dell/HPE enterprise server wins are ongoing and structural. Any new SEC filing, audit update, or earnings miss = sharp move lower. $30 is key support — break = accelerated selling. This is a "sell the bounce" put when SMCI fails at $33+.',
+    whyFail:'AI server demand is massive — even a scrutinized company benefits from the wave. Possible accounting resolution could send stock sharply higher. Put decays fast at IV 68% if stock sits still.',
+    chips:['⚖️ SEC investigation active','📉 Down 70% from highs','🏢 Dell/HPE winning share','💰 $62 total cost'],
+    chipsStyle:['wchip-orange','wchip-orange','wchip-red','wchip-green'],
+    score:72
+  },
+  {
+    rank:7, ticker:'MARA', contract:'$12P Jun 20', type:'Bitcoin Proxy Short — Bearish PUT', setup:'BTC weakness amplified 2-3x in miners',
+    dir:'put',
+    price:0.55, totalCost:55, stopPct:60, stopPrice:0.22,
+    t1:0.85, t2:1.20, t3:1.75,
+    t1pct:55, t2pct:118, t3pct:218,
+    earn:'Aug 2026 — verify', holdMax:'Jun 20', daysHold:44,
+    expectedMove:'-20 to -30% on stock if BTC drops 10%', ivCurrent:85, ivCrush:'ELEVATED — IV 85%. High theta decay. Only enter on BTC breakdown.',
+    liquidity:'MEDIUM-HIGH', spread:'$0.04–$0.10',
+    popEstimate:30, lossChance:70,
+    breakEven:11.45,
+    catalyst:'MARA at ~$14.80. Pure Bitcoin proxy. BTC miners amplify BTC moves 2-3x in both directions. Post-halving economics are worse: profit-per-block compressed, network hashrate at all-time highs, electricity costs rising. Only enter if BTC shows clear distribution (close below key support). $12P at $0.55 profits if MARA falls below $11.45 — a -23% drop from current price.',
+    whyWin:'Bitcoin miners have explosive downside when BTC drops. MARA fell 40-50% in prior BTC bear cycles. Post-halving profit compression is structural. Rising electricity costs = earnings headwind. One BTC close below $90K and MARA drops 20-30% in days.',
+    whyFail:'⚡ IV 85% ELEVATED = expensive put, fast decay. BTC trends reverse instantly on ETF inflow data. Institutional Bitcoin adoption provides floor. Directional bet that requires BTC weakness — don\'t fight the trend.',
+    chips:['₿ BTC proxy — 2-3x moves','⚡ IV 85% — elevated','📉 Post-halving compression','🎰 Lottery — 1 contract only'],
+    chipsStyle:['wchip-gold','wchip-orange','wchip-orange','wchip-red'],
+    score:60
   }
 ];
 
@@ -3182,13 +3245,14 @@ function renderPlays40() {
     const rr = (potentialGain3 / potentialLoss).toFixed(1);
     const chips = (p.chips||[]).map((c,ci) => '<span class="wchip ' + (p.chipsStyle[ci]||'wchip-gray') + '">' + c + '</span>').join('');
     const scoreColor = p.score >= 80 ? 'var(--green)' : p.score >= 65 ? 'var(--gold)' : 'var(--orange)';
+    const isPut = (p.dir === 'put') || /\$[\d.]+P\b/.test(p.contract);
     return `
     <div class="play40-card ${rankClass}">
       <div class="play40-hdr">
         <div style="display:flex;align-items:flex-start;gap:10px">
           <div class="p40-rank">#${p.rank}</div>
           <div>
-            <div class="p40-ticker">${p.ticker}</div>
+            <div class="p40-ticker">${p.ticker} <span style="font-size:10px;font-weight:800;padding:2px 6px;border-radius:4px;vertical-align:middle;${isPut ? 'background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)' : 'background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.25)'}">${isPut ? '📉 PUT' : '📈 CALL'}</span></div>
             <div class="p40-contract">${p.contract} · ${p.type}</div>
             <div style="margin-top:4px"><span class="badge b-gray">${p.setup}</span></div>
           </div>
@@ -3249,13 +3313,13 @@ function renderPlays40() {
       </div>
 
       <!-- HOW TO BUY THIS -->
-      <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:9px;padding:12px;margin-top:10px">
-        <div style="font-size:11px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📋 How to Execute This Trade</div>
+      <div style="background:${isPut ? 'rgba(239,68,68,0.04)' : 'rgba(16,185,129,0.05)'};border:1px solid ${isPut ? 'rgba(239,68,68,0.2)' : 'rgba(16,185,129,0.2)'};border-radius:9px;padding:12px;margin-top:10px">
+        <div style="font-size:11px;font-weight:800;color:${isPut ? 'var(--red)' : 'var(--green)'};text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📋 How to Execute This Trade</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px">
           <div style="background:rgba(0,0,0,0.3);border-radius:7px;padding:8px">
             <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Step 1 — What you're buying</div>
-            <div style="font-size:11px;color:var(--text);font-weight:600">📈 <strong style="color:var(--cyan)">${p.contract}</strong> Call Option on ${p.ticker}</div>
-            <div style="font-size:10px;color:var(--muted);margin-top:3px">This is a CALL — you profit if ${p.ticker} stock price rises above $${p.breakEven} before ${p.holdMax}</div>
+            <div style="font-size:11px;color:var(--text);font-weight:600">${isPut ? '📉' : '📈'} <strong style="color:var(--cyan)">${p.contract}</strong> ${isPut ? 'Put' : 'Call'} Option on ${p.ticker}</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px">${isPut ? 'This is a PUT — you profit if ' + p.ticker + ' stock price FALLS BELOW $' + p.breakEven + ' before ' + p.holdMax : 'This is a CALL — you profit if ' + p.ticker + ' stock price rises above $' + p.breakEven + ' before ' + p.holdMax}</div>
           </div>
           <div style="background:rgba(0,0,0,0.3);border-radius:7px;padding:8px">
             <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Step 2 — Entry order</div>
@@ -3274,7 +3338,7 @@ function renderPlays40() {
           </div>
         </div>
         <div style="margin-top:8px;padding:6px 10px;background:rgba(245,158,11,0.08);border-radius:6px;font-size:10px;color:var(--gold)">
-          ⚡ <strong>NOT a stock purchase.</strong> You're buying the RIGHT to buy ${p.ticker} at the strike price. If the stock doesn't move enough before expiry, the option expires worthless and you lose the $${p.totalCost} paid. Max loss = $${p.totalCost}.
+          ⚡ <strong>NOT a stock ${isPut ? 'sale' : 'purchase'}.</strong> ${isPut ? 'You\'re buying the RIGHT to SELL ' + p.ticker + ' at the strike price. You profit when the stock FALLS. If it doesn\'t drop enough before expiry, the option expires worthless.' : 'You\'re buying the RIGHT to buy ' + p.ticker + ' at the strike price. If the stock doesn\'t move enough before expiry, the option expires worthless and you lose the $' + p.totalCost + ' paid.'} Max loss = $${p.totalCost}.
         </div>
       </div>
 
