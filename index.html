@@ -569,7 +569,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="searchbox" onclick="focusLookup()" style="cursor:text"><span>🔍</span><input id="srch" type="text" placeholder="Search ticker, strategy…" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter'){quickLookup(this.value.trim());this.value=''}"></div>
     <div class="mktchips">
       <div class="mkt"><span class="lb">SPY</span><span class="up">737.62</span><span class="up">+0.83%</span></div>
-      <div class="mkt"><span class="lb">QQQ</span><span class="up">480.85</span><span class="up">+0.95%</span></div>
+      <div class="mkt"><span class="lb">QQQ</span><span class="up">718.55</span><span class="up">+1.02%</span></div>
       <div class="mkt"><span class="lb">VIX</span><span class="up">17.21</span></div>
       <div class="mkt"><span class="lb">BTC</span><span class="up">96,420</span></div>
     </div>
@@ -902,7 +902,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   ══════════════════════════════════════════ -->
   <div class="section" id="sec-intel">
     <div class="sec-title">🔬 AI Intel Hub</div>
-    <div class="sec-sub">Deep research per ticker · What to watch · Entry signals · Risk flags · All from live research May 7, 2026</div>
+    <div class="sec-sub">Deep research per ticker · What to watch · Entry signals · Risk flags · All from live research May 9, 2026</div>
     <div class="tab-row" id="intelTabs"></div>
     <div id="intelBody"></div>
   </div>
@@ -921,25 +921,65 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
        ALERTS
   ══════════════════════════════════════════ -->
   <div class="section" id="sec-alerts">
-    <div class="sec-title">🔔 Alerts</div>
-    <div class="sec-sub">Smart triggers · Earnings warnings · Price levels · Macro events</div>
-    <div class="warn-bar">⚠️ <strong>3 active alerts</strong> · SAIL earnings 34 days · RGTI IV elevated · MARA unusual volume</div>
-    <div class="grid2">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px">
       <div>
-        <div class="card-title" style="margin-bottom:9px">Alert Rules</div>
-        <div id="alertRules"></div>
+        <div class="sec-title">🔔 Alerts</div>
+        <div class="sec-sub">Auto-generated from your positions &amp; plays · Add your own price targets</div>
       </div>
-      <div>
-        <div class="card-title" style="margin-bottom:9px">Recent Triggers</div>
-        <div id="recentAlerts"></div>
-        <div class="divider"></div>
-        <div class="card-title" style="margin-bottom:9px">Macro Calendar</div>
-        <div class="grid3">
-          <div class="card-sm"><div style="font-size:10px;color:var(--muted)">CPI Report</div><div style="font-weight:700;margin-top:3px">May 13</div><span class="badge b-orange" style="margin-top:5px;display:inline-flex">High Impact</span></div>
-          <div class="card-sm"><div style="font-size:10px;color:var(--muted)">FOMC Meeting</div><div style="font-weight:700;margin-top:3px">Jun 11</div><span class="badge b-red" style="margin-top:5px;display:inline-flex">Rate Decision</span></div>
-          <div class="card-sm"><div style="font-size:10px;color:var(--muted)">SAIL Earnings</div><div style="font-weight:700;margin-top:3px">Jun 10</div><span class="badge b-red" style="margin-top:5px;display:inline-flex">⚠ SELL FIRST</span></div>
+      <button class="btn btn-ghost btn-sm" onclick="showAddAlertForm()" style="font-size:11px">＋ Add Alert</button>
+    </div>
+    <div id="alertSummaryBar" class="warn-bar" style="margin-bottom:14px"></div>
+
+    <!-- ADD ALERT FORM -->
+    <div id="addAlertForm" style="display:none;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:var(--cyan);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">New Custom Alert</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <div class="pf-label">Ticker</div>
+          <input class="pf-input" id="al-ticker" type="text" placeholder="ACHR" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <div>
+          <div class="pf-label">Condition</div>
+          <select class="pf-select" id="al-condition">
+            <option value="above">Price above ($)</option>
+            <option value="below">Price below ($)</option>
+            <option value="earnings">Earnings within (days)</option>
+            <option value="note">Note / reminder</option>
+          </select>
         </div>
       </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <div class="pf-label">Target Value</div>
+          <input class="pf-input" id="al-value" type="text" placeholder="7.50">
+        </div>
+        <div>
+          <div class="pf-label">Note (optional)</div>
+          <input class="pf-input" id="al-note" type="text" placeholder="Break-even hit — consider selling">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" onclick="saveCustomAlert()">Save Alert</button>
+        <button class="btn btn-ghost btn-sm" onclick="hideAddAlertForm()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- AUTO ALERTS (from picks/positions) -->
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px">Auto Alerts — Updated Daily</div>
+    <div id="alertRules" style="margin-bottom:16px"></div>
+
+    <!-- CUSTOM ALERTS -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)">My Custom Alerts</div>
+    </div>
+    <div id="customAlertsList" style="margin-bottom:16px"></div>
+
+    <!-- MACRO CALENDAR -->
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px">Macro Calendar</div>
+    <div class="grid3">
+      <div class="card-sm"><div style="font-size:10px;color:var(--muted)">CPI Report</div><div style="font-weight:700;margin-top:3px">May 13</div><span class="badge b-orange" style="margin-top:5px;display:inline-flex">High Impact</span></div>
+      <div class="card-sm"><div style="font-size:10px;color:var(--muted)">FOMC Meeting</div><div style="font-weight:700;margin-top:3px">Jun 11</div><span class="badge b-red" style="margin-top:5px;display:inline-flex">Rate Decision</span></div>
+      <div class="card-sm"><div style="font-size:10px;color:var(--muted)">SAIL Earnings</div><div style="font-weight:700;margin-top:3px">Jun 10</div><span class="badge b-red" style="margin-top:5px;display:inline-flex">⚠ SELL FIRST</span></div>
     </div>
   </div>
 
@@ -1815,55 +1855,65 @@ const PICKS = [
     risks:'Option expires May 16 — you have 7 trading days left. Theta accelerating. Take profits Monday unless you have conviction for another +$5 in NVDA. Earnings May 20 — but option expires before that.'
   },
   {
-    grade:'B', ticker:'ACHR', contract:'$7C Jun 20', price:0.48, total:48,
-    entry:6.28, stop:0.19, t1:0.75, t2:1.10, t3:1.65,
+    grade:'C', ticker:'ACHR', contract:'$6C Jun 20', price:0.40, total:40,
+    entry:5.58, stop:0.16, t1:0.62, t2:0.90, t3:1.35,
     earn:'Not confirmed — verify before Aug', holdMax:'Jun 20',
-    signal:'buy', signalText:'Buy now — cheap eVTOL with real catalysts',
-    iv:78, ivFlag:false,
-    thesis:'<strong>ACHR at $6.28 (-2.0% today).</strong> Stock has $2B cash on hand — zero bankruptcy risk. $6B order backlog from airlines and DOD. White House pilot program running across NY, FL, TX. FAA commercial certification timeline: H2 2026. At $6.28 a $7C Jun 20 is only $0.48 — one of the cheapest quality setups on the board. Any positive FAA news, White House announcement, or order expansion can move this 15-20% in a day.',
-    watch:['Watch $6.50 reclaim — confirms dip is over','FAA certification milestone news = major catalyst','White House eVTOL program expansion announcements','$2B cash cushion means no dilution risk near-term'],
-    risks:'eVTOL is pre-revenue speculative. FAA certification could slip. IV 78% means options decay fast if stock goes sideways.'
+    signal:'wait', signalText:'Wait for $5.75 reclaim — stock pulled back -11% today on no news',
+    iv:80, ivFlag:false,
+    thesis:'<strong>ACHR fell -11.1% to $5.58 today despite JOBY surging +5%.</strong> The divergence is unusual — no ACHR-specific news found. $2B cash on hand eliminates bankruptcy risk. $6B backlog from airlines and DOD intact. White House eVTOL program still active. FAA certification H2 2026 remains the binary catalyst. The $7C from yesterday is now $1.42 OTM — switch to $6C Jun 20 at ~$0.40 for better risk/reward. Wait for $5.75 reclaim before entering — confirm the dip is technical and not news-driven.',
+    watch:['Watch $5.75 reclaim before entering — confirms reversal','JOBY divergence: if JOBY holds $10.50, sector is fine and ACHR dip is noise','FAA certification milestone = major catalyst for both eVTOL names','$2B cash = no dilution risk'],
+    risks:'11% drop with no news is a yellow flag — check for any undisclosed news before entering. eVTOL pre-revenue speculative. IV 80% = fast theta decay.'
   },
   {
-    grade:'B', ticker:'LUNR', contract:'$26C Jun 6', price:0.65, total:65,
+    grade:'A', ticker:'LUNR', contract:'$26C Jun 6', price:0.65, total:65,
     entry:24.11, stop:0.26, t1:0.98, t2:1.40, t3:2.00,
-    earn:'Not confirmed — verify; exit Jun 5 to be safe', holdMax:'Jun 5 EOD',
-    signal:'buy', signalText:'Buy now — space bounce setup still intact',
-    iv:82, ivFlag:true,
-    thresh:'SHORT HOLD: Exit by Jun 5 close.',
-    thesis:'<strong>LUNR at $24.11 (-8.4% today)</strong> despite no negative news — continued sector rotation selling. Stock is up 200%+ over the past year. NASA CLPS task order $180M+ still active. $175M strategic equity investment. Space sector remains in strong secular uptrend driven by SpaceX IPO hype and 9+ new space ETFs requiring LUNR shares. High beta (2.95x market) means bounces are fast and violent. This is a quick momentum flip.',
-    watch:['$25 reclaim = bullish signal','SpaceX IPO news = sector rip catalyst','Space ETF rebalancing = mechanical buying','Exit Jun 5 — do not hold through any earnings'],
-    risks:'⚡ IV 82% ELEVATED — flag. Beta 2.95 cuts both ways. If market sells off 2%, LUNR can drop 6%. Short leash required.'
+    earn:'⚠️ MAY 14 CONFIRMED — EXIT MAY 13 EOD', holdMax:'May 13 EOD',
+    signal:'buy', signalText:'🎯 $26C IS IN THE MONEY — LUNR AT $28.97 (+21%) — TAKE PROFITS NOW',
+    iv:85, ivFlag:true,
+    thresh:'🎯 IN THE MONEY: LUNR surged to $28.97 today (+$4.86). Your $26C Jun 6 entered at $0.65 is now worth approximately $3.00–$4.00+. This is a WINNER — TAKE PROFITS. Earnings May 14 — HARD EXIT by May 13 close.',
+    thesis:'<strong>🎯 $26C IS NOW DEEP IN THE MONEY — LUNR AT $28.97 (+21.4% TODAY)!</strong> The thesis played out PERFECTLY. RKLB surged +30% on record Q1 earnings (revenue $200M, +64% YoY, $2.2B backlog), and space sector halo lifted LUNR +21%. Your $26C entered at $0.65 is now approximately worth $3.00–$4.00+ based on intrinsic value alone ($28.97 - $26.00 = $2.97 intrinsic + time value). <strong>THIS IS A WINNER — SELL ON MONDAY OPEN OR TODAY IN EXTENDED HOURS.</strong> Earnings May 14 — you MUST exit by May 13 close. Do NOT give back these gains.',
+    watch:['🎯 SELL MONDAY OPEN — $26C is ITM at $28.97 stock price','Intrinsic value alone: $2.97 — up from $0.65 entry = ~360-500% gain','⚠️ EARNINGS MAY 14 — HARD EXIT MAY 13 — NO EXCEPTIONS','If stock opens above $29.50 Monday, consider selling immediately for max gain'],
+    risks:'⚠️ EARNINGS MAY 14 — IV will collapse after the print. Do NOT hold through earnings under ANY circumstances. Take profits now. This is a gift — sell it.'
   },
   {
-    grade:'B', ticker:'S', contract:'$16C Jun 20', price:0.55, total:55,
-    entry:15.92, stop:0.22, t1:0.85, t2:1.20, t3:1.75,
-    earn:'Jun 2026 (verify exact date)', holdMax:'May 30',
-    signal:'buy', signalText:'Buy now — CRWD +8.1%, PANW +7.1% — S is the cheapest catch-up play',
+    grade:'B', ticker:'S', contract:'$16C Jun 20', price:0.50, total:50,
+    entry:15.60, stop:0.20, t1:0.78, t2:1.10, t3:1.65,
+    earn:'Jun 2026 (verify exact date) — exit Jun 10', holdMax:'Jun 10',
+    signal:'wait', signalText:'Wait for $15.75 reclaim — cyber sector still strong but S pulled back slightly',
     iv:46, ivFlag:false,
-    thesis:'<strong>CrowdStrike +8.1% and Palo Alto +7.1% TODAY (May 8)</strong> — cybersecurity remains the hottest sector for day 2. SentinelOne at $15.92 (+3.9%) is participating but still the cheapest name in the sector by valuation (3.5x forward revenue vs CRWD at 18x). Growing 43% YoY. AI-native SOC platform gaining enterprise share. Sector momentum still spreading to all names. IV at 46% = cheapest options on the board.',
-    watch:['CRWD and PANW momentum lifts all cybersecurity names','Watch $16 — reclaim confirms breakout','CrowdStrike earnings in June will lift sector further','IV 46% = maximum leverage per dollar spent'],
-    risks:'Smallest market cap in cyber space ($5.2B). Can underperform the sector. Needs a specific catalyst to outperform CRWD/PANW.'
+    thesis:'<strong>SentinelOne at $15.60 (-2.0% today)</strong> as CRWD pulled back -1.7% and PANW ran +5.78% on Anthropic AI defense partnership news. The sector is still firmly bullish — PANW up 5.78%, CRWD holding above $490. SentinelOne is the value play: 43% YoY revenue growth, AI-native SOC, only 3.5x forward revenue vs CRWD at 18x. Today\'s small pullback on S while PANW ripped higher is unusual — suggests rotation within the sector, not selling. IV 46% = cheapest options in all of cybersecurity. If CRWD and PANW hold Monday, S catches up.',
+    watch:['PANW +5.78% today on Anthropic AI defense partnership — sector fundamental catalyst','$15.75 reclaim Monday = green light for $16C entry','CRWD earnings Jun 4 = sector lift for S','IV 46% = highest leverage per dollar in cyber'],
+    risks:'S lagging behind CRWD/PANW today may indicate lack of institutional support. Needs CRWD to hold above $490 to provide sector floor.'
   },
   {
-    grade:'B', ticker:'JOBY', contract:'$10.5C Jun 20', price:0.58, total:58,
-    entry:10.01, stop:0.23, t1:0.88, t2:1.25, t3:1.85,
+    grade:'B', ticker:'JOBY', contract:'$11C Jun 20', price:0.52, total:52,
+    entry:10.52, stop:0.21, t1:0.82, t2:1.18, t3:1.75,
     earn:'Aug 2026 (verify)', holdMax:'Jun 20',
-    signal:'buy', signalText:'$10 RECLAIMED — entry trigger hit — buy now',
-    iv:75, ivFlag:false,
-    thesis:'<strong>JOBY at $10.01 — $10 reclaim trigger has been HIT.</strong> Entry condition is met. Company has $800M+ cash, FAA certification progressing, Toyota partnership active. The $10 level was the key resistance — with it now reclaimed at $10.01, momentum has shifted. A $10.5C Jun 20 at $0.58 is a cheap play on continued recovery. Stop: $0.23.',
-    watch:['$10 reclaim = GREEN LIGHT — entry condition MET','FAA certification milestone = major catalyst','Toyota partnership announcements','Monitor ACHR as sector leading indicator'],
-    risks:'eVTOL is pre-revenue. Stock down from $20+ highs. Needs FAA catalyst to reverse trend. IV 75% means fast decay if stock stalls.'
+    signal:'buy', signalText:'$10 held + $10.52 breakout — eVTOL momentum vs ACHR weakness, JOBY leads',
+    iv:73, ivFlag:false,
+    thesis:'<strong>JOBY at $10.52 (+5.1% today)</strong> while ACHR fell -11.1% — a clear signal that JOBY is the stronger eVTOL play right now. Company has $800M+ cash, FAA certification progressing, Toyota partnership active. JOBY held the $10 level on Thursday and is now pushing higher. The $11C Jun 20 at $0.52 gives 42 days for FAA news or a sector catalyst. Delta divergence from ACHR suggests institutional preference for JOBY quality over ACHR speculation. Upgrade from $10.5C to $11C given stock has moved.',
+    watch:['$10.80 reclaim = next resistance, watch for consolidation','FAA Part 135 Air Carrier certification = binary catalyst','Toyota partnership milestones — watch for Japan deployment news','ACHR weakness = capital rotating INTO JOBY in eVTOL sector'],
+    risks:'eVTOL sector still pre-revenue. Today\'s divergence from ACHR could reverse. IV 73% means fast decay if stock stalls above $10. Needs FAA news within 4-5 weeks for thesis to play out.'
   },
   {
-    grade:'C', ticker:'BBAI', contract:'$4.5C Jun 20', price:0.38, total:38,
-    entry:4.17, stop:0.15, t1:0.58, t2:0.82, t3:1.20,
+    grade:'B', ticker:'RKLB', contract:'$110C Jun 20', price:0.65, total:65,
+    entry:102.00, stop:0.26, t1:1.00, t2:1.45, t3:2.20,
     earn:'Aug 2026 (verify)', holdMax:'Jun 20',
-    signal:'wait', signalText:'Wait for $4.25 reclaim — lottery play only',
+    signal:'wait', signalText:'NEW PLAY — Wait for Monday open confirmation — RKLB +30% on record earnings',
+    iv:72, ivFlag:false,
+    thesis:'<strong>RKLB surged +30% to $102 today on record Q1 earnings:</strong> Revenue $200.35M (+64% YoY, best quarter ever), gross margin 38.2%, $2.2B backlog, Q2 guidance $225-240M. Largest contract ever with a confidential customer for Neutron+Electron through 2029. $190M contract for 20 hypersonic test flights. Acquiring Motiv Space Systems (space robotics). Space Force missile defense program. This is not a pump — these are structural earnings beats. A $110C Jun 20 at ~$0.65 is a post-earnings momentum play. Stock needs to reach $110.65 by Jun 20. With $2.2B backlog and 64% revenue growth, analyst targets should surge next week.',
+    watch:['Monday open: if stock holds $100 — buy signal confirmed','Analyst target upgrades expected Monday (multiple firms)','Neutron rocket first test milestones — each is a catalyst','$2.2B backlog = 5+ quarters of revenue secured'],
+    risks:'Stock already priced in much of the good news with a 30% gap up. IV likely elevated post-earnings. Wait for Monday confirmation before entering — if stock opens down more than 3% from $102, skip this play.'
+  },
+  {
+    grade:'C', ticker:'BBAI', contract:'$5C Jun 20', price:0.30, total:30,
+    entry:4.31, stop:0.12, t1:0.48, t2:0.68, t3:1.00,
+    earn:'Aug 2026 (verify)', holdMax:'Jun 20',
+    signal:'wait', signalText:'Wait for $4.50 reclaim — lottery play, +6.7% today suggests defense AI halo',
     iv:88, ivFlag:true,
-    thresh:'⚠️ LOTTERY PLAY. Max size: 1 contract. Do not risk more than $38.',
-    thesis:'<strong>BBAI at $4.12, down -5.7% today.</strong> Defense AI small-cap with government contract momentum. Cheapest call on the board at $0.38 — that\'s $38 total. This is a pure lottery play — small size, big upside if defense AI narrative catches fire. Any DoD contract announcement or PLTR halo effect can move this 20-30% in a day. IV 88% elevated — only enter if you accept total loss risk.',
-    watch:['Any DoD or intelligence contract announcement','PLTR earnings/news lifts all defense AI names','Watch $4.50 as key resistance','Only trade 1 contract — $38 max risk'],
+    thresh:'⚠️ LOTTERY PLAY. Max size: 1 contract. Do not risk more than $30.',
+    thesis:'<strong>BBAI at $4.31 (+6.7% today)</strong> — defense AI name riding sector strength. PLTR +0.55%, PANW +5.78%, Anthropic AI defense partnership announced today. BBAI has government contract momentum — any DoD or intel contract = 20-30% spike. Upgraded to $5C (from $4.5C) given stock at $4.31. At $0.30 total this is the cheapest lottery on the board. IV 88% is elevated but the dollar risk is only $30.',
+    watch:['Any DoD or intelligence contract announcement','PANW/PLTR sector momentum = BBAI halo','Watch $4.50 reclaim — confirms breakout','Only 1 contract — $30 total max risk'],
     risks:'⚡ IV 88% ELEVATED. Very small cap ($1.5B). Illiquid options — check spread before entering. High beta, low float = violent moves both ways.'
   },
   {
@@ -1906,40 +1956,40 @@ const WATCHLISTS = {
   'Options Plays': [
     {t:'IONQ',n:'IonQ Inc.',p:48.75,c:+1.07,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
     {t:'NVDA',n:'NVIDIA Corp.',p:215.20,c:+3.70,tgt:240,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'🚨 ITM — Sell'},
-    {t:'ACHR',n:'Archer Aviation',p:6.28,c:-0.13,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
-    {t:'LUNR',n:'Intuitive Machines',p:24.11,c:-2.22,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
-    {t:'S',n:'SentinelOne',p:15.92,c:+0.59,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
-    {t:'JOBY',n:'Joby Aviation',p:10.01,c:-0.51,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'$10 Reclaimed'},
-    {t:'BBAI',n:'BigBear.ai',p:4.17,c:-0.20,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
-    {t:'QUBT',n:'Quantum Computing Inc.',p:9.63,c:-0.83,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
+    {t:'ACHR',n:'Archer Aviation',p:5.58,c:-0.70,tgt:9,iv:80,conv:6,risk:8,earn:'Aug 2026',sig:'Wait — Dip'},
+    {t:'LUNR',n:'Intuitive Machines',p:28.97,c:+4.86,tgt:35,iv:85,conv:8,risk:8,earn:'⚠ May 14',sig:'🎯 Take Profits'},
+    {t:'S',n:'SentinelOne',p:15.60,c:-0.32,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
+    {t:'JOBY',n:'Joby Aviation',p:10.52,c:+0.51,tgt:14,iv:73,conv:8,risk:7,earn:'Aug 2026',sig:'Momentum'},
+    {t:'RKLB',n:'Rocket Lab USA',p:102.00,c:+23.42,tgt:120,iv:72,conv:9,risk:6,earn:'Aug 2026',sig:'🚀 Post-Earnings'},
+    {t:'BBAI',n:'BigBear.ai',p:4.31,c:+0.14,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
   ],
   'Quantum': [
     {t:'IONQ',n:'IonQ Inc.',p:48.75,c:+1.07,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
-    {t:'RGTI',n:'Rigetti Computing',p:18.94,c:+0.60,tgt:25,iv:85,conv:6,risk:8,earn:'⚠ May 11',sig:'🚨 SELL — Earn Mon'},
+    {t:'RGTI',n:'Rigetti Computing',p:18.94,c:+0.60,tgt:25,iv:90,conv:4,risk:9,earn:'⚠ MAY 11 — 2 DAYS',sig:'🚨 AVOID'},
     {t:'QBTS',n:'D-Wave Quantum',p:21.99,c:-1.84,tgt:30,iv:78,conv:6,risk:8,earn:'⚠ May 14',sig:'Avoid Earn'},
     {t:'QUBT',n:'Quantum Computing Inc.',p:9.63,c:-0.83,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
   ],
   'Space': [
-    {t:'RKLB',n:'Rocket Lab USA',p:78.58,c:-6.07,tgt:95,iv:68,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
-    {t:'ASTS',n:'AST SpaceMobile',p:65.35,c:-5.33,tgt:88,iv:75,conv:8,risk:7,earn:'Aug 2026',sig:'Buy'},
-    {t:'LUNR',n:'Intuitive Machines',p:24.11,c:-2.22,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
-    {t:'JOBY',n:'Joby Aviation',p:10.01,c:-0.51,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'$10 Reclaimed'},
-    {t:'ACHR',n:'Archer Aviation',p:6.28,c:-0.13,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
+    {t:'RKLB',n:'Rocket Lab USA',p:102.00,c:+23.42,tgt:120,iv:72,conv:9,risk:6,earn:'Aug 2026',sig:'🚀 +30% Earnings Beat'},
+    {t:'ASTS',n:'AST SpaceMobile',p:94.49,c:+29.14,tgt:115,iv:78,conv:8,risk:7,earn:'Aug 2026',sig:'Space Rally'},
+    {t:'LUNR',n:'Intuitive Machines',p:28.97,c:+4.86,tgt:35,iv:85,conv:8,risk:8,earn:'⚠ May 14',sig:'🎯 Take Profits'},
+    {t:'JOBY',n:'Joby Aviation',p:10.52,c:+0.51,tgt:14,iv:73,conv:8,risk:7,earn:'Aug 2026',sig:'Momentum'},
+    {t:'ACHR',n:'Archer Aviation',p:5.58,c:-0.70,tgt:9,iv:80,conv:6,risk:8,earn:'Aug 2026',sig:'Wait — Dip'},
   ],
   'Defense / AI': [
     {t:'PLTR',n:'Palantir Technologies',p:137.80,c:+0.75,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
-    {t:'BBAI',n:'BigBear.ai',p:4.17,c:-0.20,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
+    {t:'BBAI',n:'BigBear.ai',p:4.31,c:+0.14,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery +6.7%'},
   ],
   'Chips / AI': [
-    {t:'NVDA',n:'NVIDIA Corp.',p:215.20,c:+3.70,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'🚨 ITM — Sell'},
-    {t:'AMD',n:'Advanced Micro Devices',p:455.19,c:+46.73,tgt:475,iv:44,conv:9,risk:5,earn:'Aug 4',sig:'🚀 52-Wk High'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:215.20,c:+3.70,tgt:240,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'🚨 ITM — Sell'},
+    {t:'AMD',n:'Advanced Micro Devices',p:455.19,c:+46.73,tgt:520,iv:44,conv:9,risk:5,earn:'Aug 4',sig:'🚀 52-Wk High +11%'},
     {t:'MU',n:'Micron Technology',p:646.63,c:-20.17,tgt:720,iv:45,conv:8,risk:6,earn:'Jun 2026',sig:'Buy'},
-    {t:'SMCI',n:'Super Micro Computer',p:33.62,c:-1.03,tgt:50,iv:68,conv:6,risk:7,earn:'Aug 2026',sig:'Put Watch'},
+    {t:'SMCI',n:'Super Micro Computer',p:34.72,c:+1.10,tgt:50,iv:68,conv:6,risk:7,earn:'Aug 2026',sig:'Put Watch'},
   ],
   'Cybersecurity': [
-    {t:'CRWD',n:'CrowdStrike Holdings',p:505.72,c:+37.65,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
-    {t:'PANW',n:'Palo Alto Networks',p:196.53,c:+12.95,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
-    {t:'S',n:'SentinelOne',p:15.92,c:+0.59,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
+    {t:'CRWD',n:'CrowdStrike Holdings',p:496.88,c:-8.84,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 4',sig:'Strong Buy — Pullback'},
+    {t:'PANW',n:'Palo Alto Networks',p:207.88,c:+11.35,tgt:230,iv:35,conv:8,risk:4,earn:'⚠ May 19',sig:'Buy — Near Earn'},
+    {t:'S',n:'SentinelOne',p:15.60,c:-0.32,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
   ],
   'Metals': [
     {t:'GDX',n:'VanEck Gold Miners',p:91.72,c:-0.72,tgt:108,iv:28,conv:7,risk:4,earn:'N/A',sig:'Hold'},
@@ -1951,11 +2001,11 @@ const WATCHLISTS = {
     {t:'JOBY',n:'Joby Aviation',p:10.01,c:-0.51,tgt:14,iv:75,conv:7,risk:7,earn:'Aug 2026',sig:'$10 Reclaimed'},
   ],
   'Momentum': [
-    {t:'CRWD',n:'CrowdStrike Holdings',p:505.72,c:+37.65,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
-    {t:'PANW',n:'Palo Alto Networks',p:196.53,c:+12.95,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
+    {t:'RKLB',n:'Rocket Lab USA',p:102.00,c:+23.42,tgt:120,iv:72,conv:9,risk:6,earn:'Aug 2026',sig:'🚀 +30% Today'},
+    {t:'AMD',n:'Advanced Micro Devices',p:455.19,c:+46.73,tgt:520,iv:44,conv:9,risk:5,earn:'Aug 4',sig:'🚀 +11.4% Today'},
+    {t:'PANW',n:'Palo Alto Networks',p:207.88,c:+11.35,tgt:230,iv:35,conv:8,risk:4,earn:'⚠ May 19',sig:'Buy — Near Earn'},
     {t:'PLTR',n:'Palantir Technologies',p:137.80,c:+0.75,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
-    {t:'AMD',n:'Advanced Micro Devices',p:455.19,c:+46.73,tgt:475,iv:44,conv:9,risk:5,earn:'Aug 4',sig:'🚀 52-Wk High'},
-    {t:'NVDA',n:'NVIDIA Corp.',p:215.20,c:+3.70,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'🚨 ITM — Sell'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:215.20,c:+3.70,tgt:240,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'🚨 ITM — Sell'},
   ],
   'Crypto-Adjacent': [
     {t:'MARA',n:'MARA Holdings',p:16.42,c:-5.20,tgt:24,iv:88,conv:6,risk:9,earn:'Aug 2026',sig:'Speculative'},
@@ -2110,13 +2160,12 @@ const SCENARIOS = [
 ];
 
 const ALERTS_DATA = [
-  {icon:'🚨',title:'RGTI — EARNINGS MAY 11 (3 DAYS) — SELL TODAY',sub:'🚨 CRITICAL: RGTI at $18.34 vs $22 strike — deeply OTM. Earnings in 3 days. Sell any calls by May 9 EOD. If held, likely below stop loss.',on:true},
-  {icon:'⚠️',title:'SAIL — Earnings Hard Deadline Jun 10',sub:'Jun 10 pre-market · Sell by 9:45 AM · SAIL at $12.19 today (+4.9%) — up but still $2.81 below $15 strike · Monitor option vs $0.25 stop',on:true},
-  {icon:'⚠️',title:'QBTS — EARNINGS MAY 14',sub:'Confirmed May 14 — Avoid all calls until after print. Watch $21 hold post-earnings',on:true},
-  {icon:'🔔',title:'NVDA — Earnings May 20 — EXIT MAY 19',sub:'HARD EXIT all NVDA calls by May 19 open. IV crush will be severe into May 20 print',on:true},
-  {icon:'📊',title:'LUNR — Exit Alert Jun 5',sub:'Earnings timing uncertain — hard exit Jun 5 close to avoid any earnings risk',on:true},
-  {icon:'🔴',title:'VIX Danger Zone',sub:'Alert when VIX exceeds 25 — reduce all options exposure. Current VIX: 17.21',on:true},
-  {icon:'🎯',title:'IONQ — Price Target Hit',sub:'Alert when IONQ crosses $52 (reclaim of yesterday\'s close — confirms reversal)',on:false},
+  {icon:'🚨',title:'SAIL $15C — Hard Exit Jun 10 by 9:45 AM',sub:'YOU HOLD THIS. SAIL earnings pre-market Jun 10 — sell by 9:45 AM no matter what. Option entered at $0.60, stop $0.25. Do NOT hold through earnings.',on:true},
+  {icon:'⚠️',title:'ACHR $7C — Watch $7.48 Break-Even',sub:'ACHR must reach $7.48 for your Jun 20 call to be profitable. Entered at $0.48, stop $0.19. FAA certification H2 2026 is the key catalyst. Exit by Jun 20.',on:true},
+  {icon:'⚠️',title:'IONQ $50C — Needs $50.62 by Jun 20',sub:'IONQ must recover above $50.62 for break-even. Beat earnings May 7 but dropped -18% on sentiment. Thesis: gap-downs on beats reverse in 1–2 weeks. Stop $0.25.',on:true},
+  {icon:'🔔',title:'LUNR — Earnings Approaching Jun 5 Hard Exit',sub:'Exit any LUNR calls by Jun 5 EOD — earnings timing uncertain. IV 82% elevated. $26C stop at $0.26.',on:true},
+  {icon:'🔴',title:'VIX Danger Zone',sub:'If VIX exceeds 25 — reduce all options exposure and do not open new plays. Current VIX: ~17 (safe zone).',on:true},
+  {icon:'🔔',title:'NVDA Earnings May 20 — No New Calls',sub:'NVDA reports May 20. Do not buy any new NVDA calls until after the print. IV crush will be severe into earnings.',on:true},
 ];
 
 const PHILOS = [
@@ -2226,12 +2275,12 @@ const optPosCharts = {};
 
 const EARNINGS_CAL = [
   {ticker:'RGTI', date:'2026-05-11', confirmed:true,  note:'Quantum AI — high IV, options will collapse after'},
-  {ticker:'LUNR', date:'2026-05-14', confirmed:true,  note:'Space play — exit calls by May 13 close'},
-  {ticker:'PANW', date:'2026-05-20', confirmed:true,  note:'Cybersecurity — strong trend, watch for beat'},
-  {ticker:'NVDA', date:'2026-05-20', confirmed:true,  note:'⚠️ Earnings May 20 — $215C expires May 16, BEFORE earnings. No IV crush. Sell by May 16 open.'},
+  {ticker:'LUNR', date:'2026-05-14', confirmed:true,  note:'🎯 $26C IS ITM AT $28.97 (+21%) — TAKE PROFITS Monday! HARD EXIT May 13 EOD before earnings.'},
+  {ticker:'PANW', date:'2026-05-19', confirmed:true,  note:'⚠️ Earnings May 19 — avoid new calls. PANW +5.78% today on Anthropic AI defense partnership.'},
+  {ticker:'NVDA', date:'2026-05-20', confirmed:true,  note:'⚠️ Earnings May 20 — $215C expires May 16, BEFORE earnings. ITM at $215.20. SELL by May 16 open.'},
   {ticker:'MU',   date:'2026-06-25', confirmed:false, note:'Memory chips — estimated date, verify closer'},
   {ticker:'SAIL', date:'2026-06-10', confirmed:true,  note:'🚨 YOU HOLD $15C — exit by 9:45 AM Jun 10'},
-  {ticker:'CRWD', date:'2026-06-03', confirmed:false, note:'Cybersecurity — estimated, verify'},
+  {ticker:'CRWD', date:'2026-06-04', confirmed:false, note:'Cybersecurity — estimated Jun 4, verify. CRWD at $496.88 — sector strong.'},
   {ticker:'IONQ', date:'2026-08-05', confirmed:false, note:'Quantum computing — estimated Q3'},
   {ticker:'AMD',  date:'2026-07-29', confirmed:false, note:'Chips — typically late July'},
   {ticker:'ASTS', date:'2026-08-12', confirmed:false, note:'Space comms — estimated Q3'},
@@ -2239,7 +2288,7 @@ const EARNINGS_CAL = [
   {ticker:'JOBY', date:'2026-08-07', confirmed:false, note:'eVTOL — estimated Q3'},
   {ticker:'PLTR', date:'2026-08-04', confirmed:false, note:'Defense AI — typically early August'},
   {ticker:'BBAI', date:'2026-08-11', confirmed:false, note:'AI software — small cap, verify'},
-  {ticker:'RKLB', date:'2026-11-10', confirmed:false, note:'Space — Q4 estimated'},
+  {ticker:'RKLB', date:'2026-08-06', confirmed:false, note:'Q1 2026 REPORTED May 8 — record $200M rev +64%. Next earnings est. Aug. NEW PLAY: $110C Jun 20.'},
   {ticker:'S',    date:'2026-09-03', confirmed:false, note:'Cybersecurity — typically September'},
 ];
 
@@ -3200,19 +3249,71 @@ function runScenario(id) {
 // ════════════════════════════════════════════════
 // ALERTS
 // ════════════════════════════════════════════════
+let CUSTOM_ALERTS = JSON.parse(localStorage.getItem('alphaCustomAlerts') || '[]');
+let _alertNextId = CUSTOM_ALERTS.length ? Math.max(...CUSTOM_ALERTS.map(a=>a.id||0)) + 1 : 1;
+
+function persistCustomAlerts() { localStorage.setItem('alphaCustomAlerts', JSON.stringify(CUSTOM_ALERTS)); }
+
 function initAlerts() {
-  document.getElementById('alertRules').innerHTML = ALERTS_DATA.map(a=>`
-    <div class="alert-rule">
+  // Summary bar
+  const activeCount = ALERTS_DATA.filter(a=>a.on).length + CUSTOM_ALERTS.filter(a=>a.on!==false).length;
+  const criticals = ALERTS_DATA.filter(a=>a.on && a.icon==='🚨').map(a=>a.title.split('—')[0].trim());
+  document.getElementById('alertSummaryBar').innerHTML =
+    `⚠️ <strong>${activeCount} active alerts</strong>${criticals.length ? ' · ' + criticals.join(' · ') : ''}`;
+
+  // Auto alerts
+  document.getElementById('alertRules').innerHTML = ALERTS_DATA.map((a,i)=>`
+    <div class="alert-rule" style="${!a.on?'opacity:.5':''}">
       <div class="alert-icon-box">${a.icon}</div>
       <div class="alert-info"><div class="alert-title">${a.title}</div><div class="alert-sub">${a.sub}</div></div>
-      <div class="toggle ${a.on?'on':''}" onclick="this.classList.toggle('on')"></div>
+      <div class="toggle ${a.on?'on':''}" onclick="ALERTS_DATA[${i}].on=this.classList.toggle('on');initAlerts()"></div>
     </div>`).join('');
-  document.getElementById('recentAlerts').innerHTML = [
-    {icon:'✅',t:'SAIL up 25% from entry'},
-    {icon:'📈',t:'MARA unusual volume — 2.4x average'},
-    {icon:'⚠️',t:'RGTI earnings May 11 — 4 days away'},
-    {icon:'🚀',t:'RKLB FCC catalyst — space stocks rally'},
-  ].map(a=>`<div style="display:flex;gap:9px;align-items:center;padding:8px;background:rgba(255,255,255,.02);border-radius:7px;margin-bottom:5px"><span style="font-size:16px">${a.icon}</span><div style="font-size:12px">${a.t}</div></div>`).join('');
+
+  // Custom alerts
+  const cl = document.getElementById('customAlertsList');
+  if (!CUSTOM_ALERTS.length) {
+    cl.innerHTML = '<div style="padding:14px;text-align:center;color:var(--muted);font-size:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px dashed var(--border)">No custom alerts yet · Tap "+ Add Alert" to create one</div>';
+  } else {
+    cl.innerHTML = CUSTOM_ALERTS.map(a => {
+      const condLabel = a.condition==='above' ? `Price above $${a.value}` : a.condition==='below' ? `Price below $${a.value}` : a.condition==='earnings' ? `Earnings within ${a.value} days` : 'Note';
+      return `<div class="alert-rule" style="${a.on===false?'opacity:.5':''}">
+        <div class="alert-icon-box" style="background:rgba(139,92,246,.12);color:var(--purple)">${a.ticker||'📌'}</div>
+        <div class="alert-info">
+          <div class="alert-title">${a.ticker} — ${condLabel}</div>
+          <div class="alert-sub">${a.note || 'Custom alert'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="toggle ${a.on!==false?'on':''}" onclick="CUSTOM_ALERTS.find(x=>x.id===${a.id}).on=this.classList.toggle('on');persistCustomAlerts()"></div>
+          <button onclick="deleteCustomAlert(${a.id})" style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.2);border-radius:5px;color:var(--red);font-size:10px;font-weight:700;padding:3px 7px;cursor:pointer">✕</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function showAddAlertForm() {
+  document.getElementById('addAlertForm').style.display = 'block';
+  document.getElementById('al-ticker').focus();
+}
+function hideAddAlertForm() {
+  document.getElementById('addAlertForm').style.display = 'none';
+  ['al-ticker','al-value','al-note'].forEach(id => document.getElementById(id).value = '');
+}
+function saveCustomAlert() {
+  const ticker = document.getElementById('al-ticker').value.trim().toUpperCase();
+  const condition = document.getElementById('al-condition').value;
+  const value = document.getElementById('al-value').value.trim();
+  const note = document.getElementById('al-note').value.trim();
+  if (!ticker) { document.getElementById('al-ticker').focus(); return; }
+  CUSTOM_ALERTS.push({ id: _alertNextId++, ticker, condition, value, note, on: true, created: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) });
+  persistCustomAlerts();
+  hideAddAlertForm();
+  initAlerts();
+}
+function deleteCustomAlert(id) {
+  CUSTOM_ALERTS = CUSTOM_ALERTS.filter(a => a.id !== id);
+  persistCustomAlerts();
+  initAlerts();
 }
 
 // ════════════════════════════════════════════════
