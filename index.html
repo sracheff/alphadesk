@@ -51,6 +51,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .up{color:var(--green)}.dn{color:var(--red)}
 .dot-live{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite;margin-left:8px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes spin360{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .content{flex:1;overflow-y:auto;padding:18px}
 .section{display:none}.section.active{display:block}
 
@@ -1017,12 +1018,18 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </div>
 
     <!-- RANKED PLAYS -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
       <div>
-        <div style="font-size:15px;font-weight:800">Ranked Plays — Week of May 7</div>
+        <div style="font-size:15px;font-weight:800">Ranked Plays — Week of May 9</div>
         <div style="font-size:11px;color:var(--muted);margin-top:2px">Sorted by: realistic upside × catalyst strength × liquidity × probability of +40% move</div>
+        <div id="playsUpdatedLbl" style="font-size:10px;color:var(--dim);margin-top:3px;font-family:monospace">⏱ Last updated: —</div>
       </div>
-      <span class="badge b-red">8 plays scanned</span>
+      <div style="display:flex;align-items:center;gap:7px">
+        <span class="badge b-red">7 plays scanned</span>
+        <button class="btn btn-ghost btn-sm" id="refreshPlaysBtn" onclick="refreshPlays40()" title="Re-render plays with latest data" style="gap:5px">
+          <span id="refreshIcon">🔄</span> Refresh
+        </button>
+      </div>
     </div>
     <div id="plays40Container"></div>
 
@@ -3181,14 +3188,32 @@ function selectPhil(idx) {
 // 40% MODE DATA
 // ════════════════════════════════════════════════
 
-// ── LIVE 40% MODE PLAYS — May 8, 2026 ──
+// ── LIVE 40% MODE PLAYS — May 9, 2026 ──
+const PLAYS_UPDATED = 'May 9, 2026 — Daily Refresh';
 const PLAYS_40 = [
   {
-    rank:1, ticker:'S', contract:'$16C Jun 20', type:'Cybersector Catch-Up — Day 2 of Hottest Sector', setup:'CRWD +8.1%, PANW +7.1% — cheapest IV on the board',
-    price:0.55, totalCost:55, stopPct:60, stopPrice:0.22,
-    t1:0.85, t2:1.20, t3:1.75,
-    t1pct:55, t2pct:118, t3pct:218,
-    earn:'Jun 2026 — verify, max hold May 30', holdMax:'May 30', daysHold:22,
+    rank:1, ticker:'ACHR', contract:'$7C Jun 20', type:'eVTOL — Best Risk/Reward on the Board', setup:'S entry window closed — ACHR is the cleanest play left under $75',
+    price:0.48, totalCost:48, stopPct:60, stopPrice:0.19,
+    t1:0.75, t2:1.10, t3:1.65,
+    t1pct:56, t2pct:129, t3pct:244,
+    earn:'Aug 2026 — verify', holdMax:'Jun 20', daysHold:42,
+    expectedMove:'+13–20% on stock from $6.21', ivCurrent:78, ivCrush:'LOW — earnings August, no near-term risk',
+    liquidity:'MEDIUM-HIGH', spread:'$0.04–$0.10',
+    popEstimate:38, lossChance:62,
+    breakEven:7.48,
+    catalyst:'S $16C entry is gone — stock ran to $16.50 making calls $1.85+. ACHR at $6.21 is now the best entry under $75. $2B cash on hand eliminates bankruptcy risk. $6B backlog from airlines and DOD. White House eVTOL pilot program across NY, FL, TX. FAA certification expected H2 2026 — any update spikes the stock 20-30%. At $48 total this is the lowest-cost quality play on the board.',
+    whyWin:'$48 total risk with a real catalyst pipeline. FAA certification is a binary event — one announcement and this doubles or triples. $2B cash = no dilution risk. Only $0.79 from the $7 strike (12.7% needed). Cyber sector attention may rotate to cheap momentum names like ACHR this week.',
+    whyFail:'eVTOL is pre-revenue. FAA could slip to 2027. IV 78% = theta burns fast if sideways more than 2 weeks. Enter Monday — if stock opens down 3%+ wait for it to stabilize first.',
+    chips:['💰 $48 total — cheapest quality','✅ $2B cash on hand','🛫 FAA H2 2026 catalyst','🏛️ White House program active'],
+    chipsStyle:['wchip-green','wchip-green','wchip-gold','wchip-gold'],
+    score:91
+  },
+  {
+    rank:2, ticker:'IONQ', contract:'$50C Jun 20', type:'Earnings Selloff Reversal — Beat & Raised Guidance', setup:'Classic overreaction gap-down — thesis still intact after 2 days',
+    price:0.62, totalCost:62, stopPct:60, stopPrice:0.25,
+    t1:0.95, t2:1.35, t3:2.00,
+    t1pct:53, t2pct:118, t3pct:223,
+    earn:'Aug 2026 — verify before hold', holdMax:'Jun 20', daysHold:42,
     expectedMove:'+8–14% follow-through on cyber rally day 2', ivCurrent:46, ivCrush:'VERY LOW — cheapest IV on the board',
     liquidity:'MEDIUM-HIGH', spread:'$0.03–$0.07',
     popEstimate:44, lossChance:56,
@@ -3201,70 +3226,65 @@ const PLAYS_40 = [
     score:95
   },
   {
-    rank:3, ticker:'IONQ', contract:'$50C Jun 20', type:'Bounce — Post-Earnings Selloff Stabilizing', setup:'Stabilizing at $48.75 after 2-day selloff — bounce setup intact',
-    price:0.62, totalCost:62, stopPct:60, stopPrice:0.25,
-    t1:0.95, t2:1.35, t3:2.00,
-    t1pct:53, t2pct:118, t3pct:223,
-    earn:'Aug 2026 — verify before hold', holdMax:'Jun 20', daysHold:43,
-    expectedMove:'+8–15% bounce from $47.68', ivCurrent:74, ivCrush:'LOW — earnings August, no near-term crush risk',
+    expectedMove:'+8–15% bounce from ~$47 lows', ivCurrent:74, ivCrush:'LOW — earnings already done, next report August',
     liquidity:'HIGH — major quantum name', spread:'$0.02–$0.06 typical',
-    popEstimate:41, lossChance:59,
+    popEstimate:40, lossChance:60,
     breakEven:50.62,
-    catalyst:'IONQ at $47.68 (-9.3% today, -18% from $52.57 two days ago) — second day of selling on no new negative news. Quarter was a blowout: revenue beat, \'26 guidance raised, NVIDIA partnership intact. The market is giving you an even better entry than yesterday. Emotional selling on two consecutive down days typically resolves with a sharp bounce.',
-    whyWin:'Stock was $52.57 two sessions ago. The continued selloff makes the gap-fill thesis even stronger. $50 strike is now 4.9% above current $47.68. Two-day selloff = more frustrated longs ready to buy back. One NVDA quantum headline or sector catalyst recovers this gap instantly.',
-    whyFail:'The continued selling could signal a real institutional exit, not just emotional noise. Quantum sector broadly weak. If broader market sells off, speculative names hit hardest. Theta burns on Jun 20 if stock stalls.',
-    chips:['📉 -9.3% today (day 2 selloff)','🎯 Jun 20 — 43 DTE','✅ High liquidity','📈 Guidance RAISED'],
+    catalyst:'IONQ reported Q1 2026 on May 7 — beat revenue and RAISED full year guidance. Dropped -18% over two days anyway. Earnings overhang is now CLEARED — next catalyst is pure momentum recovery. Two-day selloff on a blowout quarter historically reverses sharply in week 2 as algorithms and retail buyers step back in.',
+    whyWin:'Gap-downs on beats with raised guidance reverse within 5-10 trading days. NVDA quantum partnership = recurring catalyst. Any quantum news this week sends IONQ back toward $52. Earnings cleared = no IV crush risk for 3 months.',
+    whyFail:'Continued selling could mean real institutional exit. Quantum sector broadly weak. $50 strike needs a 6–8% bounce from current levels. Theta burns if stock stalls.',
+    chips:['📉 -18% on an earnings BEAT','📈 Full year guidance RAISED','🎯 Jun 20 — 42 DTE','✅ Earnings overhang cleared'],
     chipsStyle:['wchip-gold','wchip-green','wchip-green','wchip-green'],
-    score:88
+    score:86
   },
   {
-    rank:2, ticker:'NVDA', contract:'$215C May 16', type:'🚨 IN THE MONEY — NVDA $215.20 — TAKE PROFITS', setup:'$215C breached — option now ITM — sell Monday open or T1',
+    rank:3, ticker:'NVDA', contract:'$215C May 16', type:'🚨 IF HELD — Sell Monday Open. Entered at $0.68', setup:'$215C went ITM Friday — if you hold this, sell at open Monday',
     price:0.68, totalCost:68, stopPct:59, stopPrice:0.28,
     t1:1.05, t2:1.55, t3:2.30,
     t1pct:54, t2pct:128, t3pct:238,
-    earn:'⚠️ MAY 20 — option expires May 16 (before earnings)', holdMax:'May 16 open', daysHold:7,
-    expectedMove:'Stock already AT strike ($215.20) — option now ITM', ivCurrent:42, ivCrush:'Option expires May 16 — before earnings May 20. No IV crush risk.',
+    earn:'⚠️ MAY 20 — option expires May 16 BEFORE earnings', holdMax:'May 16 open', daysHold:7,
+    expectedMove:'Already ITM at $215.20 close — intrinsic value building', ivCurrent:42, ivCrush:'Expires May 16 — before earnings. No crush risk.',
     liquidity:'VERY HIGH — most liquid options in the world', spread:'$0.01–$0.03',
-    popEstimate:52, lossChance:48,
+    popEstimate:55, lossChance:45,
     breakEven:215.68,
-    catalyst:'🚨 NVDA CLOSED $215.20 on May 8 — your $215C is NOW IN THE MONEY. The China trip catalyst played out. NVDA hit an intraday high of $217.80 on May 8 — new 52-week high. Option entered at $0.68 is now likely worth $1.50–$2.50+ (estimated). Consider taking profits Monday morning. 7 trading days left. Earnings May 20 — but option expires May 16, no IV crush risk.',
-    whyWin:'Already ITM. NVDA above $215.20 means intrinsic value is building. Any continuation to $217–220 and this option is worth $2–5+. Entered at $0.68 = 100-600%+ gain. Take profits on open.',
-    whyFail:'7 days left — theta decay intense now that you\'re at-the-money. If NVDA pulls back below $215, option loses intrinsic value fast. Sell at T1 ($1.05) or Monday open — don\'t be greedy.',
-    chips:['🚨 $215C NOW IN THE MONEY','💰 Entry $0.68 → ~$1.50+ est','⏰ 7 DAYS LEFT','📅 Expires before earnings'],
-    chipsStyle:['wchip-green','wchip-green','wchip-orange','wchip-green'],
-    score:88
+    catalyst:'NVDA closed $215.20 on May 8 — the $215C is in the money. China trip catalyst played out. Option entered at $0.68 is now estimated worth $1.20–$2.50+. DO NOT enter new — this note is for anyone already holding. Sell at Monday open or at T1 ($1.05). Only 7 days to expiry. Do not hold past May 14.',
+    whyWin:'Already ITM with intrinsic value. Any continuation to $217–220 = $2–5+ option value. 100–600%+ gain from $0.68 entry.',
+    whyFail:'7 days left — theta burning fast. Do NOT enter new at this point. If already holding, take profits at open Monday.',
+    chips:['🚨 SELL MONDAY OPEN if holding','💰 Est. value $1.20–$2.50+','⏰ 7 DAYS LEFT','📅 Expires before earnings'],
+    chipsStyle:['wchip-orange','wchip-green','wchip-orange','wchip-green'],
+    score:80
   },
   {
-    rank:4, ticker:'ACHR', contract:'$7C Jun 20', type:'eVTOL Bounce — Cheap Stock', setup:'Post-dip momentum with FAA catalyst potential',
-    price:0.48, totalCost:48, stopPct:60, stopPrice:0.19,
-    t1:0.75, t2:1.10, t3:1.65,
-    t1pct:56, t2pct:129, t3pct:244,
-    earn:'Aug 2026 — verify', holdMax:'Jun 20', daysHold:43,
-    expectedMove:'+12–20% on stock', ivCurrent:78, ivCrush:'LOW — earnings August, no near-term risk',
-    liquidity:'MEDIUM-HIGH', spread:'$0.04–$0.10',
-    popEstimate:37, lossChance:63,
-    breakEven:7.48,
-    catalyst:'$2B cash, $6B order backlog, White House pilot NY/FL/TX, FAA H2 2026 certification target. Stock at $6.28 (-2.0% today) on no news. Cheapest quality eVTOL setup. $7C at $0.48 = $48 total, one of the lowest cost plays on the board.',
-    whyWin:'$2B cash eliminates bankruptcy risk. $6B backlog shows real demand. FAA certification news (expected H2 2026) could spike stock 30-50%. Any White House announcement = immediate catalyst. Only 11% to strike from current $6.28.',
-    whyFail:'eVTOL companies are perpetually "almost there." FAA certification could slip to 2027. IV 78% means fast theta decay if stock goes sideways. No near-term earnings catalyst.',
-    chips:['💰 $48 total cost','✅ $2B cash on hand','🛫 FAA H2 2026 target','🏛️ White House program'],
-    chipsStyle:['wchip-green','wchip-green','wchip-gold','wchip-gold'],
-    score:78
+    rank:4, ticker:'S', contract:'$19C Jun 18', type:'Cyber Catch-Up — Lower Conviction, Entry Window Shifted', setup:'$16C gone at $1.85 — $19C is only affordable strike left',
+    price:0.70, totalCost:70, stopPct:60, stopPrice:0.28,
+    t1:1.10, t2:1.55, t3:2.20,
+    t1pct:57, t2pct:121, t3pct:214,
+    earn:'Jun 2026 — verify, exit by Jun 10', holdMax:'Jun 10', daysHold:32,
+    expectedMove:'+15–20% on stock from $16.50', ivCurrent:46, ivCrush:'VERY LOW — cheapest IV in cyber sector',
+    liquidity:'MEDIUM', spread:'$0.04–$0.10',
+    popEstimate:32, lossChance:68,
+    breakEven:19.70,
+    catalyst:'S ran from $15.81 to $16.50 (+4.4%) making the original $16C entry too expensive ($1.85+). The $19C Jun 18 at $0.70 is the only entry under $75 remaining. Needs S to reach $19.70 — a 19% move from current $16.50. CRWD holding above $500 for day 3 supports continued sector strength. Only enter if CRWD holds $500+ at Monday open.',
+    whyWin:'Cyber sector momentum now 3 days old — institutional. IV 46% still cheapest in sector. If S gets a company-specific catalyst (partnership, earnings preview), $19 is achievable. $70 risk is controlled.',
+    whyFail:'Needs 19% move — much harder than original setup. Entry window on the clean $16C play has passed. Skip if CRWD opens down Monday.',
+    chips:['⚠️ Lower conviction — entry shifted','💎 IV 46% still cheapest','🔒 CRWD holding $500+','💰 $70 total cost'],
+    chipsStyle:['wchip-orange','wchip-green','wchip-green','wchip-green'],
+    score:65
   },
   {
-    rank:5, ticker:'LUNR', contract:'$26C Jun 6', type:'Space Bounce — High Beta', setup:'Sector selloff reversal — day 2',
+    rank:5, ticker:'LUNR', contract:'$26C Jun 6', type:'Space Bounce — Oversold After 2-Day Selloff', setup:'No news selloff — beta 2.95x bounce candidate',
     price:0.65, totalCost:65, stopPct:60, stopPrice:0.26,
     t1:0.98, t2:1.40, t3:2.00,
     t1pct:51, t2pct:115, t3pct:208,
-    earn:'Verify before Jun 5 — exit Jun 5 to be safe', holdMax:'Jun 5 EOD', daysHold:28,
-    expectedMove:'+10–18% bounce from $24.11', ivCurrent:82, ivCrush:'ELEVATED — IV 82%. Exit Jun 5.',
+    earn:'Verify before Jun 5 — exit Jun 5 EOD', holdMax:'Jun 5 EOD', daysHold:27,
+    expectedMove:'+10–18% bounce from ~$24', ivCurrent:82, ivCrush:'ELEVATED — IV 82%. Exit Jun 5.',
     liquidity:'MEDIUM', spread:'$0.05–$0.12',
     popEstimate:34, lossChance:66,
     breakEven:26.65,
-    catalyst:'LUNR at $24.11 (-8.4% today) on no stock-specific news — continued sector rotation. Beta 2.95x market. Up 200%+ over the past year. $180M+ NASA CLPS task order active. 9+ space ETFs require LUNR shares for mechanical rebalancing. SpaceX IPO hype is a recurring catalyst.',
-    whyWin:'Beta 2.95 — when market bounces 2%, LUNR bounces 6%. SpaceX IPO news could drop any day and send all space names up 15-20% instantly. 9 new space ETFs = forced mechanical buying. Two-day selloff with no news = oversold bounce setup.',
-    whyFail:'⚡ IV 82% ELEVATED. Beta 2.95 cuts both ways — market selloff hits LUNR 3x harder. Two days red confirms sector weakness may persist. Must exit Jun 5 to avoid any earnings risk.',
-    chips:['📉 -8.4% today (day 2)','⚡ IV 82% — elevated','🚀 Beta 2.95x','🛸 SpaceX IPO catalyst'],
+    catalyst:'LUNR fell -17%+ over two days on zero stock-specific news — pure sector rotation. Beta 2.95x market means it bounces violently when space sentiment turns. $180M+ NASA task order active. SpaceX IPO hype = recurring catalyst for all space names. Two-day no-news selloff at this beta level is a textbook bounce setup.',
+    whyWin:'Beta 2.95 — when market bounces 2%, LUNR bounces 6%. SpaceX IPO news could drop any day. 9 space ETFs = mechanical buying pressure. Two-day selloff creates oversold RSI and frustrated short-term sellers who will flip.',
+    whyFail:'⚡ IV 82% ELEVATED. Beta cuts both ways. Space sector may continue rotating out. Must exit Jun 5 no matter what.',
+    chips:['📉 -17% in 2 days on no news','⚡ IV 82% elevated','🚀 Beta 2.95x bounce candidate','🛸 SpaceX IPO wildcard'],
     chipsStyle:['wchip-gold','wchip-orange','wchip-green','wchip-green'],
     score:70
   },
@@ -3314,6 +3334,36 @@ function init40Mode() {
   renderGoalTracker();
   recalc();
   renderPlays40();
+  updatePlaysTimestamp();
+}
+
+function updatePlaysTimestamp() {
+  const lbl = document.getElementById('playsUpdatedLbl');
+  if (lbl) lbl.textContent = '⏱ Last updated: ' + PLAYS_UPDATED;
+}
+
+function refreshPlays40() {
+  const btn = document.getElementById('refreshPlaysBtn');
+  const icon = document.getElementById('refreshIcon');
+  if (btn) btn.disabled = true;
+  if (icon) icon.style.animation = 'spin360 .7s linear infinite';
+  // Re-render all 40% mode UI with current data
+  renderGoalTracker();
+  recalc();
+  renderPlays40();
+  updatePlaysTimestamp();
+  // Show a brief "refreshed" flash then re-enable
+  setTimeout(() => {
+    if (icon) icon.style.animation = '';
+    if (btn) btn.disabled = false;
+    // Flash the label green briefly
+    const lbl = document.getElementById('playsUpdatedLbl');
+    if (lbl) {
+      lbl.style.color = 'var(--green)';
+      lbl.textContent = '✅ Refreshed — ' + PLAYS_UPDATED;
+      setTimeout(() => { lbl.style.color = 'var(--dim)'; lbl.textContent = '⏱ Last updated: ' + PLAYS_UPDATED; }, 2500);
+    }
+  }, 700);
 }
 
 function renderGoalTracker() {
