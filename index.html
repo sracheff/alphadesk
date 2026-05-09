@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AlphaDesk v2 — AI Investment Intelligence</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://apis.google.com/js/api.js" async defer></script>
+<!-- JSONBin sync: no external scripts needed -->
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -553,8 +552,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="nav-item" onclick="showSec('alerts')"><span class="nav-icon">🔔</span>Alerts <span class="nav-badge">3</span></div>
     <div class="nav-item" onclick="showSec('settings')"><span class="nav-icon">⚙️</span>Strategy Settings</div>
     <div class="nav-divider" style="margin-top:auto"></div>
-    <div class="nav-item" id="driveSyncBtn" onclick="_driveReady ? saveToDrive() : connectDrive()" style="color:var(--muted)" title="Sync data across devices via Google Drive">
-      <span class="nav-icon">☁️</span><span id="driveSyncLbl">☁️ Connect Drive</span>
+    <div class="nav-item" id="syncPushBtn" onclick="pushToCloud()" style="color:var(--muted)" title="Push this device's data to cloud">
+      <span class="nav-icon">☁️</span><span id="syncPushLbl">☁️ Push to Cloud</span>
+    </div>
+    <div class="nav-item" id="syncPullBtn" onclick="pullFromCloud()" style="color:var(--muted)" title="Pull latest data from cloud">
+      <span class="nav-icon">⬇️</span><span id="syncPullLbl">⬇️ Pull from Cloud</span>
     </div>
     <div class="nav-item" onclick="lockAlpha()" style="color:var(--muted)"><span class="nav-icon">🔒</span>Lock</div>
   </nav>
@@ -1267,17 +1269,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <span class="mni">🏛️</span>Capitol
     </div>
   </div>
-  <!-- DRIVE SYNC IN DRAWER -->
+  <!-- JSONBIN SYNC IN DRAWER -->
   <div style="padding:12px 14px 6px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px">
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px">☁️ Google Drive Sync</div>
-    <button id="mobDriveSyncBtn" onclick="_driveReady ? null : connectDrive()" style="width:100%;padding:9px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:8px;color:var(--green);font-size:12px;font-weight:700;cursor:pointer;margin-bottom:6px">
-      <span id="mobDriveSyncLbl">Connect Google Drive</span>
-    </button>
-    <div id="mobDriveActions" style="display:none;display:grid;grid-template-columns:1fr 1fr;gap:6px">
-      <button onclick="saveToDrive();closeDrawer()" style="padding:9px;background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:8px;color:var(--cyan);font-size:11px;font-weight:700;cursor:pointer">⬆ Push to Drive</button>
-      <button onclick="loadFromDrive();closeDrawer()" style="padding:9px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);border-radius:8px;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer">⬇ Pull from Drive</button>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px">☁️ Cloud Sync</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <button onclick="pushToCloud();closeDrawer()" style="padding:9px;background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:8px;color:var(--cyan);font-size:11px;font-weight:700;cursor:pointer">⬆ Push</button>
+      <button onclick="pullFromCloud();closeDrawer()" style="padding:9px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);border-radius:8px;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer">⬇ Pull</button>
     </div>
-    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:5px">Push = save this device → Drive · Pull = load Drive → this device</div>
+    <div id="mobSyncStatus" style="font-size:10px;color:var(--muted);text-align:center;margin-top:5px">Push saves this device · Pull loads latest</div>
   </div>
 </div>
 
@@ -4187,166 +4186,77 @@ window.addEventListener('DOMContentLoaded', () => {
   setInterval(()=>{
     const v = parseFloat('564.82') + (Math.random()-.49)*.08;
   }, 3200);
-  // Init Drive sync UI
-  try { initDriveSync(); } catch(e) { console.warn('drive',e); }
+  // JSONBin sync ready (no init needed — pull on demand)
 });
 
 // ════════════════════════════════════════════════
-// GOOGLE DRIVE SYNC
+// JSONBIN CLOUD SYNC
 // ════════════════════════════════════════════════
-const DRIVE_CLIENT_ID = '139862991351-0k9llap3j4gotbeakhv29oi6oo4dnb49.apps.googleusercontent.com';
-const DRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
-const DRIVE_FILE_NAME = 'alphadesk-data.json';
-let _driveToken = null;
-let _driveFileId = null;
-let _driveReady = false;
+const JB_BIN  = '69ff93f6250b1311c328ae31';
+const JB_KEY  = '$2a$10$83SgerQqGvaLyjqUsgIAtugfH.2KSIeoPWhgGkCllal0TKC8dprPy';
+const JB_URL  = `https://api.jsonbin.io/v3/b/${JB_BIN}`;
 
-function initDriveSync() {
-  const stored = localStorage.getItem('alphaDriveToken');
-  if (stored) {
-    try {
-      const t = JSON.parse(stored);
-      if (t.expiry > Date.now()) { _driveToken = t.token; _driveReady = true; updateDriveUI('connected'); loadFromDrive(); return; }
-    } catch(e) {}
-  }
-  updateDriveUI('disconnected');
+function _syncStatus(msg, color) {
+  // Sidebar labels
+  const pl = document.getElementById('syncPushLbl');
+  const dl = document.getElementById('syncPullLbl');
+  if (pl) pl.textContent = msg || '☁️ Push to Cloud';
+  // Mobile status
+  const ms = document.getElementById('mobSyncStatus');
+  if (ms) { ms.textContent = msg || 'Push saves this device · Pull loads latest'; ms.style.color = color || 'var(--muted)'; }
+  setTimeout(() => {
+    if (pl) pl.textContent = '☁️ Push to Cloud';
+    if (dl) dl.textContent = '⬇️ Pull from Cloud';
+    if (ms) { ms.textContent = 'Push saves this device · Pull loads latest'; ms.style.color = 'var(--muted)'; }
+  }, 3000);
 }
 
-function updateDriveUI(state) {
-  const configs = {
-    connected: { color:'var(--green)',  bg:'rgba(16,185,129,.08)',  border:'rgba(16,185,129,.2)',  text:'☁️ Drive Synced — Tap to Sync Now' },
-    syncing:   { color:'var(--gold)',   bg:'rgba(245,158,11,.08)',  border:'rgba(245,158,11,.2)',  text:'☁️ Syncing…' },
-    error:     { color:'var(--red)',    bg:'rgba(239,68,68,.08)',   border:'rgba(239,68,68,.2)',   text:'☁️ Sync Error — Tap to Retry' },
-    disconnected:{ color:'var(--green)',bg:'rgba(16,185,129,.08)', border:'rgba(16,185,129,.2)',  text:'☁️ Connect Google Drive' },
-  };
-  const c = configs[state] || configs.disconnected;
-  // Sidebar
-  const sbl = document.getElementById('driveSyncLbl');
-  const sbtn = document.getElementById('driveSyncBtn');
-  if (sbl) sbl.textContent = state === 'connected' ? '☁️ Drive Synced' : state === 'syncing' ? '☁️ Syncing…' : state === 'error' ? '☁️ Sync Error' : '☁️ Connect Drive';
-  if (sbtn) sbtn.style.color = c.color;
-  // Mobile drawer
-  const mbl = document.getElementById('mobDriveSyncLbl');
-  const mbtn = document.getElementById('mobDriveSyncBtn');
-  const mact = document.getElementById('mobDriveActions');
-  if (mbl) mbl.textContent = state === 'connected' ? '✅ Drive Connected' : state === 'syncing' ? '☁️ Syncing…' : state === 'error' ? '⚠️ Sync Error — Tap to reconnect' : 'Connect Google Drive';
-  if (mbtn) { mbtn.style.color = c.color; mbtn.style.background = c.bg; mbtn.style.borderColor = c.border; mbtn.style.display = state === 'connected' ? 'none' : 'block'; }
-  if (mact) mact.style.display = state === 'connected' ? 'grid' : 'none';
-}
-
-function connectDrive() {
-  if (DRIVE_CLIENT_ID === 'PASTE_YOUR_CLIENT_ID_HERE') {
-    alert('Google Drive not configured yet. Paste your Client ID into the app first.');
-    return;
-  }
-  if (typeof google === 'undefined') { alert('Google scripts still loading — try again in a moment.'); return; }
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: DRIVE_CLIENT_ID,
-    scope: DRIVE_SCOPES,
-    callback: (resp) => {
-      if (resp.error) { updateDriveUI('error'); return; }
-      _driveToken = resp.access_token;
-      _driveReady = true;
-      const expiry = Date.now() + (resp.expires_in * 1000);
-      localStorage.setItem('alphaDriveToken', JSON.stringify({ token: _driveToken, expiry }));
-      updateDriveUI('connected');
-      saveToDrive();
-    }
-  });
-  client.requestAccessToken();
-}
-
-function disconnectDrive() {
-  _driveToken = null; _driveReady = false; _driveFileId = null;
-  localStorage.removeItem('alphaDriveToken');
-  updateDriveUI('disconnected');
-}
-
-async function driveRequest(method, url, body) {
-  const opts = { method, headers: { 'Authorization': 'Bearer ' + _driveToken } };
-  if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
-  const res = await fetch(url, opts);
-  if (res.status === 401) { disconnectDrive(); return null; }
-  return res.ok ? res : null;
-}
-
-async function findDriveFile() {
-  const res = await fetch(
-    `https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${DRIVE_FILE_NAME}'&fields=files(id)`,
-    { headers: { 'Authorization': 'Bearer ' + _driveToken } }
-  );
-  if (!res.ok) return null;
-  const data = await res.json();
-  return data.files && data.files.length ? data.files[0].id : null;
-}
-
-async function saveToDrive() {
-  if (!_driveReady || !_driveToken) return;
-  updateDriveUI('syncing');
+async function pushToCloud() {
+  _syncStatus('☁️ Pushing…', 'var(--gold)');
   try {
     const payload = {
-      portfolio:     PORTFOLIO,
-      customAlerts:  CUSTOM_ALERTS,
-      watchlist:     MY_WATCHLIST,
-      journal:       TRADE_JOURNAL,
-      savedAt:       new Date().toISOString()
+      portfolio:    PORTFOLIO,
+      customAlerts: CUSTOM_ALERTS,
+      watchlist:    MY_WATCHLIST,
+      journal:      TRADE_JOURNAL,
+      savedAt:      new Date().toISOString()
     };
-    const content = JSON.stringify(payload);
-    if (!_driveFileId) _driveFileId = await findDriveFile();
-
-    if (_driveFileId) {
-      // Update existing file
-      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${_driveFileId}?uploadType=media`, {
-        method: 'PATCH',
-        headers: { 'Authorization': 'Bearer ' + _driveToken, 'Content-Type': 'application/json' },
-        body: content
-      });
-    } else {
-      // Create new file in appDataFolder
-      const meta = { name: DRIVE_FILE_NAME, parents: ['appDataFolder'] };
-      const form = new FormData();
-      form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
-      form.append('file', new Blob([content], { type: 'application/json' }));
-      const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
-        method: 'POST', headers: { 'Authorization': 'Bearer ' + _driveToken }, body: form
-      });
-      if (res.ok) { const d = await res.json(); _driveFileId = d.id; }
-    }
-    updateDriveUI('connected');
-  } catch(e) { updateDriveUI('error'); console.warn('Drive save error:', e); }
-}
-
-async function loadFromDrive() {
-  if (!_driveReady || !_driveToken) return;
-  updateDriveUI('syncing');
-  try {
-    if (!_driveFileId) _driveFileId = await findDriveFile();
-    if (!_driveFileId) { updateDriveUI('connected'); saveToDrive(); return; }
-    const res = await fetch(`https://www.googleapis.com/drive/v3/files/${_driveFileId}?alt=media`, {
-      headers: { 'Authorization': 'Bearer ' + _driveToken }
+    const res = await fetch(JB_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JB_KEY },
+      body: JSON.stringify(payload)
     });
-    if (!res.ok) { updateDriveUI('error'); return; }
-    const data = await res.json();
-    // Merge Drive data into app
-    if (data.portfolio)    { PORTFOLIO = data.portfolio; persistPortfolio(); renderPortfolio(); }
-    if (data.customAlerts) { CUSTOM_ALERTS = data.customAlerts; persistCustomAlerts(); }
-    if (data.watchlist)    { MY_WATCHLIST = data.watchlist; persistWatchlist(); renderMyWatchlist(); }
-    if (data.journal)      { TRADE_JOURNAL = data.journal; saveJournalToStorage(); renderJournal(); }
-    updateDriveUI('connected');
-    const ts = data.savedAt ? new Date(data.savedAt).toLocaleString() : 'unknown';
-    console.log('AlphaDesk: loaded from Drive, last saved', ts);
-  } catch(e) { updateDriveUI('error'); console.warn('Drive load error:', e); }
+    if (res.ok) {
+      _syncStatus('✅ Pushed ' + new Date().toLocaleTimeString(), 'var(--green)');
+    } else {
+      _syncStatus('⚠️ Push failed (' + res.status + ')', 'var(--red)');
+    }
+  } catch(e) {
+    _syncStatus('⚠️ Push error', 'var(--red)');
+    console.warn('JSONBin push error:', e);
+  }
 }
 
-// Hook into all persist functions to auto-sync after every save
-const _origPersistPortfolio = persistPortfolio;
-persistPortfolio = function() { _origPersistPortfolio(); if (_driveReady) saveToDrive(); };
-const _origPersistCustomAlerts = persistCustomAlerts;
-persistCustomAlerts = function() { _origPersistCustomAlerts(); if (_driveReady) saveToDrive(); };
-const _origPersistWatchlist = persistWatchlist;
-persistWatchlist = function() { _origPersistWatchlist(); if (_driveReady) saveToDrive(); };
-const _origSaveJournal = saveJournalToStorage;
-saveJournalToStorage = function() { _origSaveJournal(); if (_driveReady) saveToDrive(); };
+async function pullFromCloud() {
+  _syncStatus('⬇️ Pulling…', 'var(--gold)');
+  try {
+    const res = await fetch(JB_URL + '/latest', {
+      headers: { 'X-Master-Key': JB_KEY }
+    });
+    if (!res.ok) { _syncStatus('⚠️ Pull failed (' + res.status + ')', 'var(--red)'); return; }
+    const json = await res.json();
+    const data = json.record || json;
+    if (data.portfolio    && data.portfolio.length)    { PORTFOLIO = data.portfolio; localStorage.setItem('alphaPortfolio', JSON.stringify(PORTFOLIO)); renderPortfolio(); }
+    if (data.customAlerts && data.customAlerts.length) { CUSTOM_ALERTS = data.customAlerts; localStorage.setItem('alphaCustomAlerts', JSON.stringify(CUSTOM_ALERTS)); }
+    if (data.watchlist    && data.watchlist.length)    { MY_WATCHLIST = data.watchlist; localStorage.setItem('alphaWatchlist', JSON.stringify(MY_WATCHLIST)); renderMyWatchlist(); }
+    if (data.journal      && data.journal.length)      { TRADE_JOURNAL = data.journal; localStorage.setItem('alphaJournal', JSON.stringify(TRADE_JOURNAL)); renderJournal(); }
+    const ts = data.savedAt ? new Date(data.savedAt).toLocaleTimeString() : '?';
+    _syncStatus('✅ Pulled — saved ' + ts, 'var(--green)');
+  } catch(e) {
+    _syncStatus('⚠️ Pull error', 'var(--red)');
+    console.warn('JSONBin pull error:', e);
+  }
+}
 </script>
 
 <!-- ══════════════════════════════════
