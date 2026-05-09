@@ -1267,12 +1267,17 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <span class="mni">🏛️</span>Capitol
     </div>
   </div>
-  <!-- DRIVE SYNC BUTTON IN DRAWER -->
-  <div style="padding:12px 14px 4px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px">
-    <button id="mobDriveSyncBtn" onclick="_driveReady ? saveToDrive() : connectDrive();closeDrawer()" style="width:100%;padding:11px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:9px;color:var(--green);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
-      <span id="mobDriveSyncLbl">☁️ Connect Google Drive</span>
+  <!-- DRIVE SYNC IN DRAWER -->
+  <div style="padding:12px 14px 6px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px">
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:7px">☁️ Google Drive Sync</div>
+    <button id="mobDriveSyncBtn" onclick="_driveReady ? null : connectDrive()" style="width:100%;padding:9px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:8px;color:var(--green);font-size:12px;font-weight:700;cursor:pointer;margin-bottom:6px">
+      <span id="mobDriveSyncLbl">Connect Google Drive</span>
     </button>
-    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:6px">Sync your portfolio across all devices</div>
+    <div id="mobDriveActions" style="display:none;display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <button onclick="saveToDrive();closeDrawer()" style="padding:9px;background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:8px;color:var(--cyan);font-size:11px;font-weight:700;cursor:pointer">⬆ Push to Drive</button>
+      <button onclick="loadFromDrive();closeDrawer()" style="padding:9px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);border-radius:8px;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer">⬇ Pull from Drive</button>
+    </div>
+    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:5px">Push = save this device → Drive · Pull = load Drive → this device</div>
   </div>
 </div>
 
@@ -4223,8 +4228,10 @@ function updateDriveUI(state) {
   // Mobile drawer
   const mbl = document.getElementById('mobDriveSyncLbl');
   const mbtn = document.getElementById('mobDriveSyncBtn');
-  if (mbl) mbl.textContent = c.text;
-  if (mbtn) { mbtn.style.color = c.color; mbtn.style.background = c.bg; mbtn.style.borderColor = c.border; }
+  const mact = document.getElementById('mobDriveActions');
+  if (mbl) mbl.textContent = state === 'connected' ? '✅ Drive Connected' : state === 'syncing' ? '☁️ Syncing…' : state === 'error' ? '⚠️ Sync Error — Tap to reconnect' : 'Connect Google Drive';
+  if (mbtn) { mbtn.style.color = c.color; mbtn.style.background = c.bg; mbtn.style.borderColor = c.border; mbtn.style.display = state === 'connected' ? 'none' : 'block'; }
+  if (mact) mact.style.display = state === 'connected' ? 'grid' : 'none';
 }
 
 function connectDrive() {
