@@ -4243,16 +4243,24 @@ async function pullFromCloud() {
     const res = await fetch(JB_URL + '/latest', {
       headers: { 'X-Master-Key': JB_KEY }
     });
-    if (!res.ok) { _syncStatus('⚠️ Pull failed (' + res.status + ')', 'var(--red)'); return; }
+    if (!res.ok) {
+      alert('Pull failed — status ' + res.status + '. Check your internet connection.');
+      _syncStatus('⚠️ Pull failed (' + res.status + ')', 'var(--red)');
+      return;
+    }
     const json = await res.json();
     const data = json.record || json;
-    if (data.portfolio    && data.portfolio.length)    { PORTFOLIO = data.portfolio; localStorage.setItem('alphaPortfolio', JSON.stringify(PORTFOLIO)); renderPortfolio(); }
-    if (data.customAlerts && data.customAlerts.length) { CUSTOM_ALERTS = data.customAlerts; localStorage.setItem('alphaCustomAlerts', JSON.stringify(CUSTOM_ALERTS)); }
-    if (data.watchlist    && data.watchlist.length)    { MY_WATCHLIST = data.watchlist; localStorage.setItem('alphaWatchlist', JSON.stringify(MY_WATCHLIST)); renderMyWatchlist(); }
-    if (data.journal      && data.journal.length)      { TRADE_JOURNAL = data.journal; localStorage.setItem('alphaJournal', JSON.stringify(TRADE_JOURNAL)); renderJournal(); }
-    const ts = data.savedAt ? new Date(data.savedAt).toLocaleTimeString() : '?';
-    _syncStatus('✅ Pulled — saved ' + ts, 'var(--green)');
+    // Write everything to localStorage regardless of length — let the app decide
+    if (data.portfolio    !== undefined) localStorage.setItem('alphaPortfolio',    JSON.stringify(data.portfolio));
+    if (data.customAlerts !== undefined) localStorage.setItem('alphaCustomAlerts', JSON.stringify(data.customAlerts));
+    if (data.watchlist    !== undefined) localStorage.setItem('alphaWatchlist',    JSON.stringify(data.watchlist));
+    if (data.journal      !== undefined) localStorage.setItem('alphaJournal',      JSON.stringify(data.journal));
+    const ts = data.savedAt ? new Date(data.savedAt).toLocaleString() : 'unknown time';
+    // Reload the page so everything re-renders cleanly from the new localStorage
+    alert('✅ Data pulled from cloud (saved ' + ts + '). Page will reload.');
+    location.reload();
   } catch(e) {
+    alert('Pull error: ' + e.message);
     _syncStatus('⚠️ Pull error', 'var(--red)');
     console.warn('JSONBin pull error:', e);
   }
