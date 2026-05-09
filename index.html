@@ -1485,6 +1485,36 @@ function renderClosedEdit() {
     </div>`).join('');
 }
 
+function trackThisTrade(ticker, contract, entry, stop, expiry, hardExit, earn) {
+  // Parse contract string e.g. "$7C Jun 20" or "$28P Jun 20"
+  const m = contract.match(/\$?([\d.]+)([CP])\s*(.*)/i);
+  const strike   = m ? parseFloat(m[1]) : '';
+  const typeStr  = m ? (m[2].toUpperCase() === 'C' ? 'Call' : 'Put') : 'Call';
+  const expiryParsed = expiry || (m ? m[3] : '');
+
+  // Open portfolio editor on Active tab
+  openPortEdit();
+  peditTab('active');
+
+  // Small delay to let the panel render before filling
+  setTimeout(() => {
+    document.getElementById('addPosFormTitle').textContent = 'Track This Trade';
+    document.getElementById('editPosId').value = '';
+    document.getElementById('ap-ticker').value    = ticker;
+    document.getElementById('ap-type').value      = typeStr;
+    document.getElementById('ap-strike').value    = strike;
+    document.getElementById('ap-contracts').value = 1;
+    document.getElementById('ap-entry').value     = entry || '';
+    document.getElementById('ap-current').value   = entry || '';
+    document.getElementById('ap-stop').value      = stop || '';
+    document.getElementById('ap-expiry').value    = expiryParsed;
+    document.getElementById('ap-hardExit').value  = hardExit || '';
+    document.getElementById('ap-warning').value   = earn ? 'Earnings: ' + earn : '';
+    document.getElementById('addPosForm').classList.add('open');
+    document.getElementById('addPosForm').scrollIntoView({behavior:'smooth', block:'nearest'});
+  }, 120);
+}
+
 function showAddPosForm() {
   document.getElementById('addPosFormTitle').textContent = 'New Position';
   document.getElementById('editPosId').value = '';
@@ -2974,6 +3004,7 @@ function initPicks() {
         ${ivWarning}
         <span class="badge b-gray">Max Hold: ${p.holdMax}</span>
         <span class="badge b-gray">Cost: $${p.total}</span>
+        <button onclick="trackThisTrade('${p.ticker}','${p.contract}',${p.price},${p.stop},'${p.holdMax}','','${p.earn}')" style="margin-left:auto;padding:4px 10px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);border-radius:6px;color:var(--purple);font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap">📌 Track This</button>
       </div>
     </div>`;
   }).join('');
@@ -3505,6 +3536,11 @@ function renderPlays40() {
       </div>
 
       <div class="warn-chips">${chips}</div>
+
+      <!-- TRACK THIS TRADE -->
+      <button onclick="trackThisTrade('${p.ticker}','${p.contract}',${p.price},${p.stopPrice},'${p.holdMax}','${p.holdMax}','${p.earn}')" style="width:100%;margin-top:10px;padding:9px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);border-radius:8px;color:var(--purple);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.2px;transition:background .15s" onmouseover="this.style.background='rgba(139,92,246,.2)'" onmouseout="this.style.background='rgba(139,92,246,.1)'">
+        📌 I Bought This — Track in Portfolio
+      </button>
     </div>`;
   }).join('');
   } catch(e) {
