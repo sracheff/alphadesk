@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AlphaDesk v2 — AI Investment Intelligence</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -550,7 +552,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div class="nav-item" onclick="showSec('capitol')"><span class="nav-icon">🏛️</span>Capitol Desk <span class="nav-badge-green" id="capitolBadge" style="display:none">NEW</span></div>
     <div class="nav-item" onclick="showSec('alerts')"><span class="nav-icon">🔔</span>Alerts <span class="nav-badge">3</span></div>
     <div class="nav-item" onclick="showSec('settings')"><span class="nav-icon">⚙️</span>Strategy Settings</div>
-    <div class="nav-item" onclick="lockAlpha()" style="margin-top:auto;color:var(--muted)"><span class="nav-icon">🔒</span>Lock</div>
+    <div class="nav-divider" style="margin-top:auto"></div>
+    <div class="nav-item" id="driveSyncBtn" onclick="_driveReady ? saveToDrive() : connectDrive()" style="color:var(--muted)" title="Sync data across devices via Google Drive">
+      <span class="nav-icon">☁️</span><span id="driveSyncLbl">☁️ Connect Drive</span>
+    </div>
+    <div class="nav-item" onclick="lockAlpha()" style="color:var(--muted)"><span class="nav-icon">🔒</span>Lock</div>
   </nav>
   <div class="sidebar-footer">
     <div class="acct-chip">
@@ -4169,7 +4175,163 @@ window.addEventListener('DOMContentLoaded', () => {
   setInterval(()=>{
     const v = parseFloat('564.82') + (Math.random()-.49)*.08;
   }, 3200);
+  // Init Drive sync UI
+  try { initDriveSync(); } catch(e) { console.warn('drive',e); }
 });
+
+// ════════════════════════════════════════════════
+// GOOGLE DRIVE SYNC
+// ════════════════════════════════════════════════
+const DRIVE_CLIENT_ID = '139862991351-0k9llap3j4gotbeakhv29oi6oo4dnb49.apps.googleusercontent.com';
+const DRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.appdata';
+const DRIVE_FILE_NAME = 'alphadesk-data.json';
+let _driveToken = null;
+let _driveFileId = null;
+let _driveReady = false;
+
+function initDriveSync() {
+  const stored = localStorage.getItem('alphaDriveToken');
+  if (stored) {
+    try {
+      const t = JSON.parse(stored);
+      if (t.expiry > Date.now()) { _driveToken = t.token; _driveReady = true; updateDriveUI('connected'); loadFromDrive(); return; }
+    } catch(e) {}
+  }
+  updateDriveUI('disconnected');
+}
+
+function updateDriveUI(state) {
+  const btn = document.getElementById('driveSyncBtn');
+  const lbl = document.getElementById('driveSyncLbl');
+  if (!btn || !lbl) return;
+  if (state === 'connected') {
+    btn.style.color = 'var(--green)';
+    lbl.textContent = '☁️ Drive Synced';
+  } else if (state === 'syncing') {
+    btn.style.color = 'var(--gold)';
+    lbl.textContent = '☁️ Syncing…';
+  } else if (state === 'error') {
+    btn.style.color = 'var(--red)';
+    lbl.textContent = '☁️ Sync Error';
+  } else {
+    btn.style.color = 'var(--muted)';
+    lbl.textContent = '☁️ Connect Drive';
+  }
+}
+
+function connectDrive() {
+  if (DRIVE_CLIENT_ID === 'PASTE_YOUR_CLIENT_ID_HERE') {
+    alert('Google Drive not configured yet. Paste your Client ID into the app first.');
+    return;
+  }
+  if (typeof google === 'undefined') { alert('Google scripts still loading — try again in a moment.'); return; }
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: DRIVE_CLIENT_ID,
+    scope: DRIVE_SCOPES,
+    callback: (resp) => {
+      if (resp.error) { updateDriveUI('error'); return; }
+      _driveToken = resp.access_token;
+      _driveReady = true;
+      const expiry = Date.now() + (resp.expires_in * 1000);
+      localStorage.setItem('alphaDriveToken', JSON.stringify({ token: _driveToken, expiry }));
+      updateDriveUI('connected');
+      saveToDrive();
+    }
+  });
+  client.requestAccessToken();
+}
+
+function disconnectDrive() {
+  _driveToken = null; _driveReady = false; _driveFileId = null;
+  localStorage.removeItem('alphaDriveToken');
+  updateDriveUI('disconnected');
+}
+
+async function driveRequest(method, url, body) {
+  const opts = { method, headers: { 'Authorization': 'Bearer ' + _driveToken } };
+  if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+  const res = await fetch(url, opts);
+  if (res.status === 401) { disconnectDrive(); return null; }
+  return res.ok ? res : null;
+}
+
+async function findDriveFile() {
+  const res = await fetch(
+    `https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${DRIVE_FILE_NAME}'&fields=files(id)`,
+    { headers: { 'Authorization': 'Bearer ' + _driveToken } }
+  );
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.files && data.files.length ? data.files[0].id : null;
+}
+
+async function saveToDrive() {
+  if (!_driveReady || !_driveToken) return;
+  updateDriveUI('syncing');
+  try {
+    const payload = {
+      portfolio:     PORTFOLIO,
+      customAlerts:  CUSTOM_ALERTS,
+      watchlist:     MY_WATCHLIST,
+      journal:       TRADE_JOURNAL,
+      savedAt:       new Date().toISOString()
+    };
+    const content = JSON.stringify(payload);
+    if (!_driveFileId) _driveFileId = await findDriveFile();
+
+    if (_driveFileId) {
+      // Update existing file
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${_driveFileId}?uploadType=media`, {
+        method: 'PATCH',
+        headers: { 'Authorization': 'Bearer ' + _driveToken, 'Content-Type': 'application/json' },
+        body: content
+      });
+    } else {
+      // Create new file in appDataFolder
+      const meta = { name: DRIVE_FILE_NAME, parents: ['appDataFolder'] };
+      const form = new FormData();
+      form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
+      form.append('file', new Blob([content], { type: 'application/json' }));
+      const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
+        method: 'POST', headers: { 'Authorization': 'Bearer ' + _driveToken }, body: form
+      });
+      if (res.ok) { const d = await res.json(); _driveFileId = d.id; }
+    }
+    updateDriveUI('connected');
+  } catch(e) { updateDriveUI('error'); console.warn('Drive save error:', e); }
+}
+
+async function loadFromDrive() {
+  if (!_driveReady || !_driveToken) return;
+  updateDriveUI('syncing');
+  try {
+    if (!_driveFileId) _driveFileId = await findDriveFile();
+    if (!_driveFileId) { updateDriveUI('connected'); saveToDrive(); return; }
+    const res = await fetch(`https://www.googleapis.com/drive/v3/files/${_driveFileId}?alt=media`, {
+      headers: { 'Authorization': 'Bearer ' + _driveToken }
+    });
+    if (!res.ok) { updateDriveUI('error'); return; }
+    const data = await res.json();
+    // Merge Drive data into app
+    if (data.portfolio)    { PORTFOLIO = data.portfolio; persistPortfolio(); renderPortfolio(); }
+    if (data.customAlerts) { CUSTOM_ALERTS = data.customAlerts; persistCustomAlerts(); }
+    if (data.watchlist)    { MY_WATCHLIST = data.watchlist; persistWatchlist(); renderMyWatchlist(); }
+    if (data.journal)      { TRADE_JOURNAL = data.journal; saveJournalToStorage(); renderJournal(); }
+    updateDriveUI('connected');
+    const ts = data.savedAt ? new Date(data.savedAt).toLocaleString() : 'unknown';
+    console.log('AlphaDesk: loaded from Drive, last saved', ts);
+  } catch(e) { updateDriveUI('error'); console.warn('Drive load error:', e); }
+}
+
+// Hook into all persist functions to auto-sync after every save
+const _origPersistPortfolio = persistPortfolio;
+persistPortfolio = function() { _origPersistPortfolio(); if (_driveReady) saveToDrive(); };
+const _origPersistCustomAlerts = persistCustomAlerts;
+persistCustomAlerts = function() { _origPersistCustomAlerts(); if (_driveReady) saveToDrive(); };
+const _origPersistWatchlist = persistWatchlist;
+persistWatchlist = function() { _origPersistWatchlist(); if (_driveReady) saveToDrive(); };
+const _origSaveJournal = saveJournalToStorage;
+saveJournalToStorage = function() { _origSaveJournal(); if (_driveReady) saveToDrive(); };
 </script>
 
 <!-- ══════════════════════════════════
