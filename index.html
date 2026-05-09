@@ -1263,114 +1263,137 @@ function renderPortfolio() {
   const retPct = ((ret / P.startValue) * 100).toFixed(1);
   const goalPct = Math.min(100, ((P.totalValue / P.goal) * 100)).toFixed(1);
   const wins = P.closed.filter(t => t.result === 'win').length;
+  const losses = P.closed.filter(t => t.result === 'loss').length;
   const winRate = P.closed.length ? Math.round((wins / P.closed.length) * 100) : 0;
-  const openLabel = P.active.length ? P.active.map(a => a.ticker + ' $' + a.strike + (a.type==='Call'?'C':a.type==='Put'?'P':'')).join(', ') : 'None';
+  const retColor = ret >= 0 ? 'var(--green)' : 'var(--red)';
 
+  // ── HEADER HERO ──
   const statsHtml = `
-  <div class="sec-title">💼 My Portfolio</div>
-  <div class="sec-sub" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-    <span>Started ${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} · Goal: $${P.startValue} → $${P.goal.toLocaleString()}</span>
-    <button class="btn btn-cyan btn-sm" onclick="openPortEdit()">✏️ Edit Portfolio</button>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:18px">
+    <div>
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px">Total Account Value</div>
+      <div style="font-size:38px;font-weight:900;color:var(--text);letter-spacing:-2px;line-height:1">$${P.totalValue.toFixed(2)}</div>
+      <div style="margin-top:6px;display:flex;align-items:center;gap:8px">
+        <span style="font-size:14px;font-weight:700;color:${retColor}">${ret>=0?'+':''}$${ret.toFixed(2)}</span>
+        <span class="delta ${ret>=0?'up':'dn'}" style="font-size:12px">${ret>=0?'+':''}${retPct}% all time</span>
+        <span style="font-size:11px;color:var(--muted)">· Started $${P.startValue.toFixed(2)}</span>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="openPortEdit()" style="margin-top:4px">✏️ Edit</button>
   </div>
 
-  <div class="grid5" style="margin-bottom:16px;margin-top:12px">
-    <div class="card">
-      <div class="card-title">Total Value</div>
-      <div style="font-size:24px;font-weight:800;color:var(--cyan);letter-spacing:-1px;margin-top:5px">$${P.totalValue.toFixed(2)}</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:3px">Started: $${P.startValue.toFixed(2)}</div>
-      <div class="progress"><div class="progress-fill" style="width:${goalPct}%"></div></div>
-      <div style="font-size:10px;color:var(--muted);margin-top:4px">${goalPct}% to $${P.goal.toLocaleString()} goal</div>
+  <!-- GOAL PROGRESS BAR -->
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+      <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Goal Progress</span>
+      <span style="font-size:11px;font-weight:700;color:var(--cyan)">${goalPct}% · $${P.totalValue.toFixed(0)} of $${P.goal.toLocaleString()}</span>
     </div>
-    <div class="card">
-      <div class="card-title">Total Return</div>
-      <div style="font-size:24px;font-weight:800;color:${ret>=0?'var(--green)':'var(--red)'};letter-spacing:-1px;margin-top:5px">${ret>=0?'+':''}$${ret.toFixed(2)}</div>
-      <div style="margin-top:5px"><span class="delta ${ret>=0?'up':'dn'}">${ret>=0?'+':''}${retPct}% all time</span></div>
+    <div style="height:7px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden">
+      <div style="height:100%;width:${goalPct}%;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:4px;transition:width .5s"></div>
     </div>
-    <div class="card">
-      <div class="card-title">Buying Power</div>
-      <div style="font-size:24px;font-weight:800;letter-spacing:-1px;margin-top:5px">$${P.buyingPower.toFixed(2)}</div>
-      <div style="margin-top:5px"><span class="badge b-green">Max 1 play: $${(P.buyingPower/2).toFixed(0)}</span></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Open Positions</div>
-      <div style="font-size:24px;font-weight:800;letter-spacing:-1px;margin-top:5px">${P.active.length}</div>
-      <div style="margin-top:5px;font-size:10px;color:var(--cyan)">${openLabel}</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Win Rate</div>
-      <div style="font-size:24px;font-weight:800;color:${winRate>=50?'var(--green)':'var(--red)'};letter-spacing:-1px;margin-top:5px">${winRate}%</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:3px">${wins}/${P.closed.length} closed wins</div>
+    <div style="display:flex;justify-content:space-between;margin-top:5px">
+      <span style="font-size:10px;color:var(--dim)">$${P.startValue.toFixed(0)} start</span>
+      <span style="font-size:10px;color:var(--dim)">$${P.goal.toLocaleString()} goal</span>
     </div>
   </div>
 
-  <div class="grid2" style="margin-bottom:16px">
-    <div class="card">
-      <div class="card-hdr"><div class="card-title">Portfolio Growth</div><span class="badge b-green">${ret>=0?'+':''}${retPct}% all time</span></div>
-      <canvas id="portChart" height="170"></canvas>
+  <!-- STAT STRIP -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Buying Power</div>
+      <div style="font-size:18px;font-weight:800;color:var(--text)">$${P.buyingPower.toFixed(2)}</div>
+      <div style="font-size:10px;color:var(--green);margin-top:2px">Max play ~$${(P.buyingPower/2).toFixed(0)}</div>
     </div>
-    <div class="card">
-      <div class="card-hdr"><div class="card-title">Trade History</div></div>
-      <canvas id="tradeChart" height="170"></canvas>
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Open Positions</div>
+      <div style="font-size:18px;font-weight:800;color:var(--cyan)">${P.active.length}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">${P.active.length === 0 ? 'No open trades' : P.active.map(a=>a.ticker).join(', ')}</div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Win Rate</div>
+      <div style="font-size:18px;font-weight:800;color:${winRate>=50?'var(--green)':'var(--red)'}">${P.closed.length ? winRate+'%' : '—'}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">${wins}W · ${losses}L · ${P.closed.length} total</div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:10px 12px">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">To Goal</div>
+      <div style="font-size:18px;font-weight:800;color:var(--gold)">$${Math.max(0,P.goal - P.totalValue).toFixed(0)}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">remaining to $${P.goal.toLocaleString()}</div>
     </div>
   </div>`;
 
+  // ── ACTIVE POSITIONS ──
   const activeHtml = `
-  <div class="card" style="margin-bottom:14px">
-    <div class="card-hdr"><div class="card-title">Active Positions (${P.active.length})</div><button class="btn btn-ghost btn-sm" onclick="openPortEdit();peditTab('active')">+ Add Position</button></div>
-    ${P.active.length === 0 ? '<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">No active positions. Click "+ Add Position" to log one.</div>' :
-      P.active.map(a => {
-        const pnl = ((a.current - a.entry) / a.entry * 100).toFixed(1);
-        const pnlDollar = ((a.current - a.entry) * 100 * a.contracts).toFixed(2);
-        const up = a.current >= a.entry;
-        return `
-        ${a.warning ? `<div class="warn-bar">⚠️ <strong>${a.ticker} Alert:</strong> ${a.warning}</div>` : ''}
-        <div class="pos-card">
-          <div class="pos-ticker-pill" style="background:rgba(6,182,212,.13);color:var(--cyan)">${a.ticker}</div>
-          <div class="pos-info">
-            <div class="pos-title">$${a.strike} ${a.type} · ${a.expiry} · ${a.contracts} contract${a.contracts>1?'s':''}</div>
-            <div class="pos-meta">
-              <span>Entry: $${a.entry}</span>
-              <span>Current: $${a.current}</span>
-              <span>Stop: $${a.stop}</span>
-              ${a.hardExit ? `<span>Hard Exit: ${a.hardExit}</span>` : ''}
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:11px;margin-bottom:12px;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)">Active Positions <span style="color:var(--cyan);margin-left:4px">${P.active.length}</span></div>
+      <button class="btn btn-ghost btn-sm" onclick="openPortEdit();peditTab('active')" style="font-size:11px">＋ Add Position</button>
+    </div>
+    ${P.active.length === 0
+      ? '<div style="padding:28px;text-align:center;color:var(--muted);font-size:12px">No open positions · Tap "+ Add Position" to log a trade</div>'
+      : P.active.map(a => {
+          const pnl = a.entry > 0 ? ((a.current - a.entry) / a.entry * 100).toFixed(1) : '0.0';
+          const pnlDollar = a.entry > 0 ? ((a.current - a.entry) * 100 * a.contracts).toFixed(2) : '0.00';
+          const up = parseFloat(a.current) >= parseFloat(a.entry);
+          const typeColor = a.type === 'Put' ? 'var(--red)' : a.type === 'Call' ? 'var(--green)' : 'var(--cyan)';
+          const nearStop = a.stop > 0 && parseFloat(a.current) <= parseFloat(a.stop) * 1.15;
+          return `
+          ${a.warning ? `<div style="padding:7px 16px;background:rgba(249,115,22,.08);border-bottom:1px solid rgba(249,115,22,.15);font-size:11px;color:var(--orange)">⚠️ ${a.warning}</div>` : ''}
+          ${nearStop ? `<div style="padding:7px 16px;background:rgba(239,68,68,.08);border-bottom:1px solid rgba(239,68,68,.15);font-size:11px;color:var(--red)">🚨 Near stop loss — current $${a.current} vs stop $${a.stop}</div>` : ''}
+          <div style="display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border2);gap:12px">
+            <div style="width:46px;height:46px;border-radius:9px;background:rgba(6,182,212,.1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--cyan);flex-shrink:0;font-family:monospace">${a.ticker}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:700;color:var(--text)">${a.ticker} <span style="color:${typeColor};font-size:11px">$${a.strike}${a.type==='Call'?'C':a.type==='Put'?'P':''}</span> <span style="color:var(--muted);font-size:11px;font-weight:400">${a.expiry}</span></div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px;display:flex;gap:10px;flex-wrap:wrap">
+                <span>Entry <span style="color:var(--text)">$${a.entry}</span></span>
+                <span>Now <span style="color:var(--text)">$${a.current}</span></span>
+                <span>Stop <span style="color:var(--red)">$${a.stop}</span></span>
+                ${a.hardExit ? `<span style="color:var(--orange)">⏰ Exit by ${a.hardExit}</span>` : ''}
+              </div>
             </div>
-          </div>
-          <div class="pos-pl">
-            <div class="pos-pl-val ${up?'up':'dn'}">${up?'+':''}$${Math.abs(pnlDollar)}</div>
-            <div class="pos-pl-pct ${up?'up':'dn'}">${up?'+':''}${pnl}%</div>
-          </div>
-        </div>`;
-      }).join('')
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-size:15px;font-weight:800;color:${up?'var(--green)':'var(--red)'}">${up?'+':''}$${Math.abs(pnlDollar)}</div>
+              <div style="font-size:11px;font-weight:600;color:${up?'var(--green)':'var(--red)'};margin-top:1px">${up?'+':''}${pnl}%</div>
+            </div>
+          </div>`;
+        }).join('')
     }
   </div>`;
 
+  // ── CLOSED TRADES ──
   const closedHtml = `
-  <div class="card">
-    <div class="card-hdr">
-      <div class="card-title">Closed Trades</div>
-      <span class="badge b-green">${wins}/${P.closed.length} profitable</span>
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:11px;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)">Closed Trades <span style="color:var(--text);margin-left:4px">${P.closed.length}</span></div>
+      ${P.closed.length ? `<span class="badge b-green">${wins}/${P.closed.length} wins</span>` : ''}
     </div>
-    ${P.closed.length === 0 ? '<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">No closed trades logged yet.</div>' :
-      P.closed.map(t => {
-        const icon = t.result==='win'?'var(--green)':t.result==='loss'?'var(--red)':'var(--gold)';
-        const pct = t.entry > 0 ? (((t.exitPrice - t.entry) / t.entry) * 100).toFixed(0) : 0;
-        return `<div class="pos-card">
-          <div class="pos-ticker-pill" style="background:rgba(16,185,129,.13);color:${icon}">${t.ticker}</div>
-          <div class="pos-info">
-            <div class="pos-title">${t.desc} · Closed</div>
-            <div class="pos-meta"><span>Entry $${t.entry}</span><span>Exit $${t.exitPrice}</span><span>${pct>=0?'+':''}${pct}%</span></div>
-          </div>
-          <div class="pos-pl">
-            <div class="pos-pl-val" style="color:${icon}">${t.pnl>=0?'+':''}$${t.pnl}</div>
-            <div class="pos-pl-pct" style="color:${icon}">${t.result==='win'?'✅ Win':t.result==='loss'?'❌ Loss':'➖ Even'}</div>
-          </div>
-        </div>`;
-      }).join('')
+    ${P.closed.length === 0
+      ? '<div style="padding:28px;text-align:center;color:var(--muted);font-size:12px">No closed trades yet · Your history will appear here</div>'
+      : P.closed.map(t => {
+          const icon = t.result==='win'?'var(--green)':t.result==='loss'?'var(--red)':'var(--gold)';
+          const resultEmoji = t.result==='win'?'✅':t.result==='loss'?'❌':'➖';
+          const pct = t.entry > 0 ? (((t.exitPrice - t.entry) / t.entry) * 100).toFixed(0) : 0;
+          return `<div style="display:flex;align-items:center;padding:11px 16px;border-bottom:1px solid var(--border2);gap:12px">
+            <div style="width:46px;height:46px;border-radius:9px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:${icon};flex-shrink:0;font-family:monospace">${t.ticker}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:700;color:var(--text)">${t.ticker} <span style="font-size:11px;color:var(--muted);font-weight:400">${t.desc}</span></div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px;display:flex;gap:10px">
+                <span>Entry <span style="color:var(--text)">$${t.entry}</span></span>
+                <span>Exit <span style="color:var(--text)">$${t.exitPrice}</span></span>
+                <span style="color:${icon}">${pct>=0?'+':''}${pct}%</span>
+              </div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-size:15px;font-weight:800;color:${icon}">${t.pnl>=0?'+':''}$${t.pnl}</div>
+              <div style="font-size:11px;color:${icon};margin-top:1px">${resultEmoji} ${t.result==='win'?'Win':t.result==='loss'?'Loss':'Even'}</div>
+            </div>
+          </div>`;
+        }).join('')
     }
   </div>`;
 
   document.getElementById('port-content').innerHTML = statsHtml + activeHtml + closedHtml;
-  buildPortCharts();
+  // Charts removed from main view — kept for compatibility
+  if (typeof buildPortCharts === 'function') try { buildPortCharts(); } catch(e) {}
 }
 
 function buildPortCharts() {
