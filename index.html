@@ -1267,6 +1267,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <span class="mni">🏛️</span>Capitol
     </div>
   </div>
+  <!-- DRIVE SYNC BUTTON IN DRAWER -->
+  <div style="padding:12px 14px 4px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px">
+    <button id="mobDriveSyncBtn" onclick="_driveReady ? saveToDrive() : connectDrive();closeDrawer()" style="width:100%;padding:11px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:9px;color:var(--green);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+      <span id="mobDriveSyncLbl">☁️ Connect Google Drive</span>
+    </button>
+    <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:6px">Sync your portfolio across all devices</div>
+  </div>
 </div>
 
 <script>
@@ -4201,22 +4208,23 @@ function initDriveSync() {
 }
 
 function updateDriveUI(state) {
-  const btn = document.getElementById('driveSyncBtn');
-  const lbl = document.getElementById('driveSyncLbl');
-  if (!btn || !lbl) return;
-  if (state === 'connected') {
-    btn.style.color = 'var(--green)';
-    lbl.textContent = '☁️ Drive Synced';
-  } else if (state === 'syncing') {
-    btn.style.color = 'var(--gold)';
-    lbl.textContent = '☁️ Syncing…';
-  } else if (state === 'error') {
-    btn.style.color = 'var(--red)';
-    lbl.textContent = '☁️ Sync Error';
-  } else {
-    btn.style.color = 'var(--muted)';
-    lbl.textContent = '☁️ Connect Drive';
-  }
+  const configs = {
+    connected: { color:'var(--green)',  bg:'rgba(16,185,129,.08)',  border:'rgba(16,185,129,.2)',  text:'☁️ Drive Synced — Tap to Sync Now' },
+    syncing:   { color:'var(--gold)',   bg:'rgba(245,158,11,.08)',  border:'rgba(245,158,11,.2)',  text:'☁️ Syncing…' },
+    error:     { color:'var(--red)',    bg:'rgba(239,68,68,.08)',   border:'rgba(239,68,68,.2)',   text:'☁️ Sync Error — Tap to Retry' },
+    disconnected:{ color:'var(--green)',bg:'rgba(16,185,129,.08)', border:'rgba(16,185,129,.2)',  text:'☁️ Connect Google Drive' },
+  };
+  const c = configs[state] || configs.disconnected;
+  // Sidebar
+  const sbl = document.getElementById('driveSyncLbl');
+  const sbtn = document.getElementById('driveSyncBtn');
+  if (sbl) sbl.textContent = state === 'connected' ? '☁️ Drive Synced' : state === 'syncing' ? '☁️ Syncing…' : state === 'error' ? '☁️ Sync Error' : '☁️ Connect Drive';
+  if (sbtn) sbtn.style.color = c.color;
+  // Mobile drawer
+  const mbl = document.getElementById('mobDriveSyncLbl');
+  const mbtn = document.getElementById('mobDriveSyncBtn');
+  if (mbl) mbl.textContent = c.text;
+  if (mbtn) { mbtn.style.color = c.color; mbtn.style.background = c.bg; mbtn.style.borderColor = c.border; }
 }
 
 function connectDrive() {
