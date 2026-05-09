@@ -567,8 +567,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   <div class="topbar">
     <div class="searchbox" onclick="focusLookup()" style="cursor:text"><span>🔍</span><input id="srch" type="text" placeholder="Search ticker, strategy…" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter'){quickLookup(this.value.trim());this.value=''}"></div>
     <div class="mktchips">
-      <div class="mkt"><span class="lb">SPY</span><span class="dn">731.58</span><span class="dn">-0.31%</span></div>
-      <div class="mkt"><span class="lb">QQQ</span><span class="dn">694.94</span><span class="dn">-0.12%</span></div>
+      <div class="mkt"><span class="lb">SPY</span><span class="up">737.62</span><span class="up">+0.83%</span></div>
+      <div class="mkt"><span class="lb">QQQ</span><span class="up">480.85</span><span class="up">+0.95%</span></div>
       <div class="mkt"><span class="lb">VIX</span><span class="up">17.21</span></div>
       <div class="mkt"><span class="lb">BTC</span><span class="up">96,420</span></div>
     </div>
@@ -582,7 +582,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
        AI PICKS (homepage)
   ══════════════════════════════════════════ -->
   <div class="section active" id="sec-picks">
-    <div class="sec-title">🤖 AI Picks — May 8, 2026</div>
+    <div class="sec-title">🤖 AI Picks — May 9, 2026</div>
     <div class="sec-sub">Research-backed options plays · Graded A–D · All under $100/contract · Built for your $120.81 buying power</div>
 
     <div class="info-bar">
@@ -702,7 +702,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
             <div class="card-title">📅 Earnings Calendar — All Tracked Tickers</div>
             <div style="font-size:11px;color:var(--muted);margin-top:3px">Sell any options you hold at least 1 day before earnings to avoid IV crush</div>
           </div>
-          <span class="badge b-red">🚨 RGTI in 4 days — SELL NOW</span>
+          <span class="badge b-red">🚨 RGTI EARNINGS MON MAY 11 — SELL AT MONDAY OPEN!</span>
         </div>
         <div id="earningsCalBody"></div>
         <div style="padding:10px 16px;font-size:10px;color:var(--dim);border-top:1px solid var(--border)">
@@ -1731,27 +1731,28 @@ function cancelAddWatch() {
 // ════════════════════════════════════════════════
 
 // Real prices from live research searches
-// ── LIVE DATA via FMP — refreshed May 8, 2026 ──
+// ── LIVE DATA via FMP — refreshed May 9, 2026 ──
 const PICKS = [
   {
     grade:'A', ticker:'IONQ', contract:'$50C Jun 20', price:0.62, total:62,
-    entry:47.68, stop:0.25, t1:0.95, t2:1.35, t3:2.00,
+    entry:48.75, stop:0.25, t1:0.95, t2:1.35, t3:2.00,
     earn:'Aug 2026 (unconfirmed — verify before hold)', holdMax:'Jun 20',
-    signal:'buy', signalText:'Buy on dip — post-earnings gap still not filled',
+    signal:'buy', signalText:'Buy on dip — stabilizing after 2-day post-earnings selloff',
     iv:74, ivFlag:false,
-    thesis:'<strong>IONQ at $47.68 (-9.3% today) — down -9.3% on no new news, continuing yesterday\'s post-earnings selloff despite a blowout quarter.</strong> Zacks: "Revenues Beat, \'26 Sales View Up." Revenue guidance raised for \'26. NVIDIA quantum partnership still active. The stock was $52.57 two days ago — this pullback is emotional, not fundamental. Jun 20 expiry gives 6 weeks for recovery. Entry: $47.68 · Stop on option: $0.25.',
+    thesis:'<strong>IONQ at $48.75 (+2.2% May 8 close) — bouncing off lows after 2-day selloff on no new negative news.</strong> Zacks: "Revenues Beat, \'26 Sales View Up." Revenue guidance raised for \'26. NVIDIA quantum partnership still active. The stock was $52.57 three days ago — this pullback is emotional, not fundamental. Jun 20 expiry gives 6 weeks for recovery. Entry: $48.75 · Stop on option: $0.25.',
     watch:['Watch $48 reclaim as first momentum signal','NVIDIA quantum news = recurring +10-15% catalysts','Monitor the "big catch" — if profitability guidance, thesis is intact','Any commercial contract win = immediate spike'],
     risks:'Today\'s drop shows sentiment can be fragile. If broad market sells off, speculative names like IONQ get hit harder. Theta burns on Jun 20 expiry if stock stalls.'
   },
   {
     grade:'A', ticker:'NVDA', contract:'$215C May 16', price:0.68, total:68,
-    entry:211.50, stop:0.28, t1:1.05, t2:1.55, t3:2.30,
-    earn:'⚠️ May 20 — EARNINGS PLAY — SELL BY MAY 19 OPEN', holdMax:'May 19 open',
-    signal:'buy', signalText:'⚠️ 8 DAYS TO EXPIRY — China catalyst still in play — sell by May 16',
+    entry:215.20, stop:0.28, t1:1.05, t2:1.55, t3:2.30,
+    earn:'⚠️ May 20 — EARNINGS IN 11 DAYS — SELL BY MAY 16 OPEN', holdMax:'May 16 open',
+    signal:'buy', signalText:'🚨 $215C NOW IN THE MONEY — NVDA CLOSED $215.20 — TAKE PROFITS OR HOLD FOR T1',
     iv:42, ivFlag:false,
-    thesis:'<strong>⚠️ TIME-SENSITIVE: May 16 expiry is 8 days away. HARD SELL by May 16.</strong> NVDA at $211.50 (+3.67 today). Trump administration confirmed bringing NVIDIA CEO Jensen Huang on China trip — massive catalyst window. Earnings May 20 (AFTER option expires — no IV crush risk). IV at 42% is LOW for NVDA. Stock needs to reach $215 from $211.50 = only +1.65%. <strong>Sell at profit targets or May 16 open, whichever comes first. Do NOT hold into May 20 earnings.</strong>',
-    watch:['Trump China trip with Jensen Huang = immediate catalyst','$213-215 resistance — break = acceleration','Sell at T1 (+55%) or May 19 open, whichever comes first','Do NOT hold through May 20 earnings — IV crush + gap risk'],
-    risks:'⚠️ EARNINGS May 20 — must exit by May 19 open. If China trip is cancelled or delayed, catalyst evaporates. Stock is near 52-week high — profit taking possible.'
+    thresh:'🚨 IN THE MONEY: NVDA closed at $215.20 on May 8 — your $215C is now ITM. The option value has jumped significantly. Sell at open Monday or wait for T1 ($1.05). Do NOT hold past May 16.',
+    thesis:'<strong>🚨 $215C IS NOW IN THE MONEY — NVDA CLOSED $215.20 (+1.75%, +$3.70 on May 8)!</strong> Your $215C strike has been breached. The China trip catalyst with Jensen Huang played out. NVDA at $215.20 is now at a 52-week HIGH ($217.80 intraday high). Option entered at $0.68 is now likely worth $1.50–$2.50+ based on delta. Consider taking profits Monday at open. If holding for more upside, T1 is $1.05 (+55%). Hard sell by May 16 open. Earnings May 20 — option expires before earnings so no IV crush, but theta will accelerate. <strong>This is a WINNER — take at least partial profits.</strong>',
+    watch:['🎯 OPTION NOW ITM — take profits Monday open or hold for T1 $1.05','NVDA 52-week high at $217.80 hit intraday — next resistance ~$225','Earnings May 20 — option expires May 16, no IV crush risk','DO NOT hold past May 16 expiry under any circumstance'],
+    risks:'Option expires May 16 — you have 7 trading days left. Theta accelerating. Take profits Monday unless you have conviction for another +$5 in NVDA. Earnings May 20 — but option expires before that.'
   },
   {
     grade:'B', ticker:'ACHR', contract:'$7C Jun 20', price:0.48, total:48,
@@ -1840,11 +1841,11 @@ const PICKS = [
   }
 ];
 
-// ── LIVE PRICES — May 8, 2026 ──
+// ── LIVE PRICES — May 9, 2026 (May 8 close) ──
 const WATCHLISTS = {
   'Options Plays': [
-    {t:'IONQ',n:'IonQ Inc.',p:47.68,c:-4.89,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
-    {t:'NVDA',n:'NVIDIA Corp.',p:211.50,c:+3.67,tgt:240,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
+    {t:'IONQ',n:'IonQ Inc.',p:48.75,c:+1.07,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:215.20,c:+3.70,tgt:240,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'🚨 ITM — Sell'},
     {t:'ACHR',n:'Archer Aviation',p:6.28,c:-0.13,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
     {t:'LUNR',n:'Intuitive Machines',p:24.11,c:-2.22,tgt:32,iv:82,conv:7,risk:8,earn:'Verify',sig:'Bounce'},
     {t:'S',n:'SentinelOne',p:15.92,c:+0.59,tgt:21,iv:46,conv:8,risk:6,earn:'Jun 2026',sig:'Value Buy'},
@@ -1853,8 +1854,8 @@ const WATCHLISTS = {
     {t:'QUBT',n:'Quantum Computing Inc.',p:9.63,c:-0.83,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
   ],
   'Quantum': [
-    {t:'IONQ',n:'IonQ Inc.',p:47.68,c:-4.89,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
-    {t:'RGTI',n:'Rigetti Computing',p:18.34,c:-1.75,tgt:25,iv:85,conv:6,risk:8,earn:'⚠ May 11',sig:'Avoid Earn'},
+    {t:'IONQ',n:'IonQ Inc.',p:48.75,c:+1.07,tgt:62,iv:74,conv:9,risk:7,earn:'Aug 2026',sig:'Buy Dip'},
+    {t:'RGTI',n:'Rigetti Computing',p:18.94,c:+0.60,tgt:25,iv:85,conv:6,risk:8,earn:'⚠ May 11',sig:'🚨 SELL — Earn Mon'},
     {t:'QBTS',n:'D-Wave Quantum',p:21.99,c:-1.84,tgt:30,iv:78,conv:6,risk:8,earn:'⚠ May 14',sig:'Avoid Earn'},
     {t:'QUBT',n:'Quantum Computing Inc.',p:9.63,c:-0.83,tgt:14,iv:90,conv:4,risk:9,earn:'Aug 2026',sig:'Speculative'},
   ],
@@ -1866,12 +1867,12 @@ const WATCHLISTS = {
     {t:'ACHR',n:'Archer Aviation',p:6.28,c:-0.13,tgt:9,iv:78,conv:7,risk:8,earn:'Aug 2026',sig:'Buy'},
   ],
   'Defense / AI': [
-    {t:'PLTR',n:'Palantir Technologies',p:137.05,c:+3.26,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
+    {t:'PLTR',n:'Palantir Technologies',p:137.80,c:+0.75,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
     {t:'BBAI',n:'BigBear.ai',p:4.17,c:-0.20,tgt:6,iv:88,conv:5,risk:9,earn:'Aug 2026',sig:'Lottery'},
   ],
   'Chips / AI': [
-    {t:'NVDA',n:'NVIDIA Corp.',p:211.50,c:+3.67,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
-    {t:'AMD',n:'Advanced Micro Devices',p:408.46,c:-12.93,tgt:450,iv:44,conv:8,risk:5,earn:'Aug 4',sig:'Buy Dip'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:215.20,c:+3.70,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'🚨 ITM — Sell'},
+    {t:'AMD',n:'Advanced Micro Devices',p:455.19,c:+46.73,tgt:475,iv:44,conv:9,risk:5,earn:'Aug 4',sig:'🚀 52-Wk High'},
     {t:'MU',n:'Micron Technology',p:646.63,c:-20.17,tgt:720,iv:45,conv:8,risk:6,earn:'Jun 2026',sig:'Buy'},
     {t:'SMCI',n:'Super Micro Computer',p:33.62,c:-1.03,tgt:50,iv:68,conv:6,risk:7,earn:'Aug 2026',sig:'Put Watch'},
   ],
@@ -1892,8 +1893,9 @@ const WATCHLISTS = {
   'Momentum': [
     {t:'CRWD',n:'CrowdStrike Holdings',p:505.72,c:+37.65,tgt:560,iv:35,conv:9,risk:4,earn:'Jun 2026',sig:'Strong Buy'},
     {t:'PANW',n:'Palo Alto Networks',p:196.53,c:+12.95,tgt:225,iv:32,conv:8,risk:4,earn:'May 19',sig:'Buy'},
-    {t:'PLTR',n:'Palantir Technologies',p:137.05,c:+3.26,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
-    {t:'NVDA',n:'NVIDIA Corp.',p:211.50,c:+3.67,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'Earn Play'},
+    {t:'PLTR',n:'Palantir Technologies',p:137.80,c:+0.75,tgt:160,iv:52,conv:9,risk:5,earn:'Aug 3',sig:'Strong Buy'},
+    {t:'AMD',n:'Advanced Micro Devices',p:455.19,c:+46.73,tgt:475,iv:44,conv:9,risk:5,earn:'Aug 4',sig:'🚀 52-Wk High'},
+    {t:'NVDA',n:'NVIDIA Corp.',p:215.20,c:+3.70,tgt:250,iv:42,conv:9,risk:5,earn:'⚠ May 20',sig:'🚨 ITM — Sell'},
   ],
   'Crypto-Adjacent': [
     {t:'MARA',n:'MARA Holdings',p:16.42,c:-5.20,tgt:24,iv:88,conv:6,risk:9,earn:'Aug 2026',sig:'Speculative'},
@@ -2166,7 +2168,7 @@ const EARNINGS_CAL = [
   {ticker:'RGTI', date:'2026-05-11', confirmed:true,  note:'Quantum AI — high IV, options will collapse after'},
   {ticker:'LUNR', date:'2026-05-14', confirmed:true,  note:'Space play — exit calls by May 13 close'},
   {ticker:'PANW', date:'2026-05-20', confirmed:true,  note:'Cybersecurity — strong trend, watch for beat'},
-  {ticker:'NVDA', date:'2026-05-28', confirmed:true,  note:'⚠️ Intentional earnings play — IV crush risk, plan exit'},
+  {ticker:'NVDA', date:'2026-05-20', confirmed:true,  note:'⚠️ Earnings May 20 — $215C expires May 16, BEFORE earnings. No IV crush. Sell by May 16 open.'},
   {ticker:'MU',   date:'2026-06-25', confirmed:false, note:'Memory chips — estimated date, verify closer'},
   {ticker:'SAIL', date:'2026-06-10', confirmed:true,  note:'🚨 YOU HOLD $15C — exit by 9:45 AM Jun 10'},
   {ticker:'CRWD', date:'2026-06-03', confirmed:false, note:'Cybersecurity — estimated, verify'},
@@ -3199,7 +3201,7 @@ const PLAYS_40 = [
     score:95
   },
   {
-    rank:2, ticker:'IONQ', contract:'$50C Jun 20', type:'Bounce — Post-Earnings Continued Selloff', setup:'Day 2 gap-down on fundamental strength — bigger dip = better entry',
+    rank:3, ticker:'IONQ', contract:'$50C Jun 20', type:'Bounce — Post-Earnings Selloff Stabilizing', setup:'Stabilizing at $48.75 after 2-day selloff — bounce setup intact',
     price:0.62, totalCost:62, stopPct:60, stopPrice:0.25,
     t1:0.95, t2:1.35, t3:2.00,
     t1pct:53, t2pct:118, t3pct:223,
@@ -3216,21 +3218,21 @@ const PLAYS_40 = [
     score:88
   },
   {
-    rank:3, ticker:'NVDA', contract:'$215C May 16', type:'⚠️ 8 DAYS TO EXPIRY — China trip catalyst', setup:'Sell by May 16 — $211.50 is $3.50 from strike',
+    rank:2, ticker:'NVDA', contract:'$215C May 16', type:'🚨 IN THE MONEY — NVDA $215.20 — TAKE PROFITS', setup:'$215C breached — option now ITM — sell Monday open or T1',
     price:0.68, totalCost:68, stopPct:59, stopPrice:0.28,
     t1:1.05, t2:1.55, t3:2.30,
     t1pct:54, t2pct:128, t3pct:238,
-    earn:'⚠️ MAY 20 — option expires May 16 (before earnings)', holdMax:'May 16 open', daysHold:8,
-    expectedMove:'+1.7% needed on stock to reach strike', ivCurrent:42, ivCrush:'Option expires May 16 — before earnings May 20. No IV crush risk.',
+    earn:'⚠️ MAY 20 — option expires May 16 (before earnings)', holdMax:'May 16 open', daysHold:7,
+    expectedMove:'Stock already AT strike ($215.20) — option now ITM', ivCurrent:42, ivCrush:'Option expires May 16 — before earnings May 20. No IV crush risk.',
     liquidity:'VERY HIGH — most liquid options in the world', spread:'$0.01–$0.03',
-    popEstimate:43, lossChance:57,
+    popEstimate:52, lossChance:48,
     breakEven:215.68,
-    catalyst:'⚠️ URGENT: 8 DAYS TO EXPIRY. NVDA at $211.50 (+3.67 today). Trump/Jensen Huang China trip catalyst still in play. Only needs to go from $211.50 to $215 = +1.65%. SoftBank AI server deal adding tailwind. IV 42% is cheap. Option expires May 16 — BEFORE earnings on May 20.',
-    whyWin:'Stock only $3.50 below strike with strong China trip catalyst pending. IV 42% means option retains value. If catalyst hits, could spike $5-10 in a session. Very small move needed.',
-    whyFail:'⚠️ 8 DAYS LEFT — theta decay accelerating. If China trip is delayed or stock stays flat, option expires worthless. Near $216 resistance. Must act soon.',
-    chips:['⏰ 8 DAYS TO EXPIRY','🇨🇳 China trip catalyst','✅ Only +1.65% needed','📅 Expires before earnings'],
-    chipsStyle:['wchip-orange','wchip-green','wchip-green','wchip-green'],
-    score:80
+    catalyst:'🚨 NVDA CLOSED $215.20 on May 8 — your $215C is NOW IN THE MONEY. The China trip catalyst played out. NVDA hit an intraday high of $217.80 on May 8 — new 52-week high. Option entered at $0.68 is now likely worth $1.50–$2.50+ (estimated). Consider taking profits Monday morning. 7 trading days left. Earnings May 20 — but option expires May 16, no IV crush risk.',
+    whyWin:'Already ITM. NVDA above $215.20 means intrinsic value is building. Any continuation to $217–220 and this option is worth $2–5+. Entered at $0.68 = 100-600%+ gain. Take profits on open.',
+    whyFail:'7 days left — theta decay intense now that you\'re at-the-money. If NVDA pulls back below $215, option loses intrinsic value fast. Sell at T1 ($1.05) or Monday open — don\'t be greedy.',
+    chips:['🚨 $215C NOW IN THE MONEY','💰 Entry $0.68 → ~$1.50+ est','⏰ 7 DAYS LEFT','📅 Expires before earnings'],
+    chipsStyle:['wchip-green','wchip-green','wchip-orange','wchip-green'],
+    score:88
   },
   {
     rank:4, ticker:'ACHR', contract:'$7C Jun 20', type:'eVTOL Bounce — Cheap Stock', setup:'Post-dip momentum with FAA catalyst potential',
@@ -3859,38 +3861,49 @@ function filterCapitol(f) {
 }
 
 // ── SEED DATA (latest fetch — refreshed by daily task) ──────────────────
-const CAPITOL_UPDATED = 'May 8, 2026';
+const CAPITOL_UPDATED = 'May 9, 2026';
 const CAPITOL_SEED = [
-  {symbol:'AVGO',disclosureDate:'2026-05-07',transactionDate:'2026-04-13',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'Broadcom Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
-  {symbol:'AAPL',disclosureDate:'2026-05-07',transactionDate:'2026-04-17',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'Apple Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
+  {symbol:'TBLL',disclosureDate:'2026-05-08',transactionDate:'2026-04-02',firstName:'John',lastName:'Boozman',district:'AR',owner:'Joint',assetDescription:'INVESCO SHORT TERM TREAS ETF',assetType:'ETF',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/c99d5ebd-82ce-439c-a678-014946f46c50/'},
+  {symbol:'DVN',disclosureDate:'2026-05-08',transactionDate:'2026-04-09',firstName:'John',lastName:'Boozman',district:'AR',owner:'Joint',assetDescription:'Devon Energy Corp',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f148dc2e-d440-4759-be4d-f000c1cd6e89/'},
+  {symbol:'CEG',disclosureDate:'2026-05-08',transactionDate:'2026-04-02',firstName:'John',lastName:'Boozman',district:'AR',owner:'Joint',assetDescription:'CONSTELLATION ENE CORP',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f148dc2e-d440-4759-be4d-f000c1cd6e89/'},
   {symbol:'CEG',disclosureDate:'2026-05-07',transactionDate:'2026-04-17',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'CONSTELLATION ENE CORP',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
+  {symbol:'AAPL',disclosureDate:'2026-05-07',transactionDate:'2026-04-17',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'Apple Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
+  {symbol:'AVGO',disclosureDate:'2026-05-07',transactionDate:'2026-04-13',firstName:'Shelley',lastName:'Moore Capito',district:'WV',owner:'Spouse',assetDescription:'Broadcom Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/029f67f3-121a-406c-bddf-a9a7e7d6267b/'},
   {symbol:'NFS',disclosureDate:'2026-05-06',transactionDate:'2026-04-10',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'Nationwide Financial Services Inc',assetType:'Corporate Bond',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'},
-  {symbol:'BXSL',disclosureDate:'2026-05-06',transactionDate:'2026-04-13',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'BLACKSTONE SECURED LENDING F',assetType:'Corporate Bond',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'},
   {symbol:'ATH',disclosureDate:'2026-05-06',transactionDate:'2026-04-10',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'Athene Holding Ltd',assetType:'Corporate Bond',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'},
+  {symbol:'BXSL',disclosureDate:'2026-05-06',transactionDate:'2026-04-13',firstName:'John',lastName:'Fetterman',district:'PA',owner:'',assetDescription:'BLACKSTONE SECURED LENDING F',assetType:'Corporate Bond',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/f34c4d7a-29ba-48fb-beea-d94c1368cc99/'},
   {symbol:'LBRDA',disclosureDate:'2026-05-05',transactionDate:'2025-05-19',firstName:'John',lastName:'W. Hickenlooper',district:'CO',owner:'Spouse',assetDescription:'Liberty Broadband Corp',assetType:'Stock',type:'Sale',amount:'$500,001 – $1,000,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/8036348f-2470-41f7-be97-d822d0b17e7c/'},
   {symbol:'PLTR',disclosureDate:'2026-05-05',transactionDate:'2025-06-03',firstName:'John',lastName:'W. Hickenlooper',district:'CO',owner:'',assetDescription:'Palantir Technologies Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/8036348f-2470-41f7-be97-d822d0b17e7c/'},
   {symbol:'PLTR',disclosureDate:'2026-05-05',transactionDate:'2025-04-16',firstName:'John',lastName:'W. Hickenlooper',district:'CO',owner:'',assetDescription:'Palantir Technologies Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/8036348f-2470-41f7-be97-d822d0b17e7c/'},
   {symbol:'JPM',disclosureDate:'2026-05-04',transactionDate:'2026-04-13',firstName:'Sheldon',lastName:'Whitehouse',district:'RI',owner:'Self',assetDescription:'JPMorgan Chase & Co',assetType:'Stock',type:'Sale',amount:'$15,001 – $50,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/747b4aac-bbc9-4636-bf0f-95b0454e39d9/'},
-  {symbol:'IWD',disclosureDate:'2026-05-01',transactionDate:'2026-03-23',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'iShares Russell 1000 Value ETF',assetType:'ETF',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'FITB',disclosureDate:'2026-05-01',transactionDate:'2026-03-20',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Fifth Third Bancorp',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'RKT',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Rocket Cos Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'ACN',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Accenture PLC (1)',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'ACN',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Accenture PLC (2)',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'WFC',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Wells Fargo & Co',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'DBEU',disclosureDate:'2026-05-01',transactionDate:'2026-04-01',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'XTRACKERS MSCI EU HGD EQ ETF',assetType:'ETF',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'AMGN',disclosureDate:'2026-05-01',transactionDate:'2026-04-07',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Amgen Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'BX',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Blackstone Group Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'FTCB',disclosureDate:'2026-05-01',transactionDate:'2026-03-30',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Self',assetDescription:'FIRST TRUST CO INVEST GR ETF',assetType:'ETF',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'IWD',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'',assetDescription:'iShares Russell 1000 Value ETF',assetType:'ETF',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
   {symbol:'VUG',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Vanguard Growth ETF',assetType:'ETF',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'LNG',disclosureDate:'2026-05-01',transactionDate:'2026-03-20',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Cheniere Energy Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
-  {symbol:'MKL',disclosureDate:'2026-05-07',transactionDate:'2026-04-30',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Markel Corp',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'FTSL',disclosureDate:'2026-05-01',transactionDate:'2026-03-30',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'First Trust Exchange-Traded Fund IV Senior Loan Fund',assetType:'ETF',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'DBEU',disclosureDate:'2026-05-01',transactionDate:'2026-04-01',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'XTRACKERS MSCI EU HGD EQ ETF',assetType:'ETF',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'TEAM',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Atlassian Corp PLC',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'WFC',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Wells Fargo & Co',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'ACN',disclosureDate:'2026-05-01',transactionDate:'2026-04-13',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Accenture PLC (2)',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'AAPL',disclosureDate:'2026-05-01',transactionDate:'2026-03-20',firstName:'Mark',lastName:'Warner',district:'VA',owner:'Joint',assetDescription:'Apple Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'senate',link:'https://efdsearch.senate.gov/search/view/ptr/e8a9cd50-e2c7-4cc3-a4f8-310aa734a85c/'},
+  {symbol:'PGR',disclosureDate:'2026-05-08',transactionDate:'2026-04-27',firstName:'David',lastName:'Taylor',district:'OH02',owner:'',assetDescription:'The Progressive Corp',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034489.pdf'},
+  {symbol:'V',disclosureDate:'2026-05-08',transactionDate:'2026-04-27',firstName:'David',lastName:'Taylor',district:'OH02',owner:'',assetDescription:'Visa Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034489.pdf'},
+  {symbol:'PG',disclosureDate:'2026-05-08',transactionDate:'2026-04-27',firstName:'David',lastName:'Taylor',district:'OH02',owner:'',assetDescription:'The Procter & Gamble Co',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034489.pdf'},
+  {symbol:'LRCX',disclosureDate:'2026-05-08',transactionDate:'2026-04-27',firstName:'David',lastName:'Taylor',district:'OH02',owner:'',assetDescription:'Lam Research Corp',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034489.pdf'},
+  {symbol:'AVGO',disclosureDate:'2026-05-08',transactionDate:'2026-04-27',firstName:'David',lastName:'Taylor',district:'OH02',owner:'',assetDescription:'Broadcom Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034489.pdf'},
+  {symbol:'HD',disclosureDate:'2026-05-08',transactionDate:'2026-04-27',firstName:'David',lastName:'Taylor',district:'OH02',owner:'',assetDescription:'The Home Depot Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034489.pdf'},
+  {symbol:'TCNNF',disclosureDate:'2026-05-08',transactionDate:'2026-05-06',firstName:'Greg',lastName:'Stanton',district:'AZ04',owner:'Spouse',assetDescription:'TRULIEVE CANNABIS CORP',assetType:'Stock',type:'Sale',amount:'$15,001 – $50,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034499.pdf'},
+  {symbol:'FBIN',disclosureDate:'2026-05-07',transactionDate:'2026-04-24',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Fortune Brands Innovations Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
   {symbol:'MORN',disclosureDate:'2026-05-07',transactionDate:'2026-04-16',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Morningstar Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
-  {symbol:'TDG',disclosureDate:'2026-05-07',transactionDate:'2026-04-29',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'TransDigm Group Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
-  {symbol:'TDG',disclosureDate:'2026-05-07',transactionDate:'2026-04-16',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'TransDigm Group Inc',assetType:'Stock',type:'Purchase',amount:'$15,001 – $50,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
   {symbol:'BRO',disclosureDate:'2026-05-07',transactionDate:'2026-04-17',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Brown & Brown Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
-  {symbol:'PKG',disclosureDate:'2026-05-07',transactionDate:'2026-04-24',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Packaging Corp Of America',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
-  {symbol:'NDAQ',disclosureDate:'2026-05-07',transactionDate:'2026-04-24',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Nasdaq Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
-  {symbol:'ENTG',disclosureDate:'2026-05-07',transactionDate:'2026-04-15',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Entegris Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
-  {symbol:'CLH',disclosureDate:'2026-05-07',transactionDate:'2026-04-30',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Clean Harbors Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
   {symbol:'CHRW',disclosureDate:'2026-05-07',transactionDate:'2026-04-24',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'C.H. Robinson Worldwide Inc',assetType:'Stock',type:'Sale',amount:'$15,001 – $50,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
-  {symbol:'STE',disclosureDate:'2026-05-07',transactionDate:'2026-04-30',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Steris PLC',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'CLH',disclosureDate:'2026-05-07',transactionDate:'2026-04-30',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Clean Harbors Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'PAYX',disclosureDate:'2026-05-07',transactionDate:'2026-04-16',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Paychex Inc',assetType:'Stock',type:'Sale',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'ENTG',disclosureDate:'2026-05-07',transactionDate:'2026-04-15',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Entegris Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'PKG',disclosureDate:'2026-05-07',transactionDate:'2026-04-24',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Packaging Corp Of America',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'MKL',disclosureDate:'2026-05-07',transactionDate:'2026-04-30',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Markel Corp',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
+  {symbol:'NDAQ',disclosureDate:'2026-05-07',transactionDate:'2026-04-24',firstName:'April',lastName:'Delaney',district:'MD06',owner:'',assetDescription:'Nasdaq Inc',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034487.pdf'},
   {symbol:'KO',disclosureDate:'2026-05-07',transactionDate:'2026-04-01',firstName:'Lloyd',lastName:'Doggett',district:'TX37',owner:'',assetDescription:'The Coca-Cola Co',assetType:'Stock',type:'Purchase',amount:'$1,001 – $15,000',chamber:'house',link:'https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034486.pdf'}
 ];
 
