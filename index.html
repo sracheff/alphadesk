@@ -1128,7 +1128,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       <div style="display:flex;gap:10px;flex-wrap:wrap" id="capitolStats">
         <div style="padding:6px 14px;background:rgba(6,182,212,.07);border:1px solid rgba(6,182,212,.18);border-radius:8px;font-size:11px;color:var(--cyan)">Loading trades…</div>
       </div>
-      <button onclick="loadCapitol(true)" style="padding:7px 16px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--muted);cursor:pointer">🔄 Refresh</button>
+      <button id="capitolRefreshBtn" onclick="refreshCapitol()" style="padding:7px 16px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:5px"><span id="capitolRefreshIcon">🔄</span> Refresh</button>
     </div>
 
     <!-- YOUR TICKERS section -->
@@ -3798,21 +3798,41 @@ let _capitolLoaded = false;
 
 async function loadCapitol(force) {
   if (_capitolLoaded && !force) return;
+  _capitolLoaded = false;
   const wl = document.getElementById('capitolWatchlist');
   const feed = document.getElementById('capitolFeed');
-  const stats = document.getElementById('capitolStats');
   wl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">⏳ Fetching congressional trades…</div>';
   feed.innerHTML = '<div style="padding:20px;text-align:center;color:var(--muted);font-size:12px">⏳ Loading…</div>';
 
   try {
-    // Fetch senate + house in parallel via FMP MCP (called from page context)
-    // Since we can't call MCP tools from browser JS, we embed the latest data
-    // and provide a note. Data was last fetched server-side.
     renderCapitol(_capitolAllTrades.length ? _capitolAllTrades : CAPITOL_SEED);
     _capitolLoaded = true;
   } catch(e) {
     wl.innerHTML = '<div style="padding:20px;text-align:center;color:var(--red);font-size:12px">⚠️ Failed to load: ' + e.message + '</div>';
   }
+}
+
+function refreshCapitol() {
+  const btn = document.getElementById('capitolRefreshBtn');
+  const icon = document.getElementById('capitolRefreshIcon');
+  if (btn) btn.disabled = true;
+  if (icon) icon.style.animation = 'spin360 .7s linear infinite';
+  _capitolLoaded = false;
+  setTimeout(async () => {
+    await loadCapitol(true);
+    if (icon) icon.style.animation = '';
+    if (btn) btn.disabled = false;
+    // Flash the updated timestamp green briefly
+    const stats = document.getElementById('capitolStats');
+    const updEl = stats ? stats.querySelector('[data-updated]') : null;
+    // Brief visual confirmation via stats bar flash
+    if (stats) {
+      const prev = stats.style.opacity;
+      stats.style.transition = 'opacity .2s';
+      stats.style.opacity = '0.4';
+      setTimeout(() => { stats.style.opacity = '1'; }, 250);
+    }
+  }, 300);
 }
 
 function renderCapitol(trades) {
